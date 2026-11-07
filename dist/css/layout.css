@@ -1,0 +1,15 @@
+@layer base {
+/* layout.css — rejilla principal */
+.app-shell{position:relative;z-index:2;display:grid;grid-template-columns:340px 1fr 360px;grid-template-rows:72px 1fr 112px;grid-template-areas:"header header header" "playlist player queue" "playlist nowbar queue";gap:16px;height:100vh;height:100dvh;padding:16px}
+.app-header{grid-area:header}
+.playlist-panel{grid-area:playlist;min-height:0}
+.player-panel{grid-area:player;min-height:0;overflow:hidden}
+.queue-panel{grid-area:queue;min-height:0}
+.now-bar{grid-area:nowbar;min-height:0}
+.glass{background:var(--surface-bg);backdrop-filter:var(--blur);-webkit-backdrop-filter:var(--blur);border:var(--border-w) solid var(--surface-border);border-radius:var(--radius-lg);box-shadow:var(--elev-2)}
+
+/* ---- Premium: superficies ---- */
+.app-shell{gap:14px;padding:14px}
+.glass{background:linear-gradient(180deg,rgba(255,255,255,.055),rgba(255,255,255,.018)),var(--surface-bg);border:var(--border-w) solid var(--surface-border);border-radius:var(--radius-lg);box-shadow:var(--elev-2);backdrop-filter:var(--blur);-webkit-backdrop-filter:var(--blur)}
+[data-theme="light"] .glass{background:var(--surface-bg)}
+}

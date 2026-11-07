@@ -1,0 +1,37 @@
+@layer theme {
+/* theme.css — tokens base y estructura compartida por todos los estilos.
+   Los colores/tipografías de cada estilo viven en brass.css (por defecto), neon.css y emerald.css.
+   Orden de carga: theme.css → (finish.css) → vinyl.css → brass.css → neon.css → emerald.css */
+:root{
+/* Contrato público de superficie. Las skins no lo redefinen; los componentes
+   consumen estos tokens y cada modo de superficie publica sus propios valores. */
+--radius-xs:4px;--radius-sm:8px;--radius-md:12px;--radius-lg:18px;--radius-xl:26px;--radius-pill:999px;
+--elev-1:0 1px 2px rgba(0,0,0,.18);--elev-2:0 12px 36px rgba(0,0,0,.4);--elev-3:0 30px 80px rgba(0,0,0,.65);
+--border-w:1px;--blur:blur(28px) saturate(120%);--glass-blur:28px;--r-md:var(--radius-md);--r-xl:var(--radius-xl);
+--ease-out:cubic-bezier(.22,1,.36,1);--ease-in-out:cubic-bezier(.65,0,.35,1);
+--t-fast:160ms;--t-med:280ms;--t-slow:520ms;
+--font-mono:"JetBrains Mono","Fira Code",ui-monospace,monospace}
+body{font-family:var(--font-body);font-weight:400;color:var(--color-text-primary);position:relative;overflow:hidden;letter-spacing:0;-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;text-rendering:optimizeLegibility;background:radial-gradient(1100px 700px at 12% -8%,rgba(var(--color-accent-rgb),.11),transparent 60%),radial-gradient(900px 600px at 100% 110%,rgba(120,150,170,.07),transparent 60%),var(--color-canvas)}
+[data-theme="light"] body{background:radial-gradient(1100px 700px at 12% -8%,rgba(var(--color-accent-rgb),.25),transparent 60%),var(--color-canvas)}
+/* Luz ambiental: manchas cálidas muy suaves */
+.aurora-bg{position:fixed;inset:-10%;z-index:0;pointer-events:none;overflow:hidden;filter:var(--blur) saturate(120%);opacity:.5}
+.aurora-bg::before,.aurora-bg::after,.aurora-bg .blob-3,.aurora-bg .blob-4{content:"";position:absolute;border-radius:50%;mix-blend-mode:screen;animation:floatBlob 22s var(--ease-in-out) infinite alternate}
+.aurora-bg::before{top:-10%;left:-10%;width:55%;height:55%;background:var(--ambient-1);animation-duration:28s}
+.aurora-bg::after{bottom:-15%;right:-10%;width:60%;height:60%;background:var(--ambient-2);animation-duration:32s;animation-delay:-8s}
+.aurora-bg .blob-3{top:40%;left:50%;width:40%;height:40%;background:var(--ambient-3);animation-duration:26s;animation-delay:-14s}
+.aurora-bg .blob-4{top:10%;right:25%;width:35%;height:35%;background:var(--ambient-4);animation-duration:34s;animation-delay:-20s}
+[data-theme="light"] .aurora-bg{opacity:.45}
+@keyframes floatBlob{0%{transform:translate(0,0) scale(1)}50%{transform:translate(8%,-6%) scale(1.15)}100%{transform:translate(-6%,8%) scale(.95)}}
+.noise-overlay{position:fixed;inset:0;z-index:1;pointer-events:none;opacity:.06;mix-blend-mode:overlay;background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='240' height='240'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>")}
+button,.song-item,.queue-item,[role="button"],input[type="range"]{transition:background-color var(--t-fast) var(--ease-out),border-color var(--t-fast) var(--ease-out),transform var(--t-fast) var(--ease-out),box-shadow var(--t-med) var(--ease-out),color var(--t-fast) var(--ease-out),opacity var(--t-fast) var(--ease-out)}
+button:active:not(:disabled){transform:scale(.96)}
+/* Matiz leve para SVG neutrales; sigue la paleta activa de tema y skin. */
+svg:not(.brand-logo):not(#artDefault){color:color-mix(in srgb,currentColor 92%,var(--color-accent-soft) 8%)}
+@media(prefers-reduced-motion:reduce){.aurora-bg{display:none}}
+
+/* ---- Botón de estilo (camiseta) ---- */
+#btnSkin{position:relative}
+#btnSkin::after{content:"";position:absolute;right:7px;bottom:7px;width:8px;height:8px;border-radius:50%;background:var(--gradient-accent);box-shadow:0 0 0 2px var(--color-canvas)}
+#btnSkin:hover svg{transform:rotate(-8deg) scale(1.08)}
+#btnSkin svg{transition:transform var(--t-med) var(--ease-out)}
+}

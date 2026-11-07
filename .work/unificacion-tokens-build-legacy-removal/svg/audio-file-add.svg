@@ -1,0 +1,42 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="16" height="16" fill="none" aria-hidden="true" focusable="false">
+  <defs>
+    <linearGradient id="aan-body" x1="11.5" y1="2.5" x2="11.5" y2="20.5" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#2E2E32"/>
+      <stop offset="1" stop-color="#0F0F11"/>
+    </linearGradient>
+    <linearGradient id="aan-rim" x1="3" y1="2.5" x2="20" y2="20.5" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#F2F2F2"/>
+      <stop offset=".5" stop-color="#8E8E94"/>
+      <stop offset="1" stop-color="#C8C8CC"/>
+    </linearGradient>
+    <linearGradient id="aan-bars" x1="0" y1="5" x2="0" y2="16" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#FFFFFF"/>
+      <stop offset="1" stop-color="#B4B4BA"/>
+    </linearGradient>
+    <linearGradient id="aan-badge" x1="15" y1="14" x2="22" y2="23" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#FFFFFF"/>
+      <stop offset="1" stop-color="#B8B8BE"/>
+    </linearGradient>
+    <mask id="aan-cut" maskUnits="userSpaceOnUse" x="0" y="0" width="24" height="24">
+      <rect width="24" height="24" fill="#fff"/>
+      <circle cx="18.5" cy="18.5" r="5.4" fill="#000"/>
+    </mask>
+  </defs>
+
+  <!-- Tile -->
+  <g mask="url(#aan-cut)">
+    <rect x="2.5" y="2.5" width="18" height="18" rx="5.5" fill="url(#aan-body)"/>
+    <rect x="3" y="3" width="17" height="17" rx="5" stroke="url(#aan-rim)" stroke-width="1.1"/>
+
+    <!-- Waveform -->
+    <rect x="5.6" y="8.5" width="1.8" height="4" rx=".9" fill="url(#aan-bars)"/>
+    <rect x="8.1" y="6.5" width="1.8" height="8" rx=".9" fill="url(#aan-bars)"/>
+    <rect x="10.6" y="5" width="1.8" height="11" rx=".9" fill="url(#aan-bars)"/>
+    <rect x="13.1" y="7" width="1.8" height="7" rx=".9" fill="url(#aan-bars)"/>
+    <rect x="15.6" y="8.5" width="1.8" height="4" rx=".9" fill="url(#aan-bars)"/>
+  </g>
+
+  <!-- Add badge -->
+  <circle cx="18.5" cy="18.5" r="4.5" fill="url(#aan-badge)"/>
+  <path d="M18.5 16.2V20.8M16.2 18.5H20.8" stroke="#111113" stroke-width="1.8" stroke-linecap="round"/>
+</svg>

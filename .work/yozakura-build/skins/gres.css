@@ -1,0 +1,199 @@
+/* gres.css v1 — estilo "Gres": cerámica de taller, hecha a mano y mate.
+   Disco con esmalte tenmoku (hierro negro que rompe a óxido en el borde y deja vetas de "piel de liebre"),
+   plato de gres crudo torneado con motas de hierro, contrapeso de arcilla cocida y empuñadura de cordel de lino.
+   Se activa con <html data-skin="gres">. Misma arquitectura que brass.css: tokens + reglas del disco y del brazo
+   limitadas a :root[data-skin="gres"], así que no tocan a ningún otro estilo.
+   Cargar DESPUÉS de theme.css y vinyl.css (como brass.css, neon.css y emerald.css). Sus selectores son más específicos que los
+   tokens de :root de brass.css, por lo que gana sin depender del orden entre estilos.
+   Sin archivos externos: gradientes + box-shadow + filter nativos, y dos tramas de grano (SVG incrustado, feTurbulence) que solo
+   aportan la mota de hierro y el diente del barro; si el navegador las bloquea, el resto del acabado sigue entero.
+   Regla de oro (heredada): lo que GIRA (.art-frame) lleva sombras SIN desplazamiento; la luz direccional vive en lo estático.
+   Sin animaciones propias: no hay nada que prefers-reduced-motion tenga que apagar. */
+
+/* ============================================================
+   TOKENS · nombres heredados: coral = pigmento de óxido/caqui (acento principal), cyan = ceniza (acento suave),
+   gold = arcilla clara, mint = celadón apagado (estado correcto), danger = bermellón
+   ============================================================ */
+:root[data-skin="gres"]{
+--bg-base:#121413;--bg-deep:#0a0c0b;--bg-mid:#1a1d1b;
+--mesh-1:#3a2218;--mesh-2:#1e2a27;--mesh-3:#4a2c1b;--mesh-4:#232a2e;
+--skin-name:"gres";--accent-rgb:214,122,76;--accent2-rgb:183,188,176;--tone-hi:#ecc1a0;--tone-mid:#d67a4c;--tone-lo:#7a3a1c;--tone-deep:#a24f27;--on-accent:#140a05;--platter:#2a1d16;--platter-edge:#0b0807;
+--accent-coral:#d67a4c;--accent-cyan:#b7bcb0;--accent-gold:#d9a37e;--accent-mint:#93b5a1;--accent-danger:#ea6553;
+--gradient-primary:linear-gradient(145deg,#e79c76 0%,#d67a4c 58%,#c4683c 100%);
+--gradient-secondary:linear-gradient(145deg,#cdd1c7 0%,#a9afa3 100%);
+--text-primary:#efe9df;--text-secondary:#c4bcaf;--text-muted:#968f84;--text-faint:#5f5c55;
+--font-display:"Shippori Mincho","Iowan Old Style","Palatino Linotype",Georgia,serif;
+--font-body:"Manrope","Inter",system-ui,sans-serif;
+/* luz especular casi nula (mate), luz ambiental reflejada baja y sombras de contacto largas y blandas */
+--spec:255,240,224;
+--amb-1:.10;--amb-2:.07;--amb-3:.03;
+--sh-contact:rgba(0,0,0,.70);--sh-mid:rgba(0,0,0,.58);--sh-deep:rgba(0,0,0,.90);
+--glass-filter:blur(10px) saturate(1.08);
+/* losa de gres: casi opaca, con muy poco desenfoque; el esmalte se acumula en el borde y no hay destellos de 1px */
+--glass-bg:rgba(25,27,25,.82);--glass-bg-hover:rgba(35,37,34,.88);--glass-bg-active:rgba(54,40,32,.93);--glass-solid:rgba(23,25,23,.97);
+--glass-border:rgba(255,236,216,.08);--glass-border-strong:rgba(214,122,76,.58);
+--shadow-panel:
+ inset 0 1px 0 rgba(var(--spec),.07),
+ inset 0 0 0 1px rgba(var(--accent-rgb),.07),
+ inset 0 -16px 24px -18px rgba(0,0,0,.60),
+ inset 0 20px 28px -24px rgba(var(--spec),.05),
+ 0 1px 0 rgba(0,0,0,.55),
+ 0 10px 20px -10px rgba(0,0,0,.62),
+ 0 32px 60px -30px rgba(0,0,0,.78);
+--focus-ring:0 0 0 2px #121413,0 0 0 4px #ec9a70,0 0 12px 2px rgba(var(--accent-rgb),.24)}
+
+/* Tema claro: gres crudo (sin esmaltar, arena grisácea con mota de hierro) y pigmento de óxido más oscuro para sostener el contraste */
+:root[data-skin="gres"][data-theme="light"]{
+--bg-base:#ddd6c8;--bg-deep:#cdc5b5;--bg-mid:#e8e2d6;
+--mesh-1:#e6cbb0;--mesh-2:#c9d0c8;--mesh-3:#dcc0a6;--mesh-4:#e2dccf;
+--accent-rgb:143,63,26;--accent2-rgb:88,94,84;--tone-hi:#e2a782;--tone-mid:#b4572c;--tone-lo:#6f3216;--tone-deep:#8f3f1a;--on-accent:#fff7ee;--platter:#cfc3b0;--platter-edge:#b3a690;
+--accent-coral:#8f3f1a;--accent-cyan:#585e54;--accent-gold:#9a6a43;--accent-mint:#2f6247;--accent-danger:#a63424;
+--gradient-primary:linear-gradient(145deg,#b4572c 0%,#9a4720 58%,#7e3716 100%);
+--gradient-secondary:linear-gradient(145deg,#e6e0d3 0%,#c9c1b1 100%);
+--text-primary:#1d1a16;--text-secondary:#443e35;--text-muted:#5f584d;--text-faint:#8d867a;
+--amb-1:.08;--amb-2:.05;--amb-3:.02;
+--sh-contact:rgba(52,34,18,.55);--sh-mid:rgba(52,34,18,.36);--sh-deep:rgba(52,34,18,.46);
+--glass-filter:blur(8px) saturate(1.05);
+--glass-bg:rgba(240,235,224,.78);--glass-bg-hover:rgba(246,242,233,.88);--glass-bg-active:rgba(250,246,238,.96);--glass-solid:rgba(240,235,225,.97);
+--glass-border:rgba(70,48,28,.14);--glass-border-strong:rgba(143,63,26,.50);
+--shadow-panel:
+ inset 0 1px 0 rgba(255,255,255,.70),
+ inset 0 0 0 1px rgba(143,63,26,.05),
+ inset 0 -14px 22px -18px rgba(92,62,34,.30),
+ 0 1px 0 rgba(60,40,20,.16),
+ 0 8px 18px -10px rgba(60,40,20,.30),
+ 0 26px 50px -28px rgba(60,40,20,.38);
+--focus-ring:0 0 0 2px #fff,0 0 0 4px #8f3f1a,0 0 10px rgba(143,63,26,.32)}
+
+/* Alto contraste y sin transparencias: bordes más marcados, texto atenuado más claro, paneles sólidos (sin desenfoque) */
+@media(prefers-contrast:more){
+:root[data-skin="gres"]{--glass-border:rgba(255,255,255,.32);--glass-border-strong:rgba(255,255,255,.55);--text-muted:#c4bcaf}
+:root[data-skin="gres"][data-theme="light"]{--glass-border:rgba(40,28,14,.50);--glass-border-strong:rgba(143,63,26,.85);--text-muted:#443e35}}
+@media(prefers-reduced-transparency:reduce){
+:root[data-skin="gres"]{--glass-filter:none;--glass-bg:var(--glass-solid);--glass-bg-hover:var(--glass-solid);--glass-bg-active:var(--glass-solid)}}
+
+/* ============================================================
+   DISCO · plato de gres crudo torneado, esmalte tenmoku en el vinilo, aro de pie de barro sin esmaltar
+   ============================================================ */
+/* Plato (ESTÁTICO): de fuera adentro, caída redondeada del canto · gres crudo con marcas de torno (3 periodos inconmensurables)
+   y motas de hierro · charco de esmalte oscuro que rompe a óxido junto al labio · sombra del labio sobre el disco (queda hundido) */
+:root[data-skin="gres"] .art-wrap::before{display:block;inset:-8%;background:
+ /* 1 · caída del canto exterior (borde redondeado, sin filo especular) */
+ radial-gradient(circle closest-side,transparent 0 96.2%,rgba(var(--spec),.14) 97.6%,rgba(0,0,0,.10) 98.8%,rgba(0,0,0,.55) 100%),
+ /* 2 · sombra del labio interior sobre el vinilo */
+ radial-gradient(circle closest-side,transparent 0 85.4%,rgba(0,0,0,.80) 86.2%,rgba(0,0,0,.34) 87.6%,rgba(0,0,0,.08) 90%,transparent 93%),
+ /* 3 · charco de esmalte: casi negro pegado al labio, óxido al romper, desaparece hacia el gres crudo */
+ radial-gradient(circle closest-side,transparent 0 86.2%,rgba(34,16,9,.92) 86.8%,rgba(78,36,18,.78) 88.4%,rgba(136,66,32,.42) 90.4%,transparent 93%),
+ /* 4 · motas de hierro y diente del barro (SVG incrustado) */
+ url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220'%3E%3Cfilter id='s' x='0' y='0' width='100%25' height='100%25'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.62' numOctaves='2' seed='11' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 .13  0 0 0 0 .07  0 0 0 0 .04  19 0 0 0 -14.3'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23s)'/%3E%3C/svg%3E"),
+ url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='t' x='0' y='0' width='100%25' height='100%25'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='1.15' numOctaves='2' seed='4' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 .05  0 0 0 0 .03  0 0 0 0 .02  0 0 0 .9 -.28'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23t)'/%3E%3C/svg%3E"),
+ /* 5 · marcas de torno: crestas concéntricas irregulares */
+ repeating-radial-gradient(circle,rgba(0,0,0,.15) 0 .7px,transparent 1.5px 3.3px),
+ repeating-radial-gradient(circle,rgba(var(--spec),.11) 0 .5px,transparent 1.3px 5.1px),
+ repeating-radial-gradient(circle,rgba(0,0,0,.10) 0 1px,transparent 2.2px 8.3px),
+ /* 6 · luz de ventana estática: volumen amplio y blando */
+ linear-gradient(135deg,rgba(var(--spec),.22) 0,rgba(var(--spec),.05) 36%,transparent 54%,rgba(0,0,0,.36) 100%),
+ /* 7 · gres crudo */
+ radial-gradient(circle closest-side,#45362a 0 86%,#76634f 90%,#86725c 95%,#917d66 100%);
+ background-size:auto,auto,auto,220px 220px,180px 180px,auto,auto,auto,auto,auto;
+ box-shadow:
+ inset 0 0 0 .75px rgba(var(--spec),.12),
+ inset 0 2px 3px rgba(var(--spec),.10),
+ inset 0 -3px 6px rgba(0,0,0,.45),
+ inset 0 0 18px rgba(0,0,0,.30),
+ 0 2px 3px 2px var(--sh-contact),
+ 0 12px 22px 0 var(--sh-mid),
+ 0 44px 84px -14px var(--sh-deep),
+ 0 0 110px rgba(var(--accent-rgb),var(--amb-2))}
+
+/* Esmalte tenmoku (GIRA con el disco): base de hierro, vetas de "piel de liebre" que solo asoman hacia el borde, manchas de
+   aceite plateadas, surcos de pista suaves y borde fino que rompe a óxido. Sombras sin desplazamiento. */
+:root[data-skin="gres"] .art-frame::before{display:block;content:"";position:absolute;inset:0;z-index:1;border-radius:50%;pointer-events:none;background:
+ /* 1 · borde: esmalte fino que rompe a óxido y caída del canto */
+ radial-gradient(circle closest-side,transparent 0 92%,rgba(110,48,20,.42) 95.8%,rgba(176,98,52,.26) 98%,rgba(24,12,6,.85) 100%),
+ /* 2 · surcos de pista y cera muerta (mate) */
+ radial-gradient(circle closest-side,transparent 0 43%,rgba(0,0,0,.40) 43.8%,rgba(0,0,0,.14) 46.5%,transparent 49%,transparent calc(58% - .6px),rgba(0,0,0,.42) 58%,transparent calc(58% + .6px),transparent calc(71% - .6px),rgba(0,0,0,.42) 71%,transparent calc(71% + .6px),transparent calc(83% - .5px),rgba(0,0,0,.38) 83%,transparent calc(83% + .5px),transparent calc(93% - .5px),rgba(0,0,0,.34) 93%,transparent calc(93% + .5px)),
+ /* 3 · micro-surcos (periodos .73 / .61 px, alpha bajo: grano fino, no moiré) */
+ repeating-radial-gradient(circle,rgba(var(--spec),.04) 0 .2px,transparent .45px .73px),
+ repeating-radial-gradient(circle,rgba(0,0,0,.22) 0 .15px,transparent .38px .61px),
+ /* 4 · manchas de aceite (yuteki): seis motas plateadas, tenues */
+ radial-gradient(circle at 27% 64%,rgba(196,208,212,.14) 0 .5%,rgba(120,142,152,.12) 1.1%,transparent 1.9%),
+ radial-gradient(circle at 71% 31%,rgba(196,208,212,.12) 0 .4%,rgba(120,142,152,.10) 1%,transparent 1.7%),
+ radial-gradient(circle at 61% 79%,rgba(196,208,212,.11) 0 .35%,rgba(120,142,152,.09) .9%,transparent 1.5%),
+ radial-gradient(circle at 18% 36%,rgba(196,208,212,.10) 0 .3%,rgba(120,142,152,.08) .8%,transparent 1.4%),
+ radial-gradient(circle at 83% 58%,rgba(196,208,212,.11) 0 .4%,rgba(120,142,152,.09) .9%,transparent 1.5%),
+ radial-gradient(circle at 44% 17%,rgba(196,208,212,.09) 0 .3%,rgba(120,142,152,.07) .8%,transparent 1.4%),
+ /* 5 · máscara del centro: las vetas solo se ven hacia el borde */
+ radial-gradient(circle closest-side,#17100b 0,#17100b 60%,transparent 86%),
+ /* 6 · piel de liebre: vetas radiales finas de óxido */
+ repeating-conic-gradient(from 7deg,rgba(176,88,40,0) 0 .8deg,rgba(176,88,40,.12) 1.3deg,rgba(176,88,40,0) 2deg 3.4deg,rgba(214,150,96,.06) 3.9deg,transparent 4.3deg 6.1deg),
+ repeating-conic-gradient(from 31deg,rgba(150,70,30,0) 0 1.7deg,rgba(150,70,30,.09) 2.2deg,rgba(150,70,30,0) 3deg 4.9deg,rgba(200,130,80,.05) 5.6deg,transparent 6.1deg 8.3deg),
+ /* 7 · base de hierro */
+ radial-gradient(circle closest-side,#21150f 0,#1a110c 60%,#110a07 100%);
+ box-shadow:inset 0 0 0 .5px rgba(var(--spec),.10),inset 0 0 14px rgba(0,0,0,.40)}
+
+/* Aro de pie (GIRA): barro sin esmaltar, torneado fino; entre él y la etiqueta, la hendidura oscura del pie */
+:root[data-skin="gres"] .art-frame::after{inset:29%;background:
+ radial-gradient(circle closest-side,transparent calc(100% - 1.2px),rgba(var(--spec),.20) calc(100% - .6px),rgba(0,0,0,.50) 100%),
+ radial-gradient(circle closest-side,transparent 0 89%,rgba(var(--spec),.16) 92%,transparent 96%,rgba(0,0,0,.42) 100%),
+ radial-gradient(circle closest-side,transparent 0 83.5%,#060403 83.8%,#100a07 86%,#070504 88.6%,transparent 89%),
+ repeating-radial-gradient(circle,rgba(0,0,0,.16) 0 .5px,transparent 1.1px 2.3px),
+ url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='t' x='0' y='0' width='100%25' height='100%25'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='1.15' numOctaves='2' seed='4' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 .05  0 0 0 0 .03  0 0 0 0 .02  0 0 0 .9 -.28'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23t)'/%3E%3C/svg%3E"),
+ radial-gradient(circle closest-side,#c98c62 0,#b57548 60%,#9a5f3a 100%);
+ background-size:auto,auto,auto,auto,180px 180px,auto;
+ box-shadow:inset 0 0 0 .75px rgba(var(--spec),.20),inset 0 0 6px rgba(0,0,0,.50),0 0 0 1.5px #050403,0 0 0 2.25px rgba(var(--spec),.14),0 0 10px 2px rgba(0,0,0,.55)}
+:root[data-skin="gres"] .art-frame img{inset:32.5%;width:35%;height:35%;box-shadow:0 0 0 1.5px #050403,0 0 0 2.25px rgba(var(--spec),.16),inset 0 0 0 1px rgba(0,0,0,.65),inset 0 0 12px rgba(0,0,0,.5)}
+:root[data-skin="gres"] .art-frame .default-art{width:16%;height:16%;color:#6b3a20;opacity:.6}
+
+/* Brillo de esmalte ESTÁTICO (la luz no gira con el disco): dos lóbulos opuestos, anchos y blandos (satén, no espejo)
+   y el eje de hierro mate. mix-blend-mode normal: el eje oscuro no se vería con "screen". */
+:root[data-skin="gres"] .art-wrap::after{mix-blend-mode:normal;background:
+ radial-gradient(circle closest-side,#d9d2c6 0 .7%,#8c867c 1.4%,#2c2a27 2.3%,#0e0d0c 3.1%,transparent 3.7%),
+ conic-gradient(from 0deg,transparent 0 44deg,rgba(255,238,220,.05) 56deg,rgba(255,238,220,.16) 68deg,rgba(255,238,220,.05) 80deg,transparent 94deg 224deg,rgba(255,238,220,.04) 236deg,rgba(255,238,220,.11) 248deg,rgba(255,238,220,.04) 260deg,transparent 274deg)}
+
+/* ============================================================
+   BRAZO · hierro negro mate, empuñadura de cordel de lino, contrapeso de arcilla cocida
+   Misma geometría que los demás estilos (ver .tonearm en vinyl.css): 13 capas, mismas posiciones y tamaños que brass.css
+   ============================================================ */
+/* Base del pivote: cúpula de arcilla con marcas de torno, collar de hierro y buje central */
+:root[data-skin="gres"] .tonearm{background:
+ radial-gradient(circle closest-side,#6b645b 0 2.6%,#2f2c28 5%,#0e0d0c 10%,#0a0908 12% 13%,rgba(var(--spec),.24) 13.6%,transparent 14.6%),
+ radial-gradient(circle closest-side,#2b2824 0,#1c1a17 34%,#0f0e0c 58%,#050504 61.5%,transparent 62.5%),
+ repeating-radial-gradient(circle closest-side,rgba(0,0,0,.14) 0 .6px,transparent 1.3px 3.1px),
+ url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='t' x='0' y='0' width='100%25' height='100%25'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='1.15' numOctaves='2' seed='4' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 .05  0 0 0 0 .03  0 0 0 0 .02  0 0 0 .9 -.28'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23t)'/%3E%3C/svg%3E"),
+ radial-gradient(circle at 36% 30%,#b58866 0,#9c6d4b 28%,#7b5238 58%,#573721 84%,#3a2415 100%);
+ background-size:auto,auto,auto,180px 180px,auto;
+ box-shadow:
+ inset 0 0 0 .75px rgba(var(--spec),.16),
+ inset 0 2px 3px rgba(255,230,205,.14),
+ inset 0 -3px 5px rgba(0,0,0,.50),
+ 0 0 0 3px #17110d,
+ 0 0 0 4.25px #3a332c,
+ 0 0 0 5.25px #0f0b08,
+ 0 3px 4px 4px rgba(0,0,0,.50),
+ 0 14px 24px rgba(0,0,0,.60),
+ 0 26px 44px -10px rgba(0,0,0,.45)}
+
+/* Brazo: 13 capas (arriba→abajo)
+   1 buje del pivote · 2 aguja · 3 cápsula · 4 shell (único toque de color: barniz de óxido) ·
+   5-7 empuñadura (hilo diagonal, sombras de cilindro, cuerpo de lino) · 8-9 tubo (filetes, hierro negro mate) ·
+   10-13 contrapeso (filetes, anillos de torno, luz reflejada, cuerpo de arcilla cocida). */
+:root[data-skin="gres"] .tonearm::before{background-repeat:no-repeat;
+ background-position:10.8% 50%,100% 50%,94% 50%,88% 50%,25% 50%,25% 50%,25% 50%,63.6% 50%,63.6% 50%,0 50%,0 50%,0 50%,0 50%;
+ background-size:11.5% 100%,3% 26%,7% 100%,11% 74%,28% 22%,28% 22%,28% 22%,78% 22%,78% 22%,12.5% 100%,9% 96%,12.5% 100%,12.5% 100%;
+ background-image:
+ radial-gradient(circle closest-side,#6a645b 0 8%,#34312d 16%,#141311 30%,#0a0908 44% 56%,#37332e 60%,#1a1816 70% 80%,#070605 82%,transparent 84%),
+ radial-gradient(circle closest-side,#f4ede2 0 30%,#d8cab6 46%,rgba(200,180,155,.55) 62%,transparent 80%),
+ linear-gradient(180deg,#0f0d0c 0,#4a443e .5px,#2b2723 18%,#171512 48%,#0b0a09 80%,#050403 100%),
+ linear-gradient(180deg,#1a0d06 0,#7a3a1c 6%,#cf7144 20%,#e0916a 30%,#cf7144 44%,#a24f27 62%,#6a3318 80%,#2a140a 100%),
+ repeating-linear-gradient(100deg,rgba(40,30,16,.30) 0 .8px,rgba(40,30,16,0) 1.4px,rgba(255,248,230,.09) 1.9px 2.3px,transparent 2.9px 3.8px),
+ linear-gradient(180deg,rgba(0,0,0,.45) 0,transparent 18%,transparent 78%,rgba(0,0,0,.55) 100%),
+ linear-gradient(180deg,#554c3e 0,#988c76 14%,#c4b8a0 30%,#d3c8b0 40%,#b9ad94 52%,#8a7f6a 70%,#554c3d 88%,#2b251c 100%),
+ linear-gradient(180deg,transparent calc(30% - .5px),rgba(var(--spec),.30) 30%,transparent calc(30% + 1px),transparent calc(86% - .75px),rgba(255,226,200,.14) 86%,transparent calc(86% + .75px)),
+ linear-gradient(180deg,#070606 0,#141211 12%,#2a2724 30%,#403b36 42%,#292623 56%,#151312 76%,#070606 100%),
+ linear-gradient(180deg,transparent calc(30% - 1px),rgba(255,235,215,.09) 30%,transparent calc(30% + 1px),transparent calc(84% - .75px),rgba(255,214,180,.05) 84%,transparent calc(84% + .75px)),
+ repeating-linear-gradient(90deg,rgba(20,8,2,.45) 0 .6px,rgba(20,8,2,0) 1.1px,rgba(255,225,200,.05) 1.4px 1.8px,transparent 2.3px 3.1px),
+ linear-gradient(180deg,rgba(255,225,200,.10) 0,transparent 30%,transparent 70%,rgba(0,0,0,.25) 100%),
+ linear-gradient(180deg,#26130a 0,#4e2e1e 10%,#76492f 26%,#8d5a3c 38%,#976243 44%,#80503a 54%,#64402a 70%,#3f2515 88%,#1c0e06 100%);
+ /* sombra proyectada con la silueta real del brazo; sin resplandor de color */
+ filter:drop-shadow(0 1px 1px rgba(0,0,0,.55)) drop-shadow(0 7px 6px rgba(0,0,0,.45))}

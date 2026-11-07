@@ -1,0 +1,373 @@
+@layer skin {
+/* telar.css v1 — estilo "Telar": tapiz jacquard de lana y seda, hilo de gualda sobre lana ciruela.
+   Se activa con <html data-skin="telar">. Oscuro (por defecto) = lana ciruela-negra + gualda; Claro = lana gris perla + añil.
+   Cargar DESPUÉS de theme.css, vinyl.css y los demás estilos. Todo va bajo :root[data-skin="telar"]; los componentes opt-in usan prefijo .tl-
+   Sin imágenes externas: gradientes + box-shadow + 4 texturas SVG en data-URI (trama, sarga, irregularidad de hilo clara y oscura).
+
+   IDEA CENTRAL — todo está tejido, todo está cosido.
+   · Un solo gesto de material: la TRAMA (urdimbre/trama de 3px con un leve "slub" de hilo irregular) une superficies, disco, botones y barras.
+   · Un solo gesto de acabado: el PESPUNTE (puntada discontinua) sustituye a filetes, divisores y bordes interiores.
+   · Un solo acento: el hilo de gualda (verde-amarillo de tinte natural) contra lana ciruela; el añil/lila es su hilo secundario.
+   Reinterpretación de los elementos del DOM que aparecen en paper.css (sin cambiar HTML):
+     .art-wrap::before → alfombrilla de fieltro con festón (puntada de ojal)   .art-frame → tapiz circular con rosetón jacquard
+     .art-frame::after → parche tejido con pespunte e hilo de gualda            .tonearm → carrete de hilo
+     .tonearm::before  → aguja de tapicero con hilo enrollado y ojo
+   Regla heredada: lo que GIRA lleva sombras SIN desplazamiento; la luz de ventana (arriba-izquierda) vive en lo estático.
+   [SUPUESTO] marca selectores o variables que no se deducen de paper.css y deben mapearse al HTML real. */
+
+/* ============================================================
+   TOKENS COMUNES · nombres heredados: coral = gualda (acento principal), cyan = hilo secundario (añil/lila)
+   ============================================================ */
+:root[data-skin="telar"]{
+--skin-name:"telar";
+--font-display:"Fraunces","Newsreader","Iowan Old Style",Georgia,serif;
+--font-body:"Hanken Grotesk","Instrument Sans","Inter",system-ui,sans-serif;
+--font-mono:"JetBrains Mono","IBM Plex Mono",ui-monospace,"SF Mono",Menlo,monospace;
+--spec:250,247,255;
+/* hilo de gualda: es un objeto (carrete, aguja), por eso no cambia entre claro y oscuro */
+--tl-thread-hi:#e6f07f;--tl-thread:#c4d640;--tl-thread-lo:#8a9c1f;
+--tl-r-sm:8px;--tl-r-md:12px;--tl-r-lg:16px;
+/* Texturas: son capas de alfa (blanco/negro), así que valen en ambos temas. Si se borran, cada superficie cae a su color liso. */
+--tl-weave:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='6' height='6'%3E%3Crect width='3' height='3' fill='%23fff' fill-opacity='.09'/%3E%3Crect x='3' y='3' width='3' height='3' fill='%23fff' fill-opacity='.09'/%3E%3Crect x='3' width='3' height='3' fill='%23000' fill-opacity='.14'/%3E%3Crect y='3' width='3' height='3' fill='%23000' fill-opacity='.14'/%3E%3Cpath d='M0 .2H6M0 3.2H6M.2 0V6M3.2 0V6' stroke='%23000' stroke-opacity='.15' stroke-width='.45'/%3E%3C/svg%3E");
+--pattern-image:var(--tl-weave);
+--tl-twill:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='6' height='6'%3E%3Cpath d='M-1 1L1 -1M0 6L6 0M5 7L7 5' stroke='%23000' stroke-opacity='.20' stroke-width='1.1'/%3E%3Cpath d='M-1 4L4 -1M2 7L7 2' stroke='%23fff' stroke-opacity='.10' stroke-width='.8'/%3E%3C/svg%3E");
+--tl-slub-ink:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='320' height='320'%3E%3Cfilter id='s' x='0' y='0' width='100%25' height='100%25' color-interpolation-filters='sRGB'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.012 .5' numOctaves='2' seed='7' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0.09 0 0 0 0 0.06 0 0 0 0 0.16 1.3 0 0 0 -0.56'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23s)'/%3E%3C/svg%3E");
+--tl-slub-pale:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='320' height='320'%3E%3Cfilter id='s' x='0' y='0' width='100%25' height='100%25' color-interpolation-filters='sRGB'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.012 .5' numOctaves='2' seed='7' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0.93 0 0 0 0 0.9 0 0 0 0 0.99 1.3 0 0 0 -0.6'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23s)'/%3E%3C/svg%3E")}
+
+/* ============================================================
+   OSCURO (por defecto) · lana ciruela-negra, luz fría de ventana norte, hilo de gualda
+   ============================================================ */
+:root[data-skin="telar"]:not([data-theme="light"]){
+color-scheme:dark;
+--bg-base:#151219;--bg-deep:#0d0b11;--bg-mid:#1d1923;
+--mesh-1:#231b2b;--mesh-2:#1a2030;--mesh-3:#17141c;--mesh-4:#262014;
+--accent-rgb:196,214,64;--accent2-rgb:169,182,240;--tone-hi:#e3ee8a;--tone-mid:#c4d640;--tone-lo:#8a9c1f;--tone-deep:#a6ba2e;--on-accent:#12150a;--platter:#1b1721;--platter-edge:#0a080d;
+--accent-coral:#c4d640;--accent-cyan:#a9b6f0;--accent-gold:#e2a548;--accent-mint:#5fc7a0;--accent-danger:#ef5a6f;
+--gradient-primary:linear-gradient(135deg,#d9e86a 0%,#c4d640 52%,#8fa31f 100%);
+--gradient-secondary:linear-gradient(135deg,#b9c4f5 0%,#8e9de2 100%);
+--text-primary:#efeaf2;--text-secondary:#c6bfd1;--text-muted:#978fa6;--text-faint:#625b72;
+--amb-1:.03;--amb-2:.02;--amb-3:.01;
+--sh-contact:rgba(0,0,0,.72);--sh-mid:rgba(0,0,0,.55);--sh-deep:rgba(0,0,0,.85);
+--glass-filter:none;
+--glass-bg:rgba(30,25,37,.94);--glass-bg-hover:rgba(40,34,49,.96);--glass-bg-active:rgba(52,45,62,.98);--glass-solid:rgba(28,23,34,.985);
+--glass-border:rgba(232,222,245,.10);--glass-border-strong:rgba(196,214,64,.55);
+/* panel de lana oscura: filo de luz arriba, oclusión abajo, sombras apiladas sin resplandor */
+--shadow-panel:
+ inset 0 1px 0 rgba(255,250,255,.10),
+ inset 0 0 0 .5px rgba(255,255,255,.05),
+ inset 0 -1px 0 rgba(0,0,0,.60),
+ inset 0 0 30px rgba(0,0,0,.28),
+ 0 .5px 0 rgba(0,0,0,.90),
+ 0 1px 1px rgba(0,0,0,.50),
+ 0 6px 10px -3px rgba(0,0,0,.55),
+ 0 26px 44px -20px rgba(0,0,0,.80);
+--focus-ring:0 0 0 2px #151219,0 0 0 4px #c4d640,0 0 12px 2px rgba(196,214,64,.25);
+/* ayudantes del tema */
+--tl-ground:#1b1630;--tl-band-1:#c4d640;--tl-band-2:#a9b6f0;--tl-band-3:#e2a548;
+--tl-felt-hi:#342d3f;--tl-felt:#241f2d;--tl-stitch:#c4d640;--tl-edge:rgba(240,232,255,.50);
+--tl-label-hi:#f4f1f8;--tl-label-lo:#d9d3e4;--tl-label-ink:#232a63;
+--tl-slub:var(--tl-slub-pale);--tl-lamp:rgba(225,230,255,.06);--tl-vig:rgba(0,0,0,.36);--tl-veil-o:.45;
+--tl-stitch-line:rgba(232,222,245,.26);--tl-track:#0e0c13;--tl-hover:rgba(232,222,250,.06);--tl-scrim:rgba(9,7,13,.72);
+--tl-sung:#c4d640;--tl-unsung:#8f899f;--tl-viz-bg:#0f0d14;--tl-scroll:rgba(232,222,245,.22);
+--tl-shadow-key:inset 0 1px 0 rgba(255,250,255,.12),inset 0 -1px 0 rgba(0,0,0,.5),0 .5px 0 rgba(0,0,0,.9),0 1px 1px rgba(0,0,0,.55),0 5px 9px -3px rgba(0,0,0,.6);
+--tl-shadow-press:inset 0 2px 5px rgba(0,0,0,.6),inset 0 0 0 .5px rgba(0,0,0,.5),0 .5px 0 rgba(255,250,255,.06)}
+
+/* ============================================================
+   CLARO · lana gris perla, luz de día, hilo de gualda oscurecido a oliva para cumplir contraste, añil como secundario
+   ============================================================ */
+:root[data-skin="telar"][data-theme="light"]{
+color-scheme:light;
+--bg-base:#d9d6de;--bg-deep:#cbc7d2;--bg-mid:#e4e1e9;
+--mesh-1:#ece9f0;--mesh-2:#e0e3ee;--mesh-3:#dcd9e0;--mesh-4:#eae6dd;
+--accent-rgb:90,106,8;--accent2-rgb:58,68,150;--tone-hi:#b5c92f;--tone-mid:#8c9f16;--tone-lo:#5a6a08;--tone-deep:#6f8010;--on-accent:#11140a;--platter:#e6e3ec;--platter-edge:#c4c0cf;
+--accent-coral:#5a6a08;--accent-cyan:#3a4496;--accent-gold:#8a5b14;--accent-mint:#1f6b52;--accent-danger:#a81f43;
+--gradient-primary:linear-gradient(135deg,#d4e35e 0%,#b5c92f 55%,#8c9f16 100%);
+--gradient-secondary:linear-gradient(135deg,#4a54a8 0%,#3a4496 100%);
+--text-primary:#1b1826;--text-secondary:#3b3749;--text-muted:#4d485d;--text-faint:#8d889a;
+--amb-1:0;--amb-2:0;--amb-3:0;
+--sh-contact:rgba(40,32,64,.50);--sh-mid:rgba(40,32,64,.30);--sh-deep:rgba(40,32,64,.40);
+--glass-filter:none;
+--glass-bg:rgba(244,242,248,.94);--glass-bg-hover:rgba(248,246,251,.97);--glass-bg-active:rgba(252,251,254,.99);--glass-solid:rgba(243,241,247,.99);
+--glass-border:rgba(50,40,70,.14);--glass-border-strong:rgba(90,106,8,.55);
+--shadow-panel:
+ inset 0 1px 0 rgba(255,255,255,.90),
+ inset 0 0 0 .5px rgba(255,255,255,.50),
+ inset 0 -1px 0 rgba(90,80,120,.15),
+ inset 0 0 40px rgba(120,110,150,.08),
+ 0 .5px 0 rgba(60,50,90,.24),
+ 0 1px 1px rgba(60,50,90,.14),
+ 0 5px 8px -3px rgba(60,50,90,.18),
+ 0 24px 40px -20px rgba(60,50,90,.40);
+--focus-ring:0 0 0 2px #f3f1f7,0 0 0 4px #3a4496,0 0 12px rgba(58,68,150,.30);
+--tl-ground:#262c6b;--tl-band-1:#cfe04a;--tl-band-2:#aab6ef;--tl-band-3:#e8b45a;
+--tl-felt-hi:#f6f4fa;--tl-felt:#dedae6;--tl-stitch:#6f8010;--tl-edge:rgba(255,255,255,.95);
+--tl-label-hi:#f4f1f8;--tl-label-lo:#d9d3e4;--tl-label-ink:#232a63;
+--tl-slub:var(--tl-slub-ink);--tl-lamp:rgba(255,255,255,.40);--tl-vig:rgba(70,60,100,.16);--tl-veil-o:.50;
+--tl-stitch-line:rgba(50,40,80,.30);--tl-track:#bdb8c8;--tl-hover:rgba(60,50,100,.06);--tl-scrim:rgba(40,34,62,.45);
+--tl-sung:#5a6a08;--tl-unsung:#7b7688;--tl-viz-bg:#e9e6ef;--tl-scroll:rgba(50,40,80,.28);
+--tl-shadow-key:inset 0 1px 0 rgba(255,255,255,.95),inset 0 -1px 0 rgba(90,80,120,.16),0 .5px 0 rgba(60,50,90,.28),0 1px 1px rgba(60,50,90,.16),0 5px 8px -3px rgba(60,50,90,.26);
+--tl-shadow-press:inset 0 2px 5px rgba(60,50,90,.35),inset 0 0 0 .5px rgba(60,50,90,.30),0 .5px 0 rgba(255,255,255,.80)}
+
+/* Token compartido: el pespunte horizontal (divisores, subrayados). Va fuera de los temas porque solo depende de --tl-stitch-line. */
+:root[data-skin="telar"]{--tl-pespunte:repeating-linear-gradient(90deg,var(--tl-stitch-line) 0 5px,transparent 5px 9px)}
+
+/* Alto contraste: sin velos ni trama global, bordes y costuras firmes */
+@media(prefers-contrast:more){
+:root[data-skin="telar"]:not([data-theme="light"]){--glass-border:rgba(255,255,255,.36);--glass-border-strong:rgba(214,230,90,.90);--text-muted:#c9c2d6;--tl-stitch-line:rgba(255,255,255,.55)}
+:root[data-skin="telar"][data-theme="light"]{--glass-border:rgba(25,20,45,.55);--glass-border-strong:rgba(60,72,4,.90);--text-muted:#2e2a3c;--tl-stitch-line:rgba(25,20,45,.60)}
+:root[data-skin="telar"]::before,:root[data-skin="telar"]::after{display:none}}
+
+/* ============================================================
+   VELOS GLOBALES · dos capas fijas sin eventos de puntero
+   ::before = luz fría de ventana (arriba-izquierda) + viñeta;  ::after = trama + hilo irregular a muy baja intensidad.
+   Sin mix-blend-mode: las texturas ya son de alfa, así que no hace falta componer sobre toda la interfaz (más barato que Paper).
+   Para apagar la trama: --tl-veil-o:0.
+   ============================================================ */
+:root[data-skin="telar"]::before{content:"";position:fixed;inset:0;z-index:2147483000;pointer-events:none;background:
+ radial-gradient(120% 85% at 14% -8%,var(--tl-lamp),transparent 58%),
+ radial-gradient(150% 130% at 50% 46%,transparent 56%,var(--tl-vig) 100%)}
+:root[data-skin="telar"]::after{content:"";position:fixed;inset:0;z-index:2147483001;pointer-events:none;
+ background-image:var(--tl-slub);background-size:320px 320px;opacity:var(--tl-veil-o)}
+@media(prefers-reduced-transparency:reduce){:root[data-skin="telar"]::before,:root[data-skin="telar"]::after{display:none}}
+
+/* ============================================================
+   DISCO · tapiz circular con rosetón jacquard, parche de lana cosido, alfombrilla de fieltro con festón
+   ============================================================ */
+/* Alfombrilla (ESTÁTICO): fieltro con hueco recortado, festón de ~120 puntadas radiales (puntada de ojal) y sombra hacia abajo-derecha.
+   Capas arriba→abajo: filo · luz de ventana · hueco · hilo irregular · trama · cubierta interior · cubierta exterior · puntadas · base.
+   Las dos cubiertas opacas tapan las puntadas salvo en un anillo de ~2% de radio: así el festón aparece sin necesitar máscaras. */
+:root[data-skin="telar"] .art-wrap::before{display:block;inset:-8%;border-radius:50%;background:
+ radial-gradient(circle closest-side,transparent calc(100% - 2px),var(--tl-edge) calc(100% - 1px),transparent 100%),
+ linear-gradient(135deg,rgba(var(--spec),.30),rgba(var(--spec),0) 42%,rgba(0,0,0,0) 60%,rgba(0,0,0,.24) 100%),
+ radial-gradient(circle closest-side,transparent 0 85%,rgba(0,0,0,.62) 86.2%,rgba(0,0,0,.28) 87.4%,transparent 90%),
+ var(--tl-slub),
+ var(--tl-weave),
+ radial-gradient(circle closest-side,var(--tl-felt-hi),var(--tl-felt) 72%,var(--tl-felt) 93%,transparent 93.3%),
+ radial-gradient(circle closest-side,transparent 0 95.6%,var(--tl-felt) 95.9%),
+ repeating-conic-gradient(from 0deg,var(--tl-stitch) 0 1.2deg,transparent 1.2deg 3deg),
+ var(--tl-felt);
+ background-size:auto,auto,auto,320px 320px,6px 6px,auto,auto,auto;
+ box-shadow:
+  inset 0 0 0 .75px rgba(var(--spec),.16),
+  inset 0 -2px 3px rgba(0,0,0,.16),
+  0 0 0 .5px rgba(0,0,0,.45),
+  1px 1.5px 1px 1px var(--sh-contact),
+  4px 8px 12px 0 var(--sh-mid),
+  8px 24px 36px -6px var(--sh-mid),
+  14px 48px 84px -14px var(--sh-deep)}
+
+/* Tapiz (GIRA): urdimbre de fondo + bandas de hilo (gualda, lila, azafrán) + trama + hilo irregular + viñeta de volumen.
+   Las bandas rodean el rosetón (::before) y dejan libre el centro para parche y carátula (radio < 44%). */
+:root[data-skin="telar"] .art-frame{background:
+ radial-gradient(circle closest-side,transparent calc(100% - 1.5px),rgba(var(--spec),.30) calc(100% - .75px),transparent 100%),
+ radial-gradient(circle closest-side,rgba(0,0,0,0) 0 54%,rgba(0,0,0,.34) 100%),
+ var(--tl-slub) 0 0/320px 320px,
+ var(--tl-weave) 0 0/6px 6px,
+ radial-gradient(circle closest-side,
+  transparent 0 44%,
+  var(--tl-band-1) 44% 47%,transparent 47% 49%,var(--tl-band-2) 49% 51%,transparent 51% 81%,
+  var(--tl-band-2) 81% 83%,transparent 83% 85%,var(--tl-band-1) 85% 88.5%,transparent 88.5% 91%,var(--tl-band-3) 91% 92.2%,transparent 92.2%),
+ var(--tl-ground);
+ box-shadow:inset 0 0 0 1px rgba(0,0,0,.55),inset 0 0 16px rgba(0,0,0,.40)}
+
+/* Rosetón jacquard (GIRA): dos abanicos cónicos tono sobre tono limitados a un anillo por máscara.
+   Al ser asimétrico, se nota la rotación aun con carátulas planas. La sombra interior del borde vive en .art-frame (la máscara la recortaría aquí). */
+:root[data-skin="telar"] .art-frame::before{display:block;content:"";position:absolute;inset:0;z-index:1;border-radius:50%;pointer-events:none;
+ background:
+  repeating-conic-gradient(from 0deg,rgba(var(--spec),.11) 0 7.5deg,rgba(0,0,0,.12) 7.5deg 15deg),
+  repeating-conic-gradient(from 3.75deg,transparent 0 3.75deg,rgba(var(--spec),.05) 3.75deg 7.5deg);
+ -webkit-mask:radial-gradient(circle closest-side,transparent 0 51.5%,#000 52% 80%,transparent 80.5%);
+ mask:radial-gradient(circle closest-side,transparent 0 51.5%,#000 52% 80%,transparent 80.5%)}
+
+/* Parche central (GIRA): lana crema cosida; hilo de gualda junto a la carátula y pespunte de tinta añil en el borde.
+   La carátula tapa hasta ~83% del radio del parche; el anillo visible mide ~3.5% del ancho del disco. */
+:root[data-skin="telar"] .art-frame::after{inset:29%;border-radius:50%;background:
+ radial-gradient(circle closest-side,transparent calc(100% - 1.2px),rgba(var(--spec),.85) calc(100% - .6px),transparent 100%),
+ radial-gradient(circle closest-side,transparent 0 94%,rgba(0,0,0,.18) 97.5%,rgba(0,0,0,.40) 100%),
+ var(--tl-weave),
+ radial-gradient(circle closest-side,transparent 0 85.4%,var(--color-accent) 86% 87.6%,transparent 88.2%),
+ radial-gradient(circle closest-side,var(--tl-label-hi),var(--tl-label-lo) 88.5%,var(--tl-label-lo) 89.5%,transparent 89.8%),
+ radial-gradient(circle closest-side,transparent 0 93.6%,var(--tl-label-lo) 93.9%),
+ repeating-conic-gradient(from 0deg,var(--tl-label-ink) 0 3deg,transparent 3deg 6deg),
+ var(--tl-label-lo);
+ background-size:auto,auto,6px 6px,auto,auto,auto,auto;
+ box-shadow:inset 0 0 0 .75px rgba(var(--spec),.80),inset 0 0 8px rgba(40,30,70,.28),0 0 0 1px #07060b,0 0 0 2px rgba(var(--spec),.22),0 0 9px 2px rgba(0,0,0,.42)}
+:root[data-skin="telar"] .art-frame img{inset:32.5%;width:35%;height:35%;box-shadow:0 0 0 1.5px var(--tl-label-ink),0 0 0 2.5px rgba(var(--accent-rgb),.90),inset 0 0 0 1px rgba(0,0,0,.50),inset 0 0 12px rgba(0,0,0,.38)}
+:root[data-skin="telar"] .art-frame .default-art{width:16%;height:16%;color:var(--tl-label-ink);opacity:.5}
+
+/* Luz ESTÁTICA y botón de eje: un botón de lana de cuatro ojales en el centro; mate, sin brillos de espejo */
+:root[data-skin="telar"] .art-wrap::after{border-radius:50%;mix-blend-mode:normal;background:
+ radial-gradient(circle closest-side,#fff 0 .6%,#ece8f4 1%,var(--tl-thread) 1.8%,var(--tl-thread-lo) 3.2%,#0c0a10 3.9%,transparent 4.5%),
+ radial-gradient(ellipse 62% 56% at 28% 22%,rgba(var(--spec),.18),transparent 100%),
+ radial-gradient(ellipse 60% 56% at 74% 82%,rgba(0,0,0,.18),transparent 100%)}
+
+/* ============================================================
+   BRAZO · carrete de hilo + aguja de tapicero (acero gris azulado, hilo de gualda enrollado, cabo de añil, ojo)
+   [SUPUESTO] Misma geometría que paper.css: 13 capas en .tonearm::before con idénticas posiciones y tamaños. Cada capa conserva su "slot":
+   1 nudo de hilo · 2 punta · 3 cabo de añil · 4 virola de lana cruda · 5-7 hilo enrollado (trama, destellos, cuerpo) ·
+   8-9 caña de acero (destellos, cuerpo) · 10-13 extremo con ojo (destellos, ojo, estrías, cuerpo).
+   ============================================================ */
+/* Base del pivote: carrete — ala metálica oscura, devanado de hilo en anillos, eje de acero y brillo mate */
+:root[data-skin="telar"] .tonearm{background:
+ radial-gradient(circle closest-side at 34% 28%,rgba(255,255,255,.16) 0,rgba(255,255,255,.05) 18%,transparent 34%),
+ radial-gradient(circle closest-side,#fff 0 3%,#cfd6ea 5%,#59627f 8%,#12151f 11%,transparent 12.5%),
+ radial-gradient(circle closest-side,transparent 0 88%,rgba(0,0,0,.45) 100%),
+ repeating-radial-gradient(circle closest-side,var(--tl-thread-lo) 0 1.1px,var(--tl-thread) 1.1px 2.2px,var(--tl-thread-hi) 2.2px 2.6px,var(--tl-thread) 2.6px 3.4px),
+ radial-gradient(circle closest-side,var(--tl-thread) 0,var(--tl-thread-lo) 100%);
+ box-shadow:
+  inset 0 0 0 .75px rgba(255,255,255,.22),
+  inset 0 2px 3px rgba(255,255,255,.18),
+  inset 0 -3px 5px rgba(20,24,0,.55),
+  0 0 0 2px #1b1721,
+  0 0 0 3px rgba(255,255,255,.14),
+  0 3px 4px 3px rgba(0,0,0,.42),
+  0 14px 22px rgba(0,0,0,.50),
+  0 26px 44px -10px rgba(0,0,0,.40)}
+
+:root[data-skin="telar"] .tonearm::before{background-repeat:no-repeat;
+ background-position:10.8% 50%,100% 50%,94% 50%,88% 50%,25% 50%,25% 50%,25% 50%,63.6% 50%,63.6% 50%,0 50%,0 50%,0 50%,0 50%;
+ background-size:11.5% 100%,3% 26%,7% 100%,11% 74%,28% 22%,28% 22%,28% 22%,78% 22%,78% 22%,12.5% 100%,9% 96%,12.5% 100%,12.5% 100%;
+ background-image:
+  radial-gradient(circle closest-side,#fffbd0 0 8%,var(--tl-thread-hi) 16%,var(--tl-thread) 42%,var(--tl-thread-lo) 70%,#4b5810 80%,transparent 82%),
+  radial-gradient(circle closest-side,#fff 0 14%,#bcc7e6 28%,#4a5578 52%,#11142a 76%,rgba(17,20,42,0) 100%),
+  linear-gradient(180deg,#14163a 0,#3a4290 18%,#7f8cdc 34%,#a9b6f0 42%,#6a77c8 52%,#3a4290 70%,#1b1f52 88%,#0b0c24 100%),
+  linear-gradient(180deg,#6c6580 0,#f4f0fa .75px,#fdfbff 16%,#e4def0 34%,#c4bcd6 50%,#8c84a2 68%,#c9c2da 82%,#3a3450 100%),
+  repeating-linear-gradient(90deg,rgba(255,255,220,.30) 0 .4px,transparent .8px,rgba(30,40,0,.40) 1.1px 1.5px,transparent 1.9px 2.4px),
+  linear-gradient(180deg,transparent calc(18% - 1px),rgba(255,255,230,.55) 18%,transparent calc(18% + 1px),transparent calc(86% - .75px),rgba(230,240,150,.28) 86%,transparent calc(86% + .75px)),
+  linear-gradient(180deg,#4a5410 0,#8a9c1f 12%,#c4d640 30%,#e0ec78 38%,#b4c634 50%,#8a9c1f 66%,#5c6a12 82%,#2a3206 100%),
+  linear-gradient(180deg,transparent calc(26% - 1px),rgba(230,236,255,.90) 26%,transparent calc(26% + 1px),transparent calc(34% - .5px),rgba(230,236,255,.28) 34%,transparent calc(34% + .5px),transparent calc(88% - .75px),rgba(150,170,240,.30) 88%,transparent calc(88% + .75px)),
+  linear-gradient(180deg,#0c0d14 0,#2a2d3c 8%,#5a5f78 16%,#8d93ad 24%,#c3c8dc 30%,#7c8199 38%,#464a5e 48%,#1a1c28 60%,#0b0c12 70%,#2a2d3c 80%,#4a4e64 88%,#14151e 95%,#07080c 100%),
+  linear-gradient(180deg,transparent calc(30% - 1px),rgba(235,240,255,.70) 30%,transparent calc(30% + 1px),transparent calc(36% - .5px),rgba(235,240,255,.25) 36%,transparent calc(36% + .5px),transparent calc(84% - .75px),rgba(210,220,250,.25) 84%,transparent calc(84% + .75px)),
+  radial-gradient(ellipse 60% 24% at 50% 50%,#03040a 0 62%,#9aa1bd 70%,#333850 82%,transparent 90%),
+  repeating-linear-gradient(90deg,rgba(10,10,20,.50) 0 .5px,transparent .85px,rgba(235,240,255,.18) 1.1px 1.4px,transparent 1.75px 2.4px),
+  linear-gradient(180deg,#0a0b10 0,#2b2e3e 9%,#5a5f78 22%,#9097b2 31%,#6a6f88 40%,#3a3e52 52%,#1a1c28 64%,#2e3246 77%,#14151e 90%,#05060a 100%);
+ filter:drop-shadow(0 1px 1px rgba(0,0,0,.50)) drop-shadow(0 7px 6px rgba(0,0,0,.38))}
+
+/* ============================================================
+   BASE GENÉRICA · selector de bajo peso (:where) para que cualquier regla del proyecto gane sin pelear
+   ============================================================ */
+:where(:root[data-skin="telar"]){scrollbar-width:thin;scrollbar-color:var(--tl-scroll) transparent}
+:where(:root[data-skin="telar"]) ::-webkit-scrollbar{width:8px;height:8px}
+:where(:root[data-skin="telar"]) ::-webkit-scrollbar-thumb{background:var(--tl-scroll);border-radius:4px}
+:where(:root[data-skin="telar"]) ::-webkit-scrollbar-track{background:transparent}
+:root[data-skin="telar"] ::selection{background:rgba(var(--accent-rgb),.32);color:inherit}
+/* Foco visible: el outline transparente sigue siendo visible en forced-colors */
+:where(:root[data-skin="telar"]) :where(button,a[href],input,select,textarea,summary,[role="button"],[role="slider"],[tabindex]):focus-visible{outline:2px solid transparent;outline-offset:2px;box-shadow:var(--shadow-focus)}
+
+/* ============================================================
+   COMPONENTES OPT-IN (.tl-*) · [SUPUESTO] No conozco el HTML de AuraPlay Pro: son clases propuestas.
+   Se mapean añadiendo la clase o copiando sus declaraciones al selector real (botón de reproducción, barra de progreso, cola, etc.).
+   Jerarquía tipográfica: Fraunces para títulos y letra de karaoke; Hanken Grotesk para controles y metadatos en versalitas con tracking;
+   mono tabular solo para tiempos, dB y números de pista.
+   ============================================================ */
+:root[data-skin="telar"] .tl-num{font-family:var(--font-mono);font-variant-numeric:tabular-nums;letter-spacing:.02em}
+:root[data-skin="telar"] .tl-label{font:600 .6875rem/1.2 var(--font-body);letter-spacing:.12em;text-transform:uppercase;color:var(--color-text-muted)}
+:root[data-skin="telar"] .tl-title{font:500 1.25rem/1.2 var(--font-display);letter-spacing:-.005em;color:var(--color-text-primary)}
+
+/* Panel de lana: borde, sombra y color salen de los tokens; añade trama, hilo irregular y un pespunte interior a 6px del canto */
+:root[data-skin="telar"] .tl-panel{position:relative;isolation:isolate;border:1px solid var(--surface-border);border-radius:var(--tl-r-lg);
+ background:linear-gradient(172deg,rgba(var(--spec),.10),rgba(var(--spec),0) 40%,rgba(0,0,0,.06) 100%),var(--surface-bg);
+ box-shadow:var(--shadow-surface)}
+:root[data-skin="telar"] .tl-panel::before{content:"";position:absolute;inset:6px;border-radius:calc(var(--tl-r-lg) - 6px);border:1px dashed var(--tl-stitch-line);pointer-events:none;z-index:-1}
+:root[data-skin="telar"] .tl-panel::after{content:"";position:absolute;inset:0;border-radius:inherit;pointer-events:none;z-index:-1;background:var(--tl-slub),var(--tl-weave);background-size:320px 320px,6px 6px;opacity:.55}
+
+/* Botones: cinta tejida con relieve; el pulsado se hunde. Primario = gualda con sarga. */
+:root[data-skin="telar"] .tl-btn{appearance:none;display:inline-flex;align-items:center;justify-content:center;gap:.5em;min-height:40px;padding:0 1.1em;border:1px solid var(--surface-border);border-radius:10px;color:var(--color-text-primary);font:600 .8125rem/1 var(--font-body);letter-spacing:.06em;text-transform:uppercase;cursor:pointer;
+ background:var(--tl-weave) 0 0/6px 6px,linear-gradient(180deg,rgba(var(--spec),.10),rgba(var(--spec),0) 55%),var(--surface-bg);
+ box-shadow:var(--tl-shadow-key);transition:transform .12s ease,box-shadow .12s ease,background-color .12s ease,border-color .12s ease}
+:root[data-skin="telar"] .tl-btn:hover{border-color:var(--surface-border-strong);background-color:var(--surface-bg-hover)}
+:root[data-skin="telar"] .tl-btn:active{transform:translateY(1px);box-shadow:var(--tl-shadow-press);background-color:var(--surface-bg-active)}
+:root[data-skin="telar"] .tl-btn:focus-visible{box-shadow:var(--tl-shadow-key),var(--shadow-focus)}
+:root[data-skin="telar"] .tl-btn:disabled,:root[data-skin="telar"] .tl-btn[aria-disabled="true"]{opacity:.45;cursor:not-allowed;box-shadow:none}
+:root[data-skin="telar"] .tl-btn.is-on,:root[data-skin="telar"] .tl-btn[aria-pressed="true"]{color:var(--color-accent);border-color:var(--surface-border-strong);box-shadow:var(--tl-shadow-press),inset 0 -2px 0 var(--color-accent)}
+:root[data-skin="telar"] .tl-btn--primary{color:var(--on-accent);border-color:rgba(0,0,0,.28);background:var(--tl-twill) 0 0/6px 6px,var(--gradient-accent)}
+:root[data-skin="telar"] .tl-btn--primary:hover{border-color:rgba(0,0,0,.45);filter:brightness(1.05)}
+:root[data-skin="telar"] .tl-btn--icon{width:40px;padding:0;border-radius:50%}
+:root[data-skin="telar"] .tl-btn--play{width:56px;height:56px;padding:0;border-radius:50%}
+
+/* Progreso y volumen (input[type=range].tl-range): hilo fino + botón de lana de cuatro ojales.
+   --tl-fill es opcional (p. ej. "37%", lo escribe el JS) y pinta el tramo recorrido en WebKit; Firefox usa ::-moz-range-progress. */
+:root[data-skin="telar"] .tl-range{--tl-fill:0%;
+ --tl-thumb:
+  radial-gradient(circle at 38% 38%,rgba(0,0,0,.70) 0 1px,rgba(var(--spec),.55) 1.3px 1.9px,transparent 2.2px),
+  radial-gradient(circle at 62% 38%,rgba(0,0,0,.70) 0 1px,rgba(var(--spec),.55) 1.3px 1.9px,transparent 2.2px),
+  radial-gradient(circle at 38% 62%,rgba(0,0,0,.70) 0 1px,rgba(var(--spec),.55) 1.3px 1.9px,transparent 2.2px),
+  radial-gradient(circle at 62% 62%,rgba(0,0,0,.70) 0 1px,rgba(var(--spec),.55) 1.3px 1.9px,transparent 2.2px),
+  radial-gradient(circle closest-side,transparent 0 64%,rgba(0,0,0,.20) 68%,transparent 74%),
+  radial-gradient(circle at 36% 30%,var(--tl-label-hi),var(--tl-label-lo));
+ -webkit-appearance:none;appearance:none;width:100%;height:24px;background:transparent;cursor:pointer}
+:root[data-skin="telar"] .tl-range::-webkit-slider-runnable-track{height:4px;border-radius:2px;background:linear-gradient(90deg,var(--color-accent) var(--tl-fill),transparent var(--tl-fill)),var(--tl-track);box-shadow:inset 0 1px 1px rgba(0,0,0,.5),0 .5px 0 rgba(var(--spec),.14)}
+:root[data-skin="telar"] .tl-range::-moz-range-track{height:4px;border-radius:2px;background:var(--tl-track);box-shadow:inset 0 1px 1px rgba(0,0,0,.5)}
+:root[data-skin="telar"] .tl-range::-moz-range-progress{height:4px;border-radius:2px;background:var(--color-accent)}
+:root[data-skin="telar"] .tl-range::-webkit-slider-thumb{-webkit-appearance:none;width:18px;height:18px;margin-top:-7px;border:0;border-radius:50%;background:var(--tl-thumb);box-shadow:0 0 0 1px rgba(0,0,0,.55),0 2px 3px rgba(0,0,0,.5)}
+:root[data-skin="telar"] .tl-range::-moz-range-thumb{width:18px;height:18px;border:0;border-radius:50%;background:var(--tl-thumb);box-shadow:0 0 0 1px rgba(0,0,0,.55),0 2px 3px rgba(0,0,0,.5)}
+:root[data-skin="telar"] .tl-range:focus-visible{outline:none;box-shadow:none}
+:root[data-skin="telar"] .tl-range:focus-visible::-webkit-slider-thumb{box-shadow:0 0 0 1px rgba(0,0,0,.55),var(--shadow-focus)}
+:root[data-skin="telar"] .tl-range:focus-visible::-moz-range-thumb{box-shadow:0 0 0 1px rgba(0,0,0,.55),var(--shadow-focus)}
+
+/* Biblioteca y cola: filas separadas por pespunte; la pista activa lleva un hilo de gualda a la izquierda y título completo */
+:root[data-skin="telar"] .tl-list{margin:0;padding:0;list-style:none}
+:root[data-skin="telar"] .tl-row{position:relative;display:grid;grid-template-columns:2.5em 1fr auto;align-items:center;gap:.75em;padding:.65em .9em;border-radius:var(--tl-r-sm);color:var(--color-text-secondary);cursor:pointer;transition:background-color .12s ease}
+:root[data-skin="telar"] .tl-row + .tl-row::before{content:"";position:absolute;left:.9em;right:.9em;top:0;height:1px;background:var(--tl-pespunte)}
+:root[data-skin="telar"] .tl-row:hover,:root[data-skin="telar"] .tl-row.is-active{background:var(--tl-hover)}
+:root[data-skin="telar"] .tl-row.is-active::after{content:"";position:absolute;left:0;top:.5em;bottom:.5em;width:3px;border-radius:2px;background:var(--color-accent)}
+:root[data-skin="telar"] .tl-row__title{font:500 .95rem/1.25 var(--font-body);color:var(--color-text-primary)}
+:root[data-skin="telar"] .tl-row__meta{font:400 .75rem/1.3 var(--font-body);color:var(--color-text-muted)}
+
+/* Ecualizador: la línea de 0 dB es un pespunte; las bandas reutilizan .tl-range */
+:root[data-skin="telar"] .tl-eq{position:relative}
+:root[data-skin="telar"] .tl-eq__zero{position:absolute;left:0;right:0;top:50%;height:1px;background:var(--tl-pespunte);opacity:.8;pointer-events:none}
+:root[data-skin="telar"] .tl-eq__label{font:500 .6875rem/1 var(--font-mono);font-variant-numeric:tabular-nums;color:var(--color-text-muted)}
+
+/* Visualizador: bastidor hundido con trama; los colores salen como variables para que el JS del canvas los lea con getComputedStyle */
+:root[data-skin="telar"] .tl-viz{--tl-viz-1:var(--color-accent);--tl-viz-2:var(--color-accent-soft);--tl-viz-3:var(--color-warning);position:relative;overflow:hidden;border-radius:var(--tl-r-md);
+ background:linear-gradient(180deg,rgba(0,0,0,.20),rgba(0,0,0,0)),var(--tl-viz-bg);
+ box-shadow:inset 0 0 0 1px var(--surface-border),inset 0 2px 8px rgba(0,0,0,.40),0 .5px 0 rgba(var(--spec),.12)}
+:root[data-skin="telar"] .tl-viz::after{content:"";position:absolute;inset:0;pointer-events:none;background:var(--tl-weave);background-size:6px 6px;opacity:.5}
+
+/* Karaoke: el hilo "cose" la línea activa. [SUPUESTO] --tl-p (0–100%) lo escribe el JS; sin él la línea activa se ve completa. */
+:root[data-skin="telar"] .tl-lyrics{font-family:var(--font-display)}
+:root[data-skin="telar"] .tl-line{font-size:clamp(1.05rem,2.4vw,1.4rem);line-height:1.35;font-weight:400;color:var(--color-text-muted);transition:color .2s ease}
+:root[data-skin="telar"] .tl-line.is-active{font-size:clamp(1.3rem,3.2vw,1.9rem);font-weight:500;color:var(--tl-sung)}
+@supports ((-webkit-background-clip:text) or (background-clip:text)){
+:root[data-skin="telar"] .tl-line.is-active{color:transparent;background:linear-gradient(90deg,var(--tl-sung) var(--tl-p,100%),var(--tl-unsung) var(--tl-p,100%));-webkit-background-clip:text;background-clip:text}}
+
+/* Modal y telón: título con pespunte como subrayado; el telón es un velo plano (sin backdrop-filter, que es costoso) */
+:root[data-skin="telar"] .tl-scrim,:root[data-skin="telar"] dialog.tl-modal::backdrop{background:var(--tl-scrim)}
+:root[data-skin="telar"] .tl-modal{max-width:min(92vw,520px);padding:1.5rem;border:1px solid var(--surface-border-strong);border-radius:var(--tl-r-lg);color:var(--color-text-primary);background:var(--glass-solid);box-shadow:var(--shadow-surface),0 40px 90px -30px rgba(0,0,0,.60)}
+:root[data-skin="telar"] .tl-modal__title{margin:0;font:500 1.5rem/1.2 var(--font-display)}
+:root[data-skin="telar"] .tl-modal__title::after{content:"";display:block;height:1px;margin-top:.75rem;background:var(--tl-pespunte)}
+
+/* Notificaciones: etiqueta de prenda con hilo de estado a la izquierda (--_s) */
+:root[data-skin="telar"] .tl-toast{--_s:var(--color-accent);position:relative;display:flex;align-items:center;gap:.7em;padding:.7em 1em .7em 1.1em;border:1px solid var(--surface-border);border-radius:10px;color:var(--color-text-primary);font:500 .875rem/1.3 var(--font-body);background:var(--glass-solid);box-shadow:var(--shadow-surface);animation:tl-in .18s ease-out both}
+:root[data-skin="telar"] .tl-toast::before{content:"";position:absolute;left:0;top:6px;bottom:6px;width:3px;border-radius:2px;background:var(--_s)}
+:root[data-skin="telar"] .tl-toast.is-ok{--_s:var(--color-success)}
+:root[data-skin="telar"] .tl-toast.is-warn{--_s:var(--color-warning)}
+:root[data-skin="telar"] .tl-toast.is-error{--_s:var(--color-danger)}
+@keyframes tl-in{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+
+/* Estado vacío: un ovillo de hilo de gualda dibujado con gradientes */
+:root[data-skin="telar"] .tl-empty{display:grid;justify-items:center;gap:.7rem;padding:2.5rem 1rem;color:var(--color-text-muted);text-align:center;font:italic 400 1rem/1.4 var(--font-display)}
+:root[data-skin="telar"] .tl-empty::before{content:"";width:64px;height:64px;border-radius:50%;background:
+ radial-gradient(circle at 34% 28%,rgba(255,255,255,.28),transparent 34%),
+ repeating-linear-gradient(35deg,var(--tl-thread-lo) 0 2px,var(--tl-thread) 2px 4px),
+ repeating-linear-gradient(-50deg,rgba(0,0,0,.18) 0 1px,transparent 1px 5px),
+ var(--tl-thread);
+ box-shadow:inset -6px -8px 12px rgba(0,0,0,.40),0 10px 14px -6px rgba(0,0,0,.45)}
+
+/* ============================================================
+   ADAPTABLE, MOVIMIENTO Y ACCESIBILIDAD
+   ============================================================ */
+@media(max-width:640px){
+:root[data-skin="telar"]::after{opacity:calc(var(--tl-veil-o) * .7)}
+:root[data-skin="telar"] .tl-btn{min-height:44px}
+:root[data-skin="telar"] .tl-row{padding:.8em .7em}
+/* sombras de alfombrilla más contenidas para no empujar el disco fuera de pantalla */
+:root[data-skin="telar"] .art-wrap::before{box-shadow:inset 0 0 0 .75px rgba(var(--spec),.16),0 0 0 .5px rgba(0,0,0,.45),1px 1.5px 1px 1px var(--sh-contact),3px 6px 9px 0 var(--sh-mid),6px 16px 24px -6px var(--sh-deep)}}
+@media(prefers-reduced-motion:reduce){
+:root[data-skin="telar"] .tl-btn,:root[data-skin="telar"] .tl-row,:root[data-skin="telar"] .tl-line{transition:none}
+:root[data-skin="telar"] .tl-toast{animation:none}}
+@media(forced-colors:active){
+:root[data-skin="telar"] .tl-btn,:root[data-skin="telar"] .tl-panel,:root[data-skin="telar"] .tl-modal{border:1px solid CanvasText}
+:root[data-skin="telar"] .tl-row.is-active::after{background:Highlight}}
+}

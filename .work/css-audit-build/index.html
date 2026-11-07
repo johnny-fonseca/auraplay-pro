@@ -1,0 +1,1089 @@
+<!doctype html>
+<html lang="es" dir="ltr">
+  <head>
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, viewport-fit=cover, interactive-widget=resizes-content"
+    />
+    <meta name="theme-color" content="#0c0c0f" media="(prefers-color-scheme: dark)" />
+    <meta name="theme-color" content="#f5f0e0" media="(prefers-color-scheme: light)" />
+    <meta name="color-scheme" content="dark light" />
+    <meta name="application-name" content="AuraPlay Pro" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <meta name="apple-mobile-web-app-title" content="AuraPlay Pro" />
+    <link rel="icon" type="image/svg+xml" href="./svg/auraplay-icon.svg" />
+    <link rel="apple-touch-icon" href="./svg/auraplay-icon.svg" />
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta name="format-detection" content="telephone=no" />
+    <meta
+      name="description"
+      content="AuraPlay Pro — reproductor de música web con visualizador, ecualizador y karaoke en pantalla completa."
+    />
+    <meta name="robots" content="noindex, nofollow, noarchive" />
+
+    <!-- ═══════════════════════════════════════════════════════════
+         SECURITY — Content Security Policy (ajustar si se añaden
+         orígenes adicionales)
+         ═══════════════════════════════════════════════════════════ -->
+    <meta
+      http-equiv="Content-Security-Policy"
+      content="default-src 'self';
+               script-src 'self' 'unsafe-inline' blob: https://cdnjs.cloudflare.com;
+               style-src 'self' 'unsafe-inline';
+               font-src 'self' data:;
+               img-src 'self' data: blob:;
+               media-src 'self' blob:;
+               connect-src 'self' ws: wss: blob: data: https://lrclib.net;
+               worker-src 'self' blob:;
+               frame-src 'none';
+               object-src 'none';
+               base-uri 'self';"
+    />
+
+    <!-- ═══════════════════════════════════════════════════════════
+         SOCIAL / SEO
+         ═══════════════════════════════════════════════════════════ -->
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="AuraPlay Pro" />
+    <meta property="og:image" content="./svg/auraplay-logo.svg" />
+    <meta property="og:title" content="AuraPlay Pro · Reproductor de Música" />
+    <meta
+      property="og:description"
+      content="Reproductor de música premium con visualizador, ecualizador de 10 bandas y karaoke en pantalla completa."
+    />
+    <meta property="og:locale" content="es_ES" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="AuraPlay Pro · Reproductor de Música" />
+    <meta
+      name="twitter:description"
+      content="Reproductor de música premium con visualizador, ecualizador de 10 bandas y karaoke en pantalla completa."
+    />
+
+    <title>AuraPlay Pro · Reproductor de Música</title>
+
+    <!-- ═══════════════════════════════════════════════════════════
+         PRECONNECT / DNS PREFETCH
+         ═══════════════════════════════════════════════════════════ -->
+    <link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin />
+    <link rel="dns-prefetch" href="https://cdnjs.cloudflare.com" />
+
+    <!-- ═══════════════════════════════════════════════════════════
+         FUENTES
+         ═══════════════════════════════════════════════════════════ -->
+    <link rel="stylesheet" href="./fonts/fonts.css" />
+
+    <!-- ═══════════════════════════════════════════════════════════
+         CRITICAL — Skin & Theme bootstrap (evita FOUC)
+         ═══════════════════════════════════════════════════════════ -->
+    <script>
+      (function () {
+        try {
+          var validSkins = ["brass", "neon", "emerald", "glacier", "ruby", "titanium", "paper", "ulm", "gres", "telar"];
+          var s = localStorage.getItem("auraplay:skin");
+          if (s) {
+            try { s = JSON.parse(s); } catch (e) {}
+          }
+          if (validSkins.indexOf(s) < 0) {
+            s = localStorage.getItem("aura-skin");
+          }
+          document.documentElement.dataset.skin =
+            validSkins.indexOf(s) > -1 ? s : "brass";
+        } catch (e) {
+          document.documentElement.dataset.skin = "brass";
+        }
+      })();
+    </script>
+    <script>
+      (function () {
+        try {
+          var t = localStorage.getItem("auraplay:theme");
+          if (t) {
+            try { t = JSON.parse(t); } catch (e) {}
+          }
+          document.documentElement.dataset.theme = t === "light" ? "light" : "dark";
+        } catch (e) {
+          document.documentElement.dataset.theme = "dark";
+        }
+      })();
+    </script>
+
+    <!-- ═══════════════════════════════════════════════════════════
+         CRITICAL INLINE STYLES — skip-link + reduced motion
+         ═══════════════════════════════════════════════════════════ -->
+    <style>
+      .skip-link {
+        position: absolute;
+        top: -100px;
+        left: 8px;
+        z-index: 9999;
+        padding: 10px 18px;
+        background: var(--accent, #f0d78c);
+        color: #1a1a24;
+        border-radius: 8px;
+        font-weight: 600;
+        text-decoration: none;
+        font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
+        transition: top 0.2s ease;
+      }
+      .skip-link:focus,
+      .skip-link:focus-visible {
+        top: 8px;
+        outline: 3px solid #4a9eff;
+        outline-offset: 2px;
+      }
+      @media (prefers-reduced-motion: reduce) {
+        *,
+        *::before,
+        *::after {
+          animation-duration: 0.01ms !important;
+          animation-iteration-count: 1 !important;
+          transition-duration: 0.01ms !important;
+          scroll-behavior: auto !important;
+        }
+      }
+    </style>
+
+    <!-- ═══════════════════════════════════════════════════════════
+         CSS — versioned for cache-busting
+         ═══════════════════════════════════════════════════════════ -->
+    <link rel="stylesheet" href="./css/reset.css?v=17" />
+    <link rel="stylesheet" href="./css/layout.css?v=16" />
+    <link rel="stylesheet" href="./css/components.css?v=19" />
+    <link rel="stylesheet" href="./css/playlist.css?v=18" />
+    <link rel="stylesheet" href="./css/queue.css?v=17" />
+    <link rel="stylesheet" href="./css/player.css?v=16" />
+    <link rel="stylesheet" href="./karaoke/shared/karaoke.min.css?v=3" />
+    <link rel="stylesheet" href="./karaoke/shared/karaoke-common.min.css?v=3" />
+    <link rel="stylesheet" href="./karaoke/cinema/cinema.min.css?v=3" />
+    <link rel="stylesheet" href="./karaoke/neon/neon.min.css?v=3" />
+    <link rel="stylesheet" href="./karaoke/kinetico/kinetic.min.css?v=3" />
+    <link rel="stylesheet" href="./karaoke/guilloche/guilloche.min.css?v=1" />
+    <link rel="stylesheet" href="./karaoke/yozakura/yozakura.min.css?v=1" />
+    <link rel="stylesheet" href="./karaoke/palco-esmeralda/palco-esmeralda.min.css?v=1" />
+    <link rel="stylesheet" href="./css/responsive.css?v=16" />
+    <link rel="stylesheet" href="./css/theme.css?v=16" />
+    <link rel="stylesheet" href="./css/finish.css?v=16" />
+    <link rel="stylesheet" href="./css/vinyl.css?v=16" />
+    <link rel="stylesheet" href="./css/vinyl-interaction.css?v=16" />
+    <link rel="stylesheet" href="./skins/brass.css?v=16" />
+    <link rel="stylesheet" href="./skins/neon.css?v=16" />
+    <link rel="stylesheet" href="./skins/emerald.css?v=16" />
+    <link rel="stylesheet" href="./skins/glacier.css?v=16" />
+    <link rel="stylesheet" href="./skins/ruby.css?v=16" />
+    <link rel="stylesheet" href="./skins/titanium.css?v=16" />
+    <link rel="stylesheet" href="./skins/paper.css?v=16" />
+    <link rel="stylesheet" href="./skins/ulm.css?v=1" />
+    <link rel="stylesheet" href="./skins/gres.css?v=1" />
+    <link rel="stylesheet" href="./skins/telar.css?v=1" />
+    <link rel="stylesheet" href="./styles/neumorphism.css?v=1" />
+    <link rel="stylesheet" href="./styles/skeuomorphism.css?v=1" />
+    <link rel="stylesheet" href="./styles/glassmorphism.css?v=1" />
+    <link rel="stylesheet" href="./styles/claymorphism.css?v=1" />
+    <link rel="stylesheet" href="./styles/brutalism.css?v=4" />
+    <link rel="stylesheet" href="./styles/aurora.css?v=4" />
+    <link rel="stylesheet" href="./styles/flat.css?v=3" />
+    <link rel="stylesheet" href="./styles/bento.css?v=2" />
+    <script>
+      (function () {
+        try {
+          var style = localStorage.getItem("ui-style");
+          if (["neu", "skeuo", "glass", "clay", "brutal", "aurora", "flat", "bento"].indexOf(style) < 0) style = "neu";
+          document.documentElement.dataset.ui = style;
+        } catch (e) {}
+      })();
+    </script>
+
+    <!-- ═══════════════════════════════════════════════════════════
+         THIRD-PARTY — jsmediatags (defer preserves order)
+         ═══════════════════════════════════════════════════════════ -->
+    <script
+      src="https://cdnjs.cloudflare.com/ajax/libs/jsmediatags/3.9.5/jsmediatags.min.js"
+      defer
+    ></script>
+
+  </head>
+  <body>
+    <!-- ═══════════════════════════════════════════════════════════
+         SKIP LINK (a11y)
+         ═══════════════════════════════════════════════════════════ -->
+    <a href="#main" class="skip-link">Saltar al contenido principal</a>
+
+    <noscript>
+      <div
+        style="
+          position: fixed;
+          inset: 0;
+          z-index: 10000;
+          display: grid;
+          place-items: center;
+          background: #0c0c0f;
+          color: #f0d78c;
+          font-family: system-ui, sans-serif;
+          padding: 24px;
+          text-align: center;
+        "
+      >
+        <div>
+          <h1 style="font-size: 1.5rem; margin-bottom: 0.5rem">JavaScript deshabilitado</h1>
+          <p style="color: #b0b0be; max-width: 420px">
+            AuraPlay Pro necesita JavaScript para reproducir audio y gestionar tu biblioteca.
+            Actívalo en la configuración de tu navegador y recarga la página.
+          </p>
+        </div>
+      </div>
+    </noscript>
+
+    <!-- ── Decoración de fondo ── -->
+    <div class="aurora-bg" aria-hidden="true">
+      <span class="blob-3"></span>
+      <span class="blob-4"></span>
+    </div>
+    <div class="noise-overlay" aria-hidden="true"></div>
+
+    <!-- ── Audio + file pickers ocultos ── -->
+    <audio id="audio" preload="metadata"></audio>
+    <input id="filePicker" type="file" multiple accept="audio/*,.lrc" hidden />
+    <input id="folderPicker" type="file" webkitdirectory directory multiple hidden />
+    <input id="karaokeLrcPicker" type="file" accept=".lrc,text/plain" hidden />
+
+    <main class="app-shell" id="main">
+      <!-- ═══════════════════════════════════════════════════════
+           HEADER — Iconos premium "AuraChrome"
+           ═══════════════════════════════════════════════════════ -->
+      <header class="app-header glass">
+        <div class="brand">
+          <img
+            class="brand-logo"
+            src="./svg/auraplay-logo.svg"
+            alt="AuraPlay"
+            width="165"
+            height="50"
+          />
+        </div>
+
+        <div class="header-actions">
+          <!-- CARGAR CARPETA -->
+          <button
+            id="btnPickFolder"
+            type="button"
+            class="btn"
+            title="Cargar carpeta (F)"
+            aria-label="Cargar carpeta de música"
+          >
+            <svg
+              width="16"
+              height="16"
+              viewBox="0 0 24 24"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+              aria-hidden="true"
+              focusable="false"
+            ><image href="./svg/folder-upload.svg" x="0" y="0" width="24" height="24" /></svg>
+            <span class="label-text">Cargar carpeta</span>
+          </button>
+
+          <!-- AÑADIR ARCHIVOS -->
+          <button
+            id="btnPickFiles"
+            type="button"
+            class="btn"
+            title="Añadir archivos"
+            aria-label="Añadir archivos de audio"
+          >
+            <svg
+              width="16"
+              height="16"
+              viewBox="0 0 24 24"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+              aria-hidden="true"
+              focusable="false"
+            ><image href="./svg/audio-file-add.svg" x="0" y="0" width="24" height="24" /></svg>
+            <span class="label-text">Añadir archivos</span>
+          </button>
+
+          <!-- GUARDAR LISTA -->
+          <button
+            id="btnSavePlaylist"
+            type="button"
+            class="btn btn-icon btn-ghost"
+            title="Guardar lista"
+            aria-label="Guardar lista de reproducción"
+          >
+            <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false"><image href="./svg/playlist-save.svg" x="0" y="0" width="24" height="24" /></svg>
+          </button>
+
+          <!-- CARGAR LISTA -->
+          <button
+            id="btnLoadPlaylist"
+            type="button"
+            class="btn btn-icon btn-ghost"
+            title="Cargar lista guardada"
+            aria-label="Cargar lista de reproducción guardada"
+          >
+            <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false"><image href="./svg/playlist-load.svg" x="0" y="0" width="24" height="24" /></svg>
+          </button>
+
+          <!-- EXPORTAR M3U -->
+          <button
+            id="btnExportPlaylist"
+            type="button"
+            class="btn btn-icon btn-ghost"
+            title="Exportar M3U"
+            aria-label="Exportar lista como M3U"
+          >
+            <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false"><image href="./svg/playlist-export.svg" x="0" y="0" width="24" height="24" /></svg>
+          </button>
+
+          <!-- SKIN / ESTILO -->
+          <button
+            id="btnSkin"
+            type="button"
+            class="btn btn-icon btn-ghost"
+            title="Estilo: Latón (clic para Neón)"
+            aria-label="Cambiar estilo visual (actual: Latón)"
+          >
+            <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false"><image href="./svg/skin-switch.svg" x="0" y="0" width="24" height="24" /></svg>
+          </button>
+
+          <!-- TEMA -->
+          <button
+            id="btnTheme"
+            type="button"
+            class="btn btn-icon btn-ghost"
+            title="Cambiar tema (T)"
+            aria-label="Cambiar tema claro/oscuro"
+          >
+            <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false"><image href="./svg/theme-toggle.svg" x="0" y="0" width="24" height="24" /></svg>
+          </button>
+
+          <!-- RELIEVE / ESTILO DE SUPERFICIE -->
+          <button
+            id="btnSurfaceStyle"
+            type="button"
+            class="btn btn-icon btn-ghost"
+            title="Estilo de superficie: Neumorfismo (clic para Skeuomorfismo)"
+            aria-label="Cambiar estilo de superficie; actual: Neumorfismo"
+            aria-pressed="false"
+          >
+            <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false"><path d="M4 8.5 12 4l8 4.5v7L12 20l-8-4.5v-7Z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/><path d="m4.5 8.7 7.5 4.2 7.5-4.2M12 13v6.5M8 6.3l8 4.5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </button>
+
+          <!-- MANDO REMOTO -->
+          <button
+            id="btnRemote"
+            type="button"
+            class="btn btn-icon btn-ghost"
+            title="Abrir mando remoto"
+            aria-label="Abrir mando remoto"
+          >
+            <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false"><path d="M7 3h10a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2Z" stroke="currentColor" stroke-width="1.7"/><path d="M10 17h4" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/><path d="M9 7h6v6H9z" stroke="currentColor" stroke-width="1.5"/></svg>
+          </button>
+
+          <!-- AYUDA -->
+          <button
+            id="btnHelp"
+            type="button"
+            class="btn btn-icon btn-ghost"
+            title="Ayuda (H)"
+            aria-label="Abrir ayuda y atajos"
+          >
+            <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false"><image href="./svg/help.svg" x="0" y="0" width="24" height="24" /></svg>
+          </button>
+        </div>
+      </header>
+
+      <!-- ═══════════════════════════════════════════════════════
+           PLAYLIST PANEL
+           ═══════════════════════════════════════════════════════ -->
+      <aside class="playlist-panel glass" aria-label="Lista de reproducción">
+        <div class="panel-header">
+          <div class="panel-title">Mi biblioteca</div>
+          <div class="panel-meta" id="playlistCount" aria-live="polite">0 pistas</div>
+        </div>
+        <div class="playlist-search">
+          <svg
+            viewBox="0 0 24 24"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+            aria-hidden="true"
+            focusable="false"
+          ><image href="./svg/search.svg" x="0" y="0" width="24" height="24" /></svg>
+          <input
+            id="playlistSearch"
+            type="search"
+            placeholder="Buscar título, artista o álbum…"
+            autocomplete="off"
+            spellcheck="false"
+            enterkeyhint="search"
+            aria-label="Buscar en la biblioteca"
+          />
+          <button id="clearSearch" type="button" class="clear-btn" title="Limpiar" aria-label="Limpiar búsqueda">
+            <svg
+              width="12"
+              height="12"
+              viewBox="0 0 24 24"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+              aria-hidden="true"
+              focusable="false"
+            ><image href="./svg/search-clear.svg" x="0" y="0" width="24" height="24" /></svg>
+          </button>
+        </div>
+        <div class="playlist-list" id="playlistList"></div>
+        <div class="playlist-empty" id="playlistEmpty">
+          <div>
+            <strong>Tu biblioteca está vacía</strong>
+            <div class="hint">Arrastra archivos aquí o usa los botones del encabezado</div>
+          </div>
+        </div>
+        <div class="playlist-actions">
+          <div class="row">
+            <button id="btnClearPlaylist" type="button" class="btn btn-ghost" aria-label="Limpiar lista de reproducción">
+              <svg
+                width="14"
+                height="14"
+                viewBox="0 0 24 24"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
+                aria-hidden="true"
+                focusable="false"
+              ><image href="./svg/playlist-clear.svg" x="0" y="0" width="24" height="24" /></svg>
+              Limpiar lista
+            </button>
+
+            <button id="btnToggleViz" type="button" class="btn btn-ghost active" aria-label="Alternar visualizador">
+              <svg
+                width="14"
+                height="14"
+                viewBox="0 0 24 24"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
+                aria-hidden="true"
+                focusable="false"
+              ><image href="./svg/visualizer-toggle.svg" x="0" y="0" width="24" height="24" /></svg>
+              Visualizador
+            </button>
+          </div>
+        </div>
+      </aside>
+
+      <!-- ═══════════════════════════════════════════════════════
+           PLAYER
+           ═══════════════════════════════════════════════════════ -->
+      <section class="player-panel glass" aria-label="Reproductor">
+        <div class="player-stage">
+          <div class="art-wrap">
+            <div
+              class="tonearm"
+              role="slider"
+              tabindex="0"
+              aria-label="Brazo del tocadiscos; arrastra para buscar una posición"
+              aria-valuemin="0"
+              aria-valuemax="100"
+              aria-valuenow="0"
+            ></div>
+            <canvas id="vizCanvas" class="viz-canvas" aria-hidden="true"></canvas>
+            <div id="artFrame" class="art-frame">
+              <svg id="artDefault"
+                class="default-art"
+                viewBox="0 0 24 24"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
+                aria-hidden="true"
+                focusable="false"
+              ><image href="./svg/vinyl-record.svg" x="0" y="0" width="24" height="24" /></svg>
+              <img id="artImg" alt="" style="display: none" loading="lazy" decoding="async" />
+            </div>
+          </div>
+          <div class="now-info">
+            <span class="now-eyebrow">Reproduciendo ahora</span>
+            <h1 class="now-title" id="nowTitle">Selecciona una canción</h1>
+            <div class="now-artist" id="nowArtist">Carga archivos para empezar</div>
+            <div class="now-album" id="nowAlbum"></div>
+            <div class="now-tags" id="nowTags"></div>
+
+            <div class="karaoke-mini" aria-live="polite">
+              <div class="lyric-prev" id="lyricPrev"></div>
+              <div class="lyric-current" id="lyricCurrent">—</div>
+              <div class="lyric-next" id="lyricNext"></div>
+              <div class="karaoke-mini-actions">
+                <button
+                  id="btnLyricTranslationMode"
+                  type="button"
+                  class="lyric-translation-toggle"
+                  title="Modo de traducción"
+                  aria-label="Modo de traducción"
+                  aria-pressed="false"
+                >
+                  TR
+                </button>
+                <button
+                  id="btnLyricVariant"
+                  type="button"
+                  class="lyric-variant-toggle"
+                  title="Cambiar a letras en español"
+                  aria-label="Cambiar a letras en español"
+                  aria-pressed="false"
+                >
+                  ES
+                </button>
+                <svg id="btnKaraokeFs" class="fullscreen-toggle" width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" role="button" tabindex="0" title="Karaoke pantalla completa (K)" aria-label="Abrir karaoke en pantalla completa"><image href="./svg/karaoke-microphone.svg" x="0" y="0" width="24" height="24" /></svg>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ═══════════════════════════════════════════════════════
+           QUEUE / EQ / VIZ TABS
+           ═══════════════════════════════════════════════════════ -->
+      <aside class="queue-panel glass" aria-label="Cola y opciones">
+        <div class="queue-tabs" role="tablist">
+          <button class="btn-tab active" data-tab="queue" type="button" role="tab" aria-selected="true">
+            Cola
+          </button>
+          <button class="btn-tab" data-tab="eq" type="button" role="tab" aria-selected="false">EQ</button>
+          <button class="btn-tab" data-tab="viz" type="button" role="tab" aria-selected="false">
+            Estilos
+          </button>
+        </div>
+
+        <div class="tab-panes">
+          <div class="tab-pane active" data-pane="queue" role="tabpanel">
+            <div class="queue-list" id="queueList"></div>
+            <div class="queue-empty" id="queueEmpty">La cola está vacía</div>
+          </div>
+
+          <div class="tab-pane" data-pane="eq" role="tabpanel">
+            <div class="eq-enable-row">
+              <span>Ecualizador de 10 bandas</span>
+              <span id="eqSwitch" class="switch" role="switch" tabindex="0" aria-label="Activar ecualizador" aria-checked="false"></span>
+            </div>
+            <div class="eq-presets">
+              <button class="eq-preset-btn active" data-preset="flat" type="button">Plano</button>
+              <button class="eq-preset-btn" data-preset="rock" type="button">Rock</button>
+              <button class="eq-preset-btn" data-preset="pop" type="button">Pop</button>
+              <button class="eq-preset-btn" data-preset="jazz" type="button">Jazz</button>
+              <button class="eq-preset-btn" data-preset="classical" type="button">Clásica</button>
+              <button class="eq-preset-btn" data-preset="electronic" type="button">Electrónica</button>
+              <button class="eq-preset-btn" data-preset="bass" type="button">Bass+</button>
+              <button class="eq-preset-btn" data-preset="treble" type="button">Agudos+</button>
+              <button class="eq-preset-btn" data-preset="vocal" type="button">Vocal</button>
+            </div>
+            <div class="eq-bands" id="eqBands"></div>
+            <div class="eq-controls">
+              <button id="btnEqReset" type="button" class="btn btn-ghost">Restablecer</button>
+            </div>
+          </div>
+
+          <div class="tab-pane" data-pane="viz" role="tabpanel">
+            <div class="viz-grid">
+              <!-- VIZ 1: Ferrofluido -->
+              <button class="viz-card active" data-viz="bars" type="button" aria-label="Visualizador Ferrofluido líquido">
+                <div class="viz-preview">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M3 19h18" stroke-width="1.1"/><path d="M4 18v-5.5c0-1.8 2.1-2.2 2.7-.5l1.2 3.2 1.7-9.3c.3-1.6 2.3-1.6 2.6 0l1.2 6.2 1.4-3.7c.6-1.5 2.7-1.1 2.7.5V18" stroke-width="1.6"/><circle cx="5" cy="8" r="1.2" fill="currentColor" stroke="none"/><circle cx="19" cy="13" r="1.4" fill="currentColor" stroke="none"/></svg>
+                </div>
+                <div class="viz-name">Ferrofluido líquido</div>
+                <div class="viz-desc">Barras líquidas al ritmo</div>
+              </button>
+
+              <!-- VIZ 2: Aurora cromática -->
+              <button class="viz-card" data-viz="coverAura" type="button" aria-label="Visualizador Aurora cromática">
+                <div class="viz-preview">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" aria-hidden="true" focusable="false"><path d="M3 17c2-5.5 4.8-8.3 7.3-7.3 2.3.9 2.5 4.1 4.5 4.1 1.7 0 2.8-2.2 6.2-6.1" stroke-width="1.5"/><path d="M3 20c2.9-3.5 5.4-4.9 7.9-3.6 2.5 1.1 3.5-1.8 5.1-3.4 1.9-2 3.4-2.1 5-1.7" opacity=".62" stroke-width="1.2"/><path d="M5 5.2h.01M18.8 18.8h.01" stroke-width="2.6"/></svg>
+                </div>
+                <div class="viz-name">Aurora cromática</div>
+                <div class="viz-desc">Luces inspiradas en la portada</div>
+              </button>
+
+              <!-- VIZ 3: Reactor espectral -->
+              <button class="viz-card" data-viz="circular" type="button" aria-label="Visualizador Reactor espectral">
+                <div class="viz-preview">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="8.2" stroke-dasharray="1 2.3" stroke-width="1"/><circle cx="12" cy="12" r="4.2" stroke-width="1.2"/><path d="M12 1.8v2.1M12 20.1v2.1M1.8 12h2.1M20.1 12h2.1" stroke-width="1.4"/><path d="M12 12 16.8 8.7M12 12l-4.2 3.8" stroke-width="1.7"/><circle cx="12" cy="12" r="1.3" fill="currentColor" stroke="none"/></svg>
+                </div>
+                <div class="viz-name">Reactor espectral</div>
+                <div class="viz-desc">Anillo espectral reactivo</div>
+              </button>
+
+              <!-- VIZ 4: Nebulosa -->
+              <button class="viz-card" data-viz="particles" type="button" aria-label="Visualizador Nebulosa de partículas">
+                <div class="viz-preview">
+                  <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" focusable="false"><path d="m12 2 .8 3.8L16 4.5l-1.3 3.2 3.8.8-3.8.8 1.3 3.2-3.2-1.3L12 15l-.8-3.8L8 13.3l1.3-3.2-3.8-.8 3.8-.8L8 5.3l3.2 1.3L12 2Z"/><circle cx="5" cy="17" r="1.2"/><circle cx="18.5" cy="18.5" r="1.6"/><circle cx="6.5" cy="6" r=".8"/><circle cx="19.5" cy="8" r=".9"/><path d="M5 17c3-4 7-5.5 13.5 1.5" fill="none" stroke="currentColor" stroke-width=".65" opacity=".55"/></svg>
+                </div>
+                <div class="viz-name">Nebulosa de partículas</div>
+                <div class="viz-desc">Estrellas que estallan al ritmo</div>
+              </button>
+
+              <!-- VIZ 5: Túnel -->
+              <button class="viz-card" data-viz="tunnel" type="button" aria-label="Visualizador Túnel hiperespacial">
+                <div class="viz-preview">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M2.5 4.5h19l-3 15h-13l-3-15Z" stroke-width="1.2"/><path d="M6.5 7.5h11l-1.6 9h-7.8l-1.6-9Z" stroke-width="1.2"/><path d="M10 10h4l-.6 4h-2.8L10 10Z" stroke-width="1.3"/><path d="M3 4.5 7 9M21 4.5l-4 4" stroke-width=".9" opacity=".65"/></svg>
+                </div>
+                <div class="viz-name">Túnel hiperespacial</div>
+                <div class="viz-desc">Estelas y anillos en movimiento</div>
+              </button>
+
+              <!-- VIZ 6: Mandala -->
+              <button class="viz-card" data-viz="mirror" type="button" aria-label="Visualizador Mandala caleidoscopio">
+                <div class="viz-preview">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linejoin="round" aria-hidden="true" focusable="false"><g transform="translate(12 12)" stroke-width="1.1"><path d="M0-1.5C-3-4.5-3-8 0-10.5 3-8 3-4.5 0-1.5Z"/><path d="M1.5 0C4.5-3 8-3 10.5 0 8 3 4.5 3 1.5 0Z"/><path d="M0 1.5C3 4.5 3 8 0 10.5-3 8-3 4.5 0 1.5Z"/><path d="M-1.5 0C-4.5 3-8 3-10.5 0-8-3-4.5-3-1.5 0Z"/><circle r="2" fill="currentColor" stroke="none"/></g></svg>
+                </div>
+                <div class="viz-name">Mandala caleidoscopio</div>
+                <div class="viz-desc">Simetría floral en movimiento</div>
+              </button>
+
+              <!-- VIZ 7: Prisma -->
+              <button class="viz-card" data-viz="prism" type="button" aria-label="Visualizador Prisma cristalino">
+                <div class="viz-preview">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M4 17 9 5l6 2 5 10-8 3-8-3Z" stroke-width="1.25"/><path d="m9 5 3 12m3-10-3 10m-8 0 8-3 8 3" stroke-width=".95" opacity=".78"/><path d="M12 3v18" stroke-width=".7" stroke-dasharray="1 1.5"/></svg>
+                </div>
+                <div class="viz-name">Prisma cristalino</div>
+                <div class="viz-desc">Cristales y haces de luz</div>
+              </button>
+
+              <!-- VIZ 8: Halo -->
+              <button class="viz-card" data-viz="halo" type="button" aria-label="Visualizador Halo osciloscópico">
+                <div class="viz-preview">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" aria-hidden="true" focusable="false"><path d="M3 12c1.5-5 3.1 5 4.6 0s3.1-5 4.6 0 3.1 5 4.6 0 3.1-5 4.2 0" stroke-width="1.55"/><path d="M4 7.2c2.3-1.9 4.7-1.9 8 0s5.7 1.9 8 0M4 16.8c2.3 1.9 4.7 1.9 8 0s5.7-1.9 8 0" stroke-width=".9" opacity=".55"/></svg>
+                </div>
+                <div class="viz-name">Halo osciloscópico</div>
+                <div class="viz-desc">Ondas de audio con brillo</div>
+              </button>
+              <!-- VIZ 9: Micelio -->
+              <button class="viz-card" data-viz="mycelium" type="button" aria-label="Visualizador Micelio bioluminiscente">
+                <div class="viz-preview">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M12 21V12m0 0L7 8m5 4 5-5M7 8 5 4m2 4 1-4m9 3 3-2m-3 2 1 5M12 16l-4 3m4-3 4 3" stroke-width="1.35"/><circle cx="5" cy="4" r="1.1" fill="currentColor" stroke="none"/><circle cx="8" cy="4" r=".9" fill="currentColor" stroke="none"/><circle cx="20" cy="6" r="1.1" fill="currentColor" stroke="none"/><circle cx="4" cy="19" r=".8" fill="currentColor" stroke="none"/></svg>
+                </div>
+                <div class="viz-name">Micelio bioluminiscente</div>
+                <div class="viz-desc">Filamentos y esporas luminosas</div>
+              </button>
+              <!-- VIZ 10: Constelación musical -->
+              <button class="viz-card" data-viz="capsules" type="button" aria-label="Visualizador Constelación musical">
+                <div class="viz-preview">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><g stroke-width="1.35"><path d="M5 17V6l9-2v11"/><ellipse cx="3.7" cy="18" rx="2.1" ry="1.5" transform="rotate(-22 3.7 18)" fill="currentColor"/><ellipse cx="12.7" cy="16" rx="2.1" ry="1.5" transform="rotate(-22 12.7 16)" fill="currentColor"/><path d="M17 8v8m0-8c2.4 0 3.7 1.2 4 3"/><path d="M18 20c2-1.6 2-3.1 0-4.4-2-1.1-2-2.8 0-4.2"/></g></svg>
+                </div>
+                <div class="viz-name">Constelación musical</div>
+                <div class="viz-desc">Notas musicales en movimiento</div>
+              </button>
+              <!-- VIZ 11: Mosaico de guijarros -->
+              <button class="viz-card" data-viz="pebbles" type="button" aria-label="Visualizador Mosaico de guijarros">
+                <div class="viz-preview">
+                  <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" focusable="false"><path d="M4 7.2c0-1.7 1.2-2.8 2.8-2.8h2c1.4 0 2.4.8 2.6 2.1l.2 1.2c.2 1.5-.9 2.7-2.4 2.7H6.7C5.2 10.4 4 9.1 4 7.2Z"/><path d="M13.1 5.8c.1-1.5 1.2-2.4 2.7-2.4h1.5c1.5 0 2.6 1.1 2.6 2.7 0 1.7-1.2 2.8-2.8 2.8h-1.5c-1.6 0-2.6-1.2-2.5-3.1Z"/><path d="M3.5 15.2c.1-1.6 1.2-2.6 2.8-2.6h3.1c1.5 0 2.6 1 2.6 2.5v1.2c0 1.5-1.2 2.6-2.8 2.6H6.3c-1.8 0-2.9-1.2-2.8-3.7Z"/><path d="M13.5 14.1c.2-1.5 1.2-2.4 2.7-2.4h2c1.5 0 2.5 1 2.5 2.5v1.6c0 1.5-1.1 2.5-2.7 2.5h-2c-1.6 0-2.7-1.1-2.5-4.2Z"/></svg>
+                </div>
+                <div class="viz-name">Mosaico de guijarros</div>
+                <div class="viz-desc">Piedras que brillan con el ritmo</div>
+              </button>
+              <!-- VIZ 12: Relieve estratificado -->
+              <button class="viz-card" data-viz="relief" type="button" aria-label="Visualizador Relieve estratificado">
+                <div class="viz-preview">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" aria-hidden="true" focusable="false"><path d="M3 16c2-4 4-4 6-1s4 2 6-2 4-4 6 0" stroke-width="1.4"/><path d="M4 19c2-3 4-3 6-1s4 1 6-2 3-3 5-1" stroke-width="1.1" opacity=".75"/><path d="M7 10c2-3 4-3 6-1s3 1 5-2" stroke-width="1" opacity=".65"/></svg>
+                </div>
+                <div class="viz-name">Relieve estratificado</div>
+                <div class="viz-desc">Relieve y curvas al ritmo</div>
+              </button>
+              </div>
+
+            <div class="viz-sensitivity">
+              <div class="viz-sensitivity-meta">
+                <label for="vizSensitivity">Sensibilidad</label>
+                <output id="vizSensitivityValue" for="vizSensitivity">0.70Ã—</output>
+              </div>
+              <input
+                id="vizSensitivity"
+                class="slider"
+                type="range"
+                min="0.4"
+                max="1.2"
+                step="0.05"
+                value="0.7"
+                aria-label="Sensibilidad del visualizador"
+              />
+            </div>
+          </div>
+        </div>
+      </aside>
+
+      <!-- ═══════════════════════════════════════════════════════
+           NOW BAR
+           ═══════════════════════════════════════════════════════ -->
+      <div class="now-bar glass">
+        <div class="transport">
+          <!-- SHUFFLE -->
+          <button id="btnShuffle" type="button" class="btn-icon btn-ghost mode-btn" title="Aleatorio (S)" aria-label="Activar reproducción aleatoria">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false"><image href="./svg/shuffle.svg" x="0" y="0" width="24" height="24" /></svg>
+          </button>
+
+          <!-- PREVIOUS -->
+          <button id="btnPrev" type="button" class="btn-icon btn-ghost" title="Anterior (←)" aria-label="Canción anterior">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false"><image href="./svg/previous-track.svg" x="0" y="0" width="24" height="24" /></svg>
+          </button>
+
+          <!-- PLAY / PAUSE -->
+          <button id="btnPlay" type="button" class="btn-icon btn-play" title="Reproducir / Pausar (Space)" aria-label="Reproducir o pausar">
+            <svg class="icon-play" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false"><image href="./svg/play.svg" x="0" y="0" width="24" height="24" /></svg>
+            <svg class="icon-pause" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" style="display: none" aria-hidden="true" focusable="false"><image href="./svg/pause.svg" x="0" y="0" width="24" height="24" /></svg>
+          </button>
+
+          <!-- NEXT -->
+          <button id="btnNext" type="button" class="btn-icon btn-ghost" title="Siguiente (→)" aria-label="Canción siguiente">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false"><image href="./svg/next-track.svg" x="0" y="0" width="24" height="24" /></svg>
+          </button>
+
+          <!-- REPEAT -->
+          <button id="btnRepeat" type="button" class="btn-icon btn-ghost mode-btn" title="Repetir (R)" aria-label="Cambiar modo de repetición">
+            <svg class="repeat-all" width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false"><image href="./svg/repeat-all.svg" x="0" y="0" width="24" height="24" /></svg>
+            <svg class="repeat-one" width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" style="display: none" aria-hidden="true" focusable="false"><image href="./svg/repeat-one.svg" x="0" y="0" width="24" height="24" /></svg>
+          </button>
+        </div>
+
+        <div class="progress-wrap">
+          <div class="progress-meta">
+            <span class="now-mini-title" id="nowMiniTitle">—</span>
+            <span>
+              <span id="currentTime">0:00</span>
+              <span style="opacity: 0.4"> / </span>
+              <span id="totalTime">0:00</span>
+            </span>
+          </div>
+          <canvas class="progress-waveform" id="progressWaveform" aria-label="Forma de onda del audio en reproducción"></canvas>
+          <div class="progress-bar" id="progressBar" role="slider" aria-label="Posición de la canción" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
+            <div class="progress-fill" id="progressFill"></div>
+            <div class="progress-thumb" id="progressThumb"></div>
+          </div>
+        </div>
+
+        <div class="volume-wrap">
+          <button id="btnMute" type="button" class="btn-icon btn-ghost" title="Silenciar (M)" aria-label="Silenciar o reactivar audio">
+            <svg class="vol-high" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false"><image href="./svg/volume-high.svg" x="0" y="0" width="24" height="24" /></svg>
+            <svg class="vol-low" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" style="display: none" aria-hidden="true" focusable="false"><image href="./svg/volume-low.svg" x="0" y="0" width="24" height="24" /></svg>
+            <svg class="vol-mute" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" style="display: none" aria-hidden="true" focusable="false"><image href="./svg/volume-muted.svg" x="0" y="0" width="24" height="24" /></svg>
+          </button>
+          <input
+            id="volSlider"
+            type="range"
+            class="slider"
+            min="0"
+            max="100"
+            value="80"
+            aria-label="Volumen"
+          />
+        </div>
+      </div>
+    </main>
+
+    <!-- ── DROP OVERLAY ── -->
+    <div id="dropOverlay" class="drop-overlay" aria-hidden="true">
+      <div class="drop-msg">Suelta para añadir a la biblioteca</div>
+    </div>
+
+    <!-- ═══════════════════════════════════════════════════════
+         KARAOKE OVERLAY
+         ═══════════════════════════════════════════════════════ -->
+    <div
+      id="karaokeOverlay"
+      class="karaoke-overlay"
+      data-karaoke-style="cinema"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="kTitle"
+    >
+      <div id="kBg" class="k-bg"></div>
+      <div class="k-overlay" aria-hidden="true"></div>
+      <canvas id="kFx" class="k-fx" aria-hidden="true"></canvas>
+      <div class="k-header">
+        <img id="kArt" class="k-track-art" alt="" decoding="async" />
+        <div class="k-track-info">
+          <div class="k-track-title" id="kTitle">—</div>
+          <div class="k-track-artist" id="kArtist"></div>
+        </div>
+        <div class="k-style-picker" role="group" aria-label="Estilo de karaoke">
+          <button class="k-style-btn active" data-karaoke-style="cinema" type="button" aria-pressed="true">
+            <i class="k-style-preview cinema"></i><span>Cinema</span>
+          </button>
+          <button class="k-style-btn" data-karaoke-style="neon" type="button" aria-pressed="false">
+            <i class="k-style-preview neon"></i><span>Neón</span>
+          </button>
+          <button class="k-style-btn" data-karaoke-style="kinetic" type="button" aria-pressed="false">
+            <i class="k-style-preview kinetic"></i><span>Kinético</span>
+          </button>
+          <button class="k-style-btn" data-karaoke-style="guilloche" type="button" aria-pressed="false">
+            <i class="k-style-preview guilloche"></i><span>Guilloché</span>
+          </button>
+          <button class="k-style-btn" data-karaoke-style="yozakura" type="button" aria-pressed="false">
+            <i class="k-style-preview yozakura"></i><span>Yozakura</span>
+          </button>
+          <button class="k-style-btn" data-karaoke-style="palco-esmeralda" type="button" aria-pressed="false">
+            <i class="k-style-preview palco-esmeralda" aria-hidden="true"></i><span>Palco Esmeralda</span>
+          </button>
+        </div>
+        <button id="btnKaraokeRealFs" type="button" class="k-control" aria-label="Entrar en pantalla completa real" title="Pantalla completa">
+          ⛶
+        </button>
+        <button id="btnKaraokeClose" type="button" class="k-close" title="Cerrar (Esc)" aria-label="Cerrar karaoke">
+          <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false"><image href="./svg/close.svg" x="0" y="0" width="24" height="24" /></svg>
+        </button>
+      </div>
+      <div id="kLyricsViewport" class="k-lyrics-viewport">
+        <div id="kLyrics" class="k-lyrics"></div>
+        <div id="kPause" class="k-pause" aria-hidden="true">
+          <i></i><i></i><i></i><span id="kPauseText"></span>
+        </div>
+      </div>
+      <div class="k-footer">
+        <div class="k-progress">
+          <span id="kCurrentTime">0:00</span>
+          <input
+            id="kProgress"
+            type="range"
+            min="0"
+            max="100"
+            step="0.01"
+            value="0"
+            aria-label="Posición de la canción"
+          />
+          <span id="kTotalTime">0:00</span>
+        </div>
+        <div class="k-controls">
+          <button id="kPrev" type="button" class="k-control" aria-label="Canción anterior">⏮</button>
+          <button id="kPlay" type="button" class="k-control primary" aria-label="Reproducir o pausar">▶</button>
+          <button id="kNext" type="button" class="k-control" aria-label="Canción siguiente">⏭</button>
+          <button id="kFontDown" type="button" class="k-control" aria-label="Reducir tamaño de letra">A−</button>
+          <button id="kFontUp" type="button" class="k-control" aria-label="Aumentar tamaño de letra">A+</button>
+          <div class="k-offset">
+            <span>Desfase</span>
+            <button id="offsetMinus" type="button" class="k-control" title="-0.1 s (Shift: -0.5 s)" aria-label="Reducir desfase">−</button>
+            <span id="offsetValue" class="offset-value">+0.0s</span>
+            <button id="offsetPlus" type="button" class="k-control" title="+0.1 s (Shift: +0.5 s)" aria-label="Aumentar desfase">+</button>
+            <button id="offsetReset" type="button" class="k-control" aria-label="Restablecer desfase">0</button>
+          </div>
+          <button id="kLoadLrc" type="button" class="k-control" aria-label="Cargar archivo LRC">Cargar .lrc</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════════════════════
+         HELP MODAL
+         ═══════════════════════════════════════════════════════ -->
+    <div
+      id="helpBackdrop"
+      class="modal-backdrop"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="helpModalTitle"
+      hidden
+    >
+      <div class="modal glass">
+        <div class="modal-header">
+          <div>
+            <div class="modal-title" id="helpModalTitle">Atajos y ayuda</div>
+            <div class="modal-subtitle">AuraPlay Pro · v3.0</div>
+          </div>
+          <button id="helpClose" type="button" class="btn-icon btn-ghost" title="Cerrar" aria-label="Cerrar ayuda">
+            <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false"><image href="./svg/shortcuts-help.svg" x="0" y="0" width="24" height="24" /></svg>
+          </button>
+        </div>
+        <div class="shortcut-grid">
+          <div class="shortcut-row"><span>Play / Pausa</span><span class="kbd">Espacio</span></div>
+          <div class="shortcut-row"><span>Buscar en la pista</span><span class="kbd">← →</span></div>
+          <div class="shortcut-row"><span>Buscar ±10s</span><span class="kbd">Shift ← →</span></div>
+          <div class="shortcut-row"><span>Pista anterior / siguiente</span><span class="kbd">↑ ↓</span></div>
+          <div class="shortcut-row"><span>Silenciar</span><span class="kbd">M</span></div>
+          <div class="shortcut-row"><span>Aleatorio</span><span class="kbd">S</span></div>
+          <div class="shortcut-row"><span>Repetir</span><span class="kbd">R</span></div>
+          <div class="shortcut-row"><span>Visualizador</span><span class="kbd">V</span></div>
+          <div class="shortcut-row"><span>Karaoke pantalla completa</span><span class="kbd">K</span></div>
+          <div class="shortcut-row"><span>Cambiar estilo de karaoke</span><span class="kbd">C</span></div>
+          <div class="shortcut-row"><span>Cambiar tema</span><span class="kbd">T</span></div>
+          <div class="shortcut-row"><span>Ayuda</span><span class="kbd">H</span></div>
+          <div class="shortcut-row"><span>Cerrar modales</span><span class="kbd">Esc</span></div>
+          <div class="shortcut-row"><span>Ajustar letras</span><span class="kbd">[ ]</span></div>
+        </div>
+        <p style="margin-top: 24px; font-size: 13px; color: var(--text-muted); line-height: 1.6">
+          Arrastra archivos de audio (MP3, M4A, WAV, OGG, FLAC) y archivos
+          <code style="font-family: var(--font-mono); color: var(--accent-cyan)">.lrc</code>
+          de letras directamente sobre la ventana. Reordena la cola arrastrando las pistas.
+        </p>
+        <section class="reset-zone" aria-labelledby="resetZoneTitle">
+          <div class="reset-zone-head">
+            <div class="reset-zone-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none"><path d="M12 3 21 19H3L12 3Z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/><path d="M12 9v4m0 3h.01" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+            </div>
+            <div class="reset-zone-copy">
+              <div class="reset-eyebrow">Control avanzado <span class="reset-status-pill">Acción permanente</span></div>
+              <h2 id="resetZoneTitle">Restablecer AuraPlay</h2>
+              <p>Vuelve a empezar con la aplicación limpia. Tu colección original en el dispositivo no se modifica.</p>
+            </div>
+          </div>
+          <div class="reset-data-chips" aria-label="Datos que se eliminarán">
+            <span>Biblioteca guardada</span><span>Preferencias</span><span>Carpeta recordada</span>
+          </div>
+          <button id="btnResetAllData" type="button" class="btn reset-trigger" aria-expanded="false" aria-controls="resetConfirmPanel">
+            Restablecer datos de AuraPlay <span aria-hidden="true">→</span>
+          </button>
+          <div id="resetConfirmPanel" class="reset-confirm-panel" hidden>
+            <div class="reset-confirm-title">Confirma que quieres empezar de cero</div>
+            <p>Se borrarán la biblioteca y los datos guardados por AuraPlay en este navegador. No se pueden recuperar desde la aplicación.</p>
+            <label for="resetConfirmInput">Escribe <code>BORRAR</code> (también se acepta “borrar”) para habilitar el restablecimiento</label>
+            <input id="resetConfirmInput" class="search-input reset-confirm-input" type="text" autocomplete="off" autocapitalize="characters" spellcheck="false" placeholder="BORRAR" aria-describedby="resetConfirmStatus">
+            <div class="reset-confirm-actions">
+              <button id="btnCancelReset" type="button" class="btn btn-ghost">Cancelar</button>
+              <button id="btnConfirmReset" type="button" class="btn reset-confirm-danger" disabled>Borrar y reiniciar</button>
+            </div>
+            <div id="resetConfirmStatus" class="reset-confirm-status" role="status" aria-live="polite"></div>
+          </div>
+        </section>
+      </div>
+    </div>
+
+    <!-- ── LOADING OVERLAY ── -->
+    <div id="loadingOverlay" class="loading-overlay" role="status" aria-live="polite" aria-label="Cargando aplicación">
+      <div style="text-align: center">
+        <div class="loader-ring"></div>
+        <div class="loader-text">Cargando…</div>
+      </div>
+    </div>
+
+    <!-- ── TOASTS ── -->
+    <div id="toastContainer" class="toast-container" aria-live="polite" aria-atomic="false"></div>
+
+    <!-- ═══════════════════════════════════════════════════════
+         INLINE — restore persisted tab state (avoids flicker)
+         ═══════════════════════════════════════════════════════ -->
+    <script>
+      (function () {
+        try {
+          const read = (key, fallback) => {
+            const raw = localStorage.getItem(`auraplay:${key}`);
+            if (raw == null) return fallback;
+            try {
+              return JSON.parse(raw);
+            } catch (_) {
+              return raw;
+            }
+          };
+          const tab = read("activeTab", "queue");
+          const validTabs = ["queue", "eq", "viz"];
+          const activeTab = validTabs.includes(tab) ? tab : "queue";
+
+          document.querySelectorAll(".btn-tab").forEach((button) => {
+            const isActive = button.dataset.tab === activeTab;
+            button.classList.toggle("active", isActive);
+            button.setAttribute("aria-selected", String(isActive));
+          });
+          document.querySelectorAll(".tab-pane").forEach((pane) => {
+            pane.classList.toggle("active", pane.dataset.pane === activeTab);
+          });
+
+          const search = document.getElementById("playlistSearch");
+          if (search) search.value = String(read("searchTerm", "") || "");
+
+          const eq = read("eqEnabled", false);
+          const eqSwitch = document.getElementById("eqSwitch");
+          if (eqSwitch) {
+            const eqOn = eq === true || eq === 1 || eq === "1" || eq === "true";
+            eqSwitch.classList.toggle("on", eqOn);
+            eqSwitch.setAttribute("aria-checked", String(eqOn));
+          }
+
+          const viz = read("vizEnabled", true);
+          const btnViz = document.getElementById("btnToggleViz");
+          if (btnViz) {
+            const vizOn = viz !== false && viz !== 0 && viz !== "0" && viz !== "false";
+            btnViz.classList.toggle("active", vizOn);
+            btnViz.setAttribute("aria-pressed", String(vizOn));
+          }
+
+          const style = read("vizStyle", "bars");
+          document.querySelectorAll("[data-viz]").forEach((card) => {
+            card.classList.toggle("active", card.dataset.viz === style);
+          });
+        } catch (_) {
+          /* silent — cosmetic restore only */
+        }
+      })();
+    </script>
+
+    <!-- ═══════════════════════════════════════════════════════
+         APP SCRIPTS — all defer, order preserved
+         ═══════════════════════════════════════════════════════ -->
+    <script src="./js/utils.js?v=17" defer></script>
+    <script src="./js/storage.js?v=17" defer></script>
+    <script src="./js/toast.js?v=16" defer></script>
+    <script src="./js/lrcParser.js?v=16" defer></script>
+    <script src="./js/metadata.js?v=16" defer></script>
+    <script src="./js/audioGraph.js?v=16" defer></script>
+    <script src="./js/progressWaveform.js?v=1" defer></script>
+    <script src="./visualizers/bars.js?v=1" defer></script>
+    <script src="./visualizers/coverAura.js?v=1" defer></script>
+    <script src="./visualizers/circular.js?v=1" defer></script>
+    <script src="./visualizers/particles.js?v=1" defer></script>
+    <script src="./visualizers/tunnel.js?v=1" defer></script>
+    <script src="./visualizers/mirror.js?v=1" defer></script>
+    <script src="./visualizers/prism.js?v=1" defer></script>
+    <script src="./visualizers/halo.js?v=1" defer></script>
+    <script src="./visualizers/mycelium.js?v=1" defer></script>
+    <script src="./visualizers/auraMusicSigns.js?v=1" defer></script>
+    <script src="./visualizers/Pebbles.js?v=2" defer></script>
+    <script src="./js/aurarelief.js?v=1" defer></script>
+    <script src="./visualizers/visualizer.js?v=2" defer></script>
+    <script src="./karaoke/shared/karaoke-core.min.js?v=3" defer></script>
+    <script src="./karaoke/cinema/cinema-effects.min.js?v=3" defer></script>
+    <script src="./karaoke/neon/neon-effects.min.js?v=3" defer></script>
+    <script src="./karaoke/kinetico/kinetic-effects.min.js?v=3" defer></script>
+    <script src="./karaoke/guilloche/guilloche-effects.min.js?v=1" defer></script>
+    <script src="./karaoke/yozakura/yozakura-effects.min.js?v=1" defer></script>
+    <script src="./karaoke/palco-esmeralda/palco-esmeralda-effects.min.js?v=1" defer></script>
+    <script src="./js/shortcuts.js?v=17" defer></script>
+    <script src="./js/BabyScratchEngine.js?v=16" defer></script>
+    <script src="./js/vinylInteraction.js?v=16" defer></script>
+    <script src="./js/player.js?v=22" defer></script>
+    <script src="./js/skin.js?v=16" defer></script>
+    <script src="./styles/ui-style-cycle.js?v=2" defer></script>
+    <script src="./js/app.js?v=16" defer></script>
+    <!-- MANDO REMOTO — app.js debe inicializar window.AURA antes del host -->
+    <script src="./remote/qrcode.min.js" defer></script>
+    <script src="/__aura/config.js"></script>
+    <script src="./remote/auraAdapter.js?v=2" defer></script>
+    <script src="./remote/remoteServer.js?v=2" defer></script>
+
+    <!-- ═══════════════════════════════════════════════════════
+         BOOT SAFETY — never leave user with stuck loader
+         ═══════════════════════════════════════════════════════ -->
+    <script>
+      (function () {
+        // Global diagnostics (doesn't crash the app)
+        window.addEventListener("error", function (e) {
+          console.error("[AuraPlay] uncaught error:", e.error || e.message);
+        });
+        window.addEventListener("unhandledrejection", function (e) {
+          console.error("[AuraPlay] unhandled rejection:", e.reason);
+        });
+
+        // Failsafe: hide loader if app never signals readiness
+        function hideLoaderFailsafe() {
+          if (window.__auraReady) return;
+          var l = document.getElementById("loadingOverlay");
+          if (!l) return;
+          if (l.style.display === "none") return;
+          // Only force-hide if DOM looks intact (avoids masking real errors too early)
+          var main = document.getElementById("main");
+          if (main && main.children.length > 0) {
+            l.style.transition = "opacity .4s ease";
+            l.style.opacity = "0";
+            l.style.pointerEvents = "none";
+            setTimeout(function () {
+              l.style.display = "none";
+            }, 450);
+            console.warn(
+              "[AuraPlay] Loader failsafe triggered — app did not signal readiness in time."
+            );
+          }
+        }
+        setTimeout(hideLoaderFailsafe, 12000);
+      })();
+    </script>
+  </body>
+</html>

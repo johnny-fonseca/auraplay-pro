@@ -1,0 +1,242 @@
+/* paper.css v1 — estilo "Papel": cuaderno de tinta y papel de algodón, edición de lujo casi táctil.
+   Se activa con <html data-skin="paper">. Claro = papel crema + tinta índigo; Oscuro (por defecto) = papel negro + tinta marfil.
+   Cargar DESPUÉS de theme.css, vinyl.css y brass.css (todas las reglas llevan :root[data-skin="paper"], no tocan otros temas).
+   Sin imágenes externas: gradientes + box-shadow + filter + 8 texturas SVG en data-URI (poro, fibra, moteado de papel y papel marmolado, en versión clara y oscura).
+   Reinterpretación de los elementos del DOM, sin cambiar HTML:
+     .art-wrap::before  → pila de papeles troquelados (el "bisel")      .art-frame → papel marmolado de guardas
+     .art-frame::after  → etiqueta de papel de algodón con filete bermellón
+     .tonearm           → lacre de cera bermellón                        .tonearm::before → pincel de sumi (mango laca, hilo de seda, virola de hueso)
+   Regla de oro (heredada de Brass): lo que GIRA lleva sombras SIN desplazamiento; la luz de la lámpara vive en lo estático. */
+
+/* ============================================================
+   TOKENS COMUNES · nombres heredados: coral = bermellón (acento principal), cyan = tinta secundaria (índigo / marfil)
+   ============================================================ */
+:root[data-skin="paper"]{
+--skin-name:"paper";
+--font-display:"Newsreader","Iowan Old Style","Palatino Linotype",Georgia,serif;
+--font-body:"Instrument Sans","Inter",system-ui,sans-serif;
+--spec:255,250,238;
+--pp-seal:#a9301b;
+/* texturas SVG inline (poro, fibra, moteado y marmolado); si se borran, cada superficie cae a su color liso */
+--tx-grain-ink:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='240' height='240'%3E%3Cfilter id='n' x='0' y='0' width='100%25' height='100%25' color-interpolation-filters='sRGB'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' seed='3' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0.2 0 0 0 0 0.15 0 0 0 0 0.09 1.1 0 0 0 -0.46'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+--tx-grain-pale:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='240' height='240'%3E%3Cfilter id='n' x='0' y='0' width='100%25' height='100%25' color-interpolation-filters='sRGB'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' seed='3' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0.96 0 0 0 0 0.92 0 0 0 0 0.8 1.1 0 0 0 -0.5'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+--tx-fiber-ink:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='400'%3E%3Cfilter id='n' x='0' y='0' width='100%25' height='100%25' color-interpolation-filters='sRGB'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.03 .30' numOctaves='2' seed='8' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0.35 0 0 0 0 0.26 0 0 0 0 0.14 0.55 0 0 0 -0.2'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+--tx-fiber-pale:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='400'%3E%3Cfilter id='n' x='0' y='0' width='100%25' height='100%25' color-interpolation-filters='sRGB'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.03 .30' numOctaves='2' seed='8' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0.96 0 0 0 0 0.92 0 0 0 0 0.82 0.55 0 0 0 -0.21'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+--tx-cloud-ink:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='640' height='640'%3E%3Cfilter id='n' x='0' y='0' width='100%25' height='100%25' color-interpolation-filters='sRGB'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.005' numOctaves='3' seed='21' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0.3 0 0 0 0 0.22 0 0 0 0 0.12 0.8 0 0 0 -0.33'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+--tx-cloud-pale:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='640' height='640'%3E%3Cfilter id='n' x='0' y='0' width='100%25' height='100%25' color-interpolation-filters='sRGB'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.005' numOctaves='3' seed='21' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0.95 0 0 0 0 0.9 0 0 0 0 0.78 0.8 0 0 0 -0.35'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+--tx-marble-dark:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='720' height='720'%3E%3Cfilter id='m' x='0' y='0' width='100%25' height='100%25' color-interpolation-filters='sRGB'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.0035 .0075' numOctaves='2' seed='11' result='n'/%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.006 .014' numOctaves='2' seed='15' result='w'/%3E%3CfeDisplacementMap in='n' in2='w' scale='38' xChannelSelector='R' yChannelSelector='G' result='d'/%3E%3CfeColorMatrix in='d' type='matrix' values='5 0 0 0 -2.0 5 0 0 0 -2.0 5 0 0 0 -2.0 0 0 0 0 1' result='g'/%3E%3CfeComponentTransfer in='g'%3E%3CfeFuncR type='table' tableValues='0.031 0.051 0.086 0.051 0.031 0.051 0.914 0.086 0.031 0.659 0.051 0.031'/%3E%3CfeFuncG type='table' tableValues='0.039 0.075 0.129 0.075 0.039 0.075 0.875 0.129 0.039 0.188 0.075 0.039'/%3E%3CfeFuncB type='table' tableValues='0.071 0.188 0.353 0.188 0.071 0.188 0.776 0.353 0.071 0.106 0.188 0.071'/%3E%3C/feComponentTransfer%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23m)'/%3E%3C/svg%3E");
+--tx-marble-light:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='720' height='720'%3E%3Cfilter id='m' x='0' y='0' width='100%25' height='100%25' color-interpolation-filters='sRGB'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.0035 .0075' numOctaves='2' seed='5' result='n'/%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.006 .014' numOctaves='2' seed='9' result='w'/%3E%3CfeDisplacementMap in='n' in2='w' scale='38' xChannelSelector='R' yChannelSelector='G' result='d'/%3E%3CfeColorMatrix in='d' type='matrix' values='5 0 0 0 -2.0 5 0 0 0 -2.0 5 0 0 0 -2.0 0 0 0 0 1' result='g'/%3E%3CfeComponentTransfer in='g'%3E%3CfeFuncR type='table' tableValues='0.106 0.165 0.914 0.949 0.914 0.165 0.106 0.165 0.659 0.914 0.949 0.165'/%3E%3CfeFuncG type='table' tableValues='0.153 0.231 0.875 0.922 0.875 0.231 0.153 0.231 0.188 0.875 0.922 0.231'/%3E%3CfeFuncB type='table' tableValues='0.376 0.525 0.776 0.847 0.776 0.525 0.376 0.525 0.106 0.776 0.847 0.525'/%3E%3C/feComponentTransfer%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23m)'/%3E%3C/svg%3E")}
+
+/* ============================================================
+   OSCURO (por defecto) · papel negro de algodón, tinta marfil, sello bermellón
+   ============================================================ */
+:root[data-skin="paper"]:not([data-theme="light"]){
+--bg-base:#0b0c10;--bg-deep:#06070a;--bg-mid:#121319;
+--mesh-1:#1e1a13;--mesh-2:#151a2b;--mesh-3:#0e1117;--mesh-4:#241a12;
+--accent-rgb:236,92,62;--accent2-rgb:232,223,198;--tone-hi:#f6a08a;--tone-mid:#ea5a3c;--tone-lo:#a8321c;--tone-deep:#c4402a;--on-accent:#1a0b07;--platter:#15161b;--platter-edge:#07080a;
+--accent-coral:#ea5a3c;--accent-cyan:#e8dfc6;--accent-gold:#c8955c;--accent-mint:#7fb49a;--accent-danger:#e4506a;
+--gradient-primary:linear-gradient(135deg,#f58a6c 0%,#ea5a3c 52%,#b8361f 100%);
+--gradient-secondary:linear-gradient(135deg,#efe7d0 0%,#cfc5a8 100%);
+--text-primary:#f2ebd9;--text-secondary:#cdc6b2;--text-muted:#9a9484;--text-faint:#66624f;
+--amb-1:.05;--amb-2:.03;--amb-3:.015;
+--sh-contact:rgba(0,0,0,.72);--sh-mid:rgba(0,0,0,.55);--sh-deep:rgba(0,0,0,.85);
+--glass-filter:none;
+--glass-bg:rgba(24,25,30,.93);--glass-bg-hover:rgba(33,34,40,.95);--glass-bg-active:rgba(42,43,50,.97);--glass-solid:rgba(22,23,28,.985);
+--glass-border:rgba(240,230,205,.10);--glass-border-strong:rgba(236,92,62,.58);
+/* hoja de papel negro: filo claro del alma del papel al corte, oclusión inferior, sombras apiladas sin resplandor */
+--shadow-panel:
+ inset 0 1px 0 rgba(255,246,225,.17),
+ inset 0 0 0 .5px rgba(255,246,225,.07),
+ inset 0 -1px 0 rgba(0,0,0,.60),
+ inset 0 0 34px rgba(0,0,0,.30),
+ 0 .5px 0 rgba(0,0,0,.90),
+ 0 1px 1px rgba(0,0,0,.55),
+ 0 5px 9px -2px rgba(0,0,0,.55),
+ 0 24px 42px -18px rgba(0,0,0,.82);
+--focus-ring:0 0 0 2px #0b0c10,0 0 0 4px #ece4cf,0 0 14px 2px rgba(236,228,207,.28);
+/* ayudantes del tema (solo los usa este archivo) */
+--pp-paper:#1b1c22;--pp-paper-hi:#2b2c35;--pp-edge:rgba(246,236,212,.62);--pp-edge-in:rgba(246,236,212,.20);--pp-outline:rgba(0,0,0,.85);
+--pp-layer-line:rgba(0,0,0,.62);--pp-layer-hi:rgba(246,236,212,.13);
+--pp-rule:rgba(244,234,208,.50);--pp-rule-soft:rgba(244,234,208,.22);
+--pp-label-hi:#f3ecd7;--pp-label-lo:#d3c8a8;--pp-label-ink:#1a1d36;
+--pp-marble:var(--tx-marble-dark);--pp-ground:#080a12;
+--pp-grain:var(--tx-grain-pale);--pp-fiber:var(--tx-fiber-pale);--pp-cloud:var(--tx-cloud-pale);
+--pp-lamp:rgba(255,226,170,.075);--pp-vig:rgba(0,0,0,.38);--pp-grain-o:.34;--pp-blend:normal}
+
+/* ============================================================
+   CLARO · papel crema, tinta índigo, mesa de lino
+   ============================================================ */
+:root[data-skin="paper"][data-theme="light"]{
+--bg-base:#d4cdbb;--bg-deep:#c5bda9;--bg-mid:#e1dac9;
+--mesh-1:#efe8d6;--mesh-2:#e6dcc4;--mesh-3:#d8d8d1;--mesh-4:#ece3cf;
+--accent-rgb:176,50,29;--accent2-rgb:38,57,127;--tone-hi:#e0775a;--tone-mid:#b0321d;--tone-lo:#7d1f10;--tone-deep:#8f2616;--on-accent:#fff7ea;--platter:#e6dfcc;--platter-edge:#c9c0aa;
+--accent-coral:#b0321d;--accent-cyan:#26397f;--accent-gold:#8a5a2b;--accent-mint:#2f6b50;--accent-danger:#a8203f;
+--gradient-primary:linear-gradient(135deg,#cf4a2f 0%,#b0321d 55%,#84210f 100%);
+--gradient-secondary:linear-gradient(135deg,#3a4f9c 0%,#26397f 100%);
+--text-primary:#15172b;--text-secondary:#383b52;--text-muted:#4a4d61;--text-faint:#8c8a8e;
+--amb-1:.0;--amb-2:.0;--amb-3:.0;
+--sh-contact:rgba(58,42,16,.55);--sh-mid:rgba(58,42,16,.34);--sh-deep:rgba(58,42,16,.42);
+--glass-filter:none;
+--glass-bg:rgba(247,242,229,.94);--glass-bg-hover:rgba(250,246,236,.97);--glass-bg-active:rgba(253,250,243,.99);--glass-solid:rgba(246,241,228,.99);
+--glass-border:rgba(60,45,20,.14);--glass-border-strong:rgba(176,50,29,.52);
+--shadow-panel:
+ inset 0 1px 0 rgba(255,255,255,.92),
+ inset 0 0 0 .5px rgba(255,255,255,.50),
+ inset 0 -1px 0 rgba(120,100,60,.17),
+ inset 0 0 44px rgba(150,125,80,.11),
+ 0 .5px 0 rgba(70,55,30,.26),
+ 0 1px 1px rgba(70,55,30,.16),
+ 0 4px 7px -2px rgba(70,55,30,.20),
+ 0 22px 38px -18px rgba(70,55,30,.42);
+--focus-ring:0 0 0 2px #f7f2e5,0 0 0 4px #26397f,0 0 12px rgba(38,57,127,.35);
+--pp-paper:#f1ebdb;--pp-paper-hi:#fcf9ef;--pp-edge:rgba(255,255,255,.96);--pp-edge-in:rgba(255,255,255,.70);--pp-outline:rgba(70,52,22,.40);
+--pp-layer-line:rgba(96,76,40,.34);--pp-layer-hi:rgba(255,255,255,.60);
+--pp-rule:rgba(244,234,208,.78);--pp-rule-soft:rgba(244,234,208,.38);
+--pp-label-hi:#fbf6e6;--pp-label-lo:#e6dcc0;--pp-label-ink:#1a1d36;
+--pp-marble:var(--tx-marble-light);--pp-ground:#1b2760;
+--pp-grain:var(--tx-grain-ink);--pp-fiber:var(--tx-fiber-ink);--pp-cloud:var(--tx-cloud-ink);
+--pp-lamp:rgba(255,250,232,.42);--pp-vig:rgba(86,64,28,.20);--pp-grain-o:.42;--pp-blend:multiply}
+
+/* Alto contraste: sin velos ni grano, bordes firmes */
+@media(prefers-contrast:more){
+:root[data-skin="paper"]:not([data-theme="light"]){--glass-border:rgba(255,255,255,.34);--glass-border-strong:rgba(255,255,255,.6);--text-muted:#c9c2ae}
+:root[data-skin="paper"][data-theme="light"]{--glass-border:rgba(30,22,8,.50);--glass-border-strong:rgba(120,30,15,.85);--text-muted:#2e3246}
+:root[data-skin="paper"]::before,:root[data-skin="paper"]::after{display:none}}
+
+/* ============================================================
+   MESA Y LÁMPARA · dos velos fijos sobre toda la interfaz (no capturan clics)
+   ::before = luz cálida de lámpara arriba a la izquierda + viñeta de mesa;  ::after = formación del papel (moteado nube) + poro fino (grano fijo de página)
+   ============================================================ */
+:root[data-skin="paper"]::before{content:"";position:fixed;inset:0;z-index:2147483000;pointer-events:none;background:
+ radial-gradient(120% 85% at 14% -8%,var(--pp-lamp),transparent 58%),
+ radial-gradient(150% 130% at 50% 46%,transparent 56%,var(--pp-vig) 100%)}
+:root[data-skin="paper"]::after{content:"";position:fixed;inset:0;z-index:2147483001;pointer-events:none;
+ background-image:var(--pp-cloud),var(--pp-grain);background-size:640px 640px,240px 240px;
+ opacity:var(--pp-grain-o);mix-blend-mode:var(--pp-blend)}
+@media(prefers-reduced-transparency:reduce){:root[data-skin="paper"]::before,:root[data-skin="paper"]::after{display:none}}
+
+/* ============================================================
+   HOJA · papel de algodón (clase opt-in .paper-sheet; los paneles existentes ya heredan color, borde y sombra por tokens)
+   ============================================================ */
+.paper-sheet{position:relative;isolation:isolate;border:1px solid var(--glass-border);
+ background:linear-gradient(172deg,rgba(var(--spec),.16),rgba(var(--spec),0) 42%,rgba(0,0,0,.05) 100%),var(--glass-bg);
+ box-shadow:var(--shadow-panel)}
+/* canto de la hoja: filo de luz arriba y fibras de borde */
+.paper-sheet::before{content:"";position:absolute;inset:0;border-radius:inherit;pointer-events:none;z-index:-1;
+ background:linear-gradient(180deg,rgba(var(--spec),.55) 0,transparent 1px),var(--pp-grain);background-size:auto,240px 240px;opacity:.7;
+ box-shadow:inset 0 0 0 .5px rgba(var(--spec),.16),inset 1px 1px 0 rgba(var(--spec),.10),inset -1px -1px 0 rgba(0,0,0,.18)}
+:root[data-skin="paper"][data-theme="light"] .paper-sheet::before{mix-blend-mode:multiply}
+:root[data-skin="paper"]:not([data-theme="light"]) .paper-sheet::before{opacity:.35}
+
+/* ============================================================
+   DISCO · papel marmolado de guardas, etiqueta de algodón, pila de papeles troquelados
+   ============================================================ */
+/* Pila de papeles (ESTÁTICO): hueco recortado donde se asienta el disco, cantos de ~9 capas (≈3px de paso),
+   filo de luz en el borde y sombra proyectada hacia abajo-derecha (la lámpara está arriba a la izquierda) */
+:root[data-skin="paper"] .art-wrap::before{display:block;inset:-8%;border-radius:50%;background:
+ /* 1 · filo de luz del canto */
+ radial-gradient(circle closest-side,transparent calc(100% - 2px),var(--pp-edge) calc(100% - 1px),transparent 100%),
+ /* 2 · luz de lámpara estática */
+ linear-gradient(135deg,rgba(var(--spec),.42),rgba(var(--spec),0) 40%,rgba(0,0,0,0) 60%,rgba(0,0,0,.22) 100%),
+ /* 3 · hueco del disco: sombra de papel recortado */
+ radial-gradient(circle closest-side,transparent 0 85%,rgba(0,0,0,.66) 86.2%,rgba(0,0,0,.30) 87.2%,transparent 89.6%),
+ /* 4 · cantos de cada capa: línea de sombra + filo claro, paso de 3.1px */
+ repeating-radial-gradient(circle at 50% 50%,transparent 0 1.3px,var(--pp-layer-line) 1.75px,var(--pp-layer-hi) 2.2px,transparent 2.65px 3.1px),
+ /* 5 · capas alternas más claras */
+ repeating-radial-gradient(circle at 50% 50%,transparent 0 3.1px,rgba(var(--spec),.09) 3.1px 6.2px),
+ /* 6 · poro y fibra del papel */
+ var(--pp-grain),var(--pp-fiber),
+ /* 7 · cuerpo */
+ radial-gradient(circle closest-side,var(--pp-paper-hi),var(--pp-paper) 90%);
+ background-size:auto,auto,auto,auto,auto,240px 240px,400px 400px,auto;
+ box-shadow:
+  inset 0 0 0 .75px var(--pp-edge-in),
+  inset 0 -2px 3px rgba(0,0,0,.16),
+  0 0 0 .5px var(--pp-outline),
+  1px 1.5px 1px 1px var(--sh-contact),
+  4px 8px 12px 0 var(--sh-mid),
+  8px 24px 36px -6px var(--sh-mid),
+  14px 48px 84px -14px var(--sh-deep)}
+
+/* Superficie (GIRA): guarda marmolada (las fibras giran con el disco, como un papel real sobre el plato),
+   oscurecida hacia el borde para dar volumen de papel combado */
+:root[data-skin="paper"] .art-frame{background:
+ radial-gradient(circle closest-side,rgba(0,0,0,0) 0 52%,rgba(0,0,0,.30) 100%),
+ var(--pp-marble) 50% 50%/100% 100% no-repeat,
+ var(--pp-ground);
+ box-shadow:inset 0 0 0 1px rgba(0,0,0,.55),inset 0 0 16px rgba(0,0,0,.40)}
+
+/* Filetes y fibras (GIRA): borde de corte, 4 aros trazados con compás (marfil, tinta impresa) y poro de papel.
+   Sin offsets en las sombras: son simétricas por rotación. */
+:root[data-skin="paper"] .art-frame::before{display:block;content:"";position:absolute;inset:0;z-index:1;border-radius:50%;pointer-events:none;background:
+ radial-gradient(circle closest-side,transparent calc(100% - 1.5px),rgba(var(--spec),.34) calc(100% - .75px),transparent 100%),
+ radial-gradient(circle closest-side,
+  transparent 0 59.6%,var(--pp-rule) 60%,transparent calc(60% + .8px),
+  transparent calc(63% - .4px),var(--pp-rule-soft) 63%,transparent calc(63% + .5px),
+  transparent calc(77% - .5px),var(--pp-rule) 77%,transparent calc(77% + .7px),
+  transparent calc(91% - .4px),var(--pp-rule-soft) 91%,transparent calc(91% + .5px)),
+ var(--pp-grain);
+ background-size:auto,auto,240px 240px;
+ box-shadow:inset 0 0 0 .5px rgba(var(--spec),.14),inset 0 0 12px rgba(0,0,0,.32)}
+
+/* Etiqueta central (GIRA): disco de algodón troquelado con filete bermellón y doble filete de tinta */
+:root[data-skin="paper"] .art-frame::after{inset:29%;border-radius:50%;background:
+ radial-gradient(circle closest-side,transparent calc(100% - 1.2px),rgba(var(--spec),.85) calc(100% - .6px),transparent 100%),
+ radial-gradient(circle closest-side,transparent 0 94%,rgba(0,0,0,.20) 97.5%,rgba(0,0,0,.45) 100%),
+ radial-gradient(circle closest-side,transparent 0 88.4%,var(--pp-seal) 89%,transparent calc(89% + 1.1px)),
+ radial-gradient(circle closest-side,transparent 0 93%,var(--pp-label-ink) calc(93% + .3px),transparent calc(93% + 1px),transparent calc(95% - .2px),var(--pp-label-ink) 95%,transparent calc(95% + .5px)),
+ var(--pp-fiber),
+ radial-gradient(circle closest-side,var(--pp-label-hi) 0,var(--pp-label-lo) 100%);
+ background-size:auto,auto,auto,auto,400px 400px,auto;
+ box-shadow:inset 0 0 0 .75px rgba(var(--spec),.80),inset 0 0 8px rgba(70,50,20,.30),0 0 0 1px #05060a,0 0 0 2px rgba(var(--spec),.28),0 0 9px 2px rgba(0,0,0,.45)}
+:root[data-skin="paper"] .art-frame img{inset:32.5%;width:35%;height:35%;box-shadow:0 0 0 1.5px var(--pp-label-ink),0 0 0 2.5px rgba(var(--spec),.55),inset 0 0 0 1px rgba(0,0,0,.55),inset 0 0 12px rgba(0,0,0,.40)}
+:root[data-skin="paper"] .art-frame .default-art{width:16%;height:16%;color:var(--pp-label-ink);opacity:.5}
+
+/* Luz ESTÁTICA (la lámpara no gira con el disco) y perla de tinta en el eje: papel mate, sin brillos de espejo */
+:root[data-skin="paper"] .art-wrap::after{border-radius:50%;mix-blend-mode:normal;background:
+ radial-gradient(circle closest-side,#fff 0 .7%,#d3daf4 1.1%,#4a5390 1.9%,#10143a 3%,#05061a 3.9%,transparent 4.5%),
+ radial-gradient(ellipse 62% 56% at 28% 22%,rgba(var(--spec),.20),transparent 100%),
+ radial-gradient(ellipse 60% 56% at 74% 82%,rgba(0,0,0,.18),transparent 100%)}
+
+/* ============================================================
+   BRAZO · lacre de cera bermellón + pincel de sumi (mango de laca negra, hilo de seda, virola de hueso, cerdas)
+   Misma geometría que los demás estilos (ver .tonearm en vinyl.css): se conservan las 13 capas, posiciones y tamaños de Brass
+   ============================================================ */
+/* Base del pivote: sello de lacre — borde elevado iluminado, campo hundido, anillo grabado, botón central y brillo húmedo */
+:root[data-skin="paper"] .tonearm{background:
+ radial-gradient(circle closest-side at 34% 28%,rgba(255,236,224,.62) 0,rgba(255,236,224,.18) 14%,transparent 30%),
+ radial-gradient(circle closest-side,#fbd9cb 0 3%,#d4553a 6%,#8e2412 9%,#a92d18 11%,transparent 12.5%),
+ radial-gradient(circle closest-side,transparent 0 39%,rgba(40,3,0,.45) 40.5%,transparent 43%,rgba(255,200,180,.34) 45%,transparent 47%),
+ radial-gradient(circle closest-side,#a02915 0,#9a2814 52%,#7c1d0e 60%,#b53a22 66%,#cf4c30 72%,#a22b17 82%,#6a170a 94%,#3a0a04 100%);
+ box-shadow:
+  inset 0 0 0 .75px rgba(255,205,185,.45),
+  inset 0 2px 3px rgba(255,215,195,.40),
+  inset 0 -3px 5px rgba(50,4,0,.60),
+  0 0 0 2px #6a170a,
+  0 0 0 3px rgba(255,190,165,.20),
+  0 3px 4px 3px rgba(0,0,0,.42),
+  0 14px 22px rgba(0,0,0,.50),
+  0 26px 44px -10px rgba(0,0,0,.40)}
+
+/* Pincel: 13 capas (arriba→abajo)
+   1 collar de hueso · 2 punta mojada · 3 vientre de cerdas · 4 virola de hueso ·
+   5-7 hilo de seda bermellón (trama, destellos, cuerpo) · 8-9 mango (destellos, laca negro-azulada) ·
+   10-13 remate de asta (destellos, torneado, veta, cuerpo). */
+:root[data-skin="paper"] .tonearm::before{background-repeat:no-repeat;
+ background-position:10.8% 50%,100% 50%,94% 50%,88% 50%,25% 50%,25% 50%,25% 50%,63.6% 50%,63.6% 50%,0 50%,0 50%,0 50%,0 50%;
+ background-size:11.5% 100%,3% 26%,7% 100%,11% 74%,28% 22%,28% 22%,28% 22%,78% 22%,78% 22%,12.5% 100%,9% 96%,12.5% 100%,12.5% 100%;
+ background-image:
+  radial-gradient(circle closest-side,#fffaf0 0 8%,#f1e6c8 14%,#cdbb90 26%,#7a6a47 40%,#2a1d12 50%,#0a0a0f 52% 60%,#f3e8cd 61%,#d8c9a0 66% 78%,#6a5a3a 80.5%,transparent 82%),
+  radial-gradient(circle closest-side,#fff 0 14%,#8da0e8 26%,#26397f 50%,#0b0f2c 74%,rgba(11,15,44,0) 100%),
+  linear-gradient(180deg,#07080f 0,#6b7396 .5px,#363c5e 1.5px,#1a1e38 20%,#0b0d1c 48%,#04050a 80%,#010103 100%),
+  linear-gradient(180deg,#6f6244 0,#f7efd9 .75px,#fffaf0 16%,#efe4c8 32%,#d6c7a1 46%,#a8986f 60%,#6e6044 72%,#a89870 84%,#2f2819 100%),
+  repeating-linear-gradient(90deg,rgba(255,175,145,.30) 0 .4px,transparent .8px,rgba(60,0,0,.38) 1.1px 1.5px,transparent 1.9px 2.4px),
+  linear-gradient(180deg,transparent calc(18% - 1px),rgba(255,235,220,.55) 18%,transparent calc(18% + 1px),transparent calc(86% - .75px),rgba(255,160,130,.28) 86%,transparent calc(86% + .75px)),
+  linear-gradient(180deg,#4a0e06 0,#9a2a16 12%,#d4513a 30%,#e8705a 38%,#c0402a 50%,#8f2412 66%,#5e150a 82%,#2c0804 100%),
+  linear-gradient(180deg,transparent calc(26% - 1px),rgba(230,236,255,.90) 26%,transparent calc(26% + 1px),transparent calc(34% - .5px),rgba(230,236,255,.28) 34%,transparent calc(34% + .5px),transparent calc(88% - .75px),rgba(150,170,240,.30) 88%,transparent calc(88% + .75px)),
+  linear-gradient(180deg,#05060b 0,#161a30 7%,#2a3156 15%,#4a5486 23%,#6d78b0 29%,#3b4373 37%,#1d2240 47%,#0b0e1c 58%,#05060b 69%,#10142a 78%,#232a52 87%,#0c0f20 94%,#03040a 100%),
+  linear-gradient(180deg,transparent calc(30% - 1px),rgba(255,252,240,.80) 30%,transparent calc(30% + 1px),transparent calc(36% - .5px),rgba(255,252,240,.30) 36%,transparent calc(36% + .5px),transparent calc(84% - .75px),rgba(255,240,210,.28) 84%,transparent calc(84% + .75px)),
+  repeating-linear-gradient(90deg,rgba(40,26,10,.55) 0 .5px,rgba(40,26,10,0) .85px,rgba(255,250,235,.20) 1.1px 1.4px,transparent 1.75px 2.4px),
+  repeating-linear-gradient(180deg,rgba(255,255,255,.06) 0 .2px,transparent .45px,rgba(60,35,10,.10) .55px .7px,transparent .9px 1.19px),
+  linear-gradient(180deg,#2c2316 0,#7e6c4c 9%,#c9b88c 22%,#f1e6c8 31%,#d6c6a0 40%,#a8966c 52%,#6e5f42 64%,#9c8a62 77%,#4a3e28 90%,#241c10 100%);
+ filter:drop-shadow(0 1px 1px rgba(0,0,0,.50)) drop-shadow(0 7px 6px rgba(0,0,0,.38))}

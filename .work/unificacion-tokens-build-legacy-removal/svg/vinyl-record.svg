@@ -1,0 +1,51 @@
+<svg id="svg-root"
+                class="default-art"
+                viewBox="0 0 24 24"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
+                aria-hidden="true"
+                focusable="false"
+              >
+                <defs>
+                  <radialGradient id="rg-def-disc" cx="45%" cy="40%" r="60%">
+                    <stop offset="0%" stop-color="#404040" />
+                    <stop offset="35%" stop-color="#2B2B2B" />
+                    <stop offset="80%" stop-color="#1B1B1B" />
+                    <stop offset="100%" stop-color="#0F0F0F" />
+                  </radialGradient>
+                  <radialGradient id="rg-def-label" cx="50%" cy="40%" r="35%">
+                    <stop offset="0%" stop-color="#F4F4F4" />
+                    <stop offset="40%" stop-color="#D7D7D7" />
+                    <stop offset="75%" stop-color="#A8A8A8" />
+                    <stop offset="100%" stop-color="#6E6E6E" />
+                  </radialGradient>
+                  <radialGradient id="rg-def-outer-glow" cx="50%" cy="50%" r="50%">
+                    <stop offset="70%" stop-color="#D7D7D7" stop-opacity="0" />
+                    <stop offset="100%" stop-color="#D7D7D7" stop-opacity="0.08" />
+                  </radialGradient>
+                  <linearGradient id="lg-def-shine" x1="30%" y1="20%" x2="70%" y2="80%">
+                    <stop offset="0%" stop-color="#FFFFFF" stop-opacity="0.12" />
+                    <stop offset="50%" stop-color="#FFFFFF" stop-opacity="0" />
+                    <stop offset="100%" stop-color="#FFFFFF" stop-opacity="0.06" />
+                  </linearGradient>
+                </defs>
+                <circle cx="12" cy="12" r="11" fill="url(#rg-def-outer-glow)" />
+                <circle cx="12" cy="12" r="10" fill="url(#rg-def-disc)" stroke="#4B4B4B" stroke-width="0.3" />
+                <circle cx="12" cy="12" r="9.2" fill="none" stroke="#4B4B4B" stroke-width="0.12" opacity="0.5" />
+                <circle cx="12" cy="12" r="8.4" fill="none" stroke="#4B4B4B" stroke-width="0.12" opacity="0.45" />
+                <circle cx="12" cy="12" r="7.6" fill="none" stroke="#4B4B4B" stroke-width="0.12" opacity="0.4" />
+                <circle cx="12" cy="12" r="6.8" fill="none" stroke="#4B4B4B" stroke-width="0.12" opacity="0.35" />
+                <circle cx="12" cy="12" r="6" fill="none" stroke="#4B4B4B" stroke-width="0.12" opacity="0.3" />
+                <circle cx="12" cy="12" r="5.2" fill="none" stroke="#4B4B4B" stroke-width="0.12" opacity="0.25" />
+                <circle cx="12" cy="12" r="10" fill="url(#lg-def-shine)" />
+                <path d="M4.5 6A10 10 0 0 1 19.5 6" stroke="#FFFFFF" stroke-width="0.35" opacity="0.12" fill="none" stroke-linecap="round" />
+                <circle cx="12" cy="12" r="3.6" fill="url(#rg-def-label)" />
+                <circle cx="12" cy="12" r="3.6" fill="none" stroke="#F4F4F4" stroke-width="0.15" opacity="0.3" />
+                <line x1="10.2" y1="11.4" x2="13.8" y2="11.4" stroke="#565656" stroke-width="0.35" opacity="0.5" stroke-linecap="round" />
+                <line x1="10.7" y1="12.3" x2="13.3" y2="12.3" stroke="#565656" stroke-width="0.25" opacity="0.4" stroke-linecap="round" />
+                <circle cx="12" cy="12" r="0.85" fill="#0F0F0F" />
+                <circle cx="12" cy="12" r="0.45" fill="#2B2B2B" />
+                <circle cx="11.85" cy="11.85" r="0.2" fill="#FFFFFF" opacity="0.25" />
+                <path d="M11 10.4V14" stroke="#6E6E6E" stroke-width="0.55" stroke-linecap="round" opacity="0.45" />
+                <circle cx="10.55" cy="14" r="0.75" fill="#6E6E6E" opacity="0.4" />
+              </svg>

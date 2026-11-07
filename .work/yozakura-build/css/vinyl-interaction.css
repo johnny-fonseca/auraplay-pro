@@ -1,0 +1,348 @@
+/* AuraPlay Pro — vinilo interactivo · fase 1 · v2 "Hi-End".
+   Cargar después de vinyl.css y antes de los temas (brass, neon, emerald...).
+
+   Integración con los temas: NO define colores propios. Lee los tokens que ya publica cada estilo
+   (--accent-rgb, --tone-hi/mid/lo, --spec, --sh-contact) con fallback neutro, de modo que Latón, Neón
+   y Esmeralda lo heredan sin tocar este archivo. Los temas pueden sobrescribir las variables --vp-*
+   del anillo si quieren un acabado propio.
+
+   Reglas heredadas de brass.css:
+   · Lo que GIRA (.art-frame) solo recibe filtros sin desplazamiento (brightness/saturate/contrast):
+     nada que orbite con el disco.
+   · .tonearm::before y .art-frame::before/::after pertenecen al tema: aquí no se tocan.
+   · .tonearm no declara `transition` ni `animation`: vinyl.css gobierna su movimiento (subir/bajar). */
+
+/* ============================================================
+   VISUALIZADOR
+   ============================================================ */
+.viz-canvas {
+  pointer-events: none;
+}
+
+/* ============================================================
+   BRAZO · gesto propio, luz ámbar reflejada según el estado
+   Estados (los pone el JS): is-dragging · is-manual · is-lifted · is-on-record
+   Todos usan la misma lista de filtros (brightness + drop-shadow) para que no haya saltos entre estados.
+   ============================================================ */
+.tonearm {
+  pointer-events: auto;
+  touch-action: none;
+  cursor: grab;
+  user-select: none;
+  -webkit-user-select: none;
+  -webkit-touch-callout: none;
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* Reposo con puntero fino: el latón "despierta" al acercarse (va antes de los estados para que estos ganen) */
+@media (hover: hover) and (pointer: fine) {
+  .tonearm:hover {
+    filter: brightness(1.05) drop-shadow(0 0 6px rgba(var(--accent-rgb, 255, 255, 255), .30));
+  }
+}
+
+/* Aguja apoyada en el disco: brillo contenido, sensación de contacto */
+.tonearm.is-on-record {
+  filter: brightness(1.02) drop-shadow(0 0 7px rgba(var(--accent-rgb, 255, 255, 255), .38));
+}
+
+/* Levantado: el brazo recoge más luz (está más cerca de la lámpara) */
+.tonearm.is-lifted {
+  cursor: grab;
+  filter: brightness(1.15) drop-shadow(0 0 12px rgba(var(--accent-rgb, 255, 255, 255), .60));
+}
+
+/* Agarrado: máxima luz y cursor de agarre */
+.tonearm.is-dragging,
+.tonearm.is-manual {
+  cursor: grabbing;
+  filter: brightness(1.12) drop-shadow(0 0 10px rgba(var(--accent-rgb, 255, 255, 255), .55));
+}
+
+/* Teclado / accesibilidad: filete del color del tema, separado del latón */
+.tonearm:focus-visible {
+  outline: 2px solid rgba(var(--accent-rgb, 255, 255, 255), .90);
+  outline-offset: 4px;
+  border-radius: 4px;
+}
+
+/* Tema claro: el fondo ya es luminoso, el brillo se modera */
+[data-theme="light"] .tonearm.is-on-record {
+  filter: brightness(1.01) drop-shadow(0 0 5px rgba(var(--accent-rgb, 0, 0, 0), .30));
+}
+[data-theme="light"] .tonearm.is-lifted {
+  filter: brightness(1.06) drop-shadow(0 0 9px rgba(var(--accent-rgb, 0, 0, 0), .42));
+}
+[data-theme="light"] .tonearm.is-dragging,
+[data-theme="light"] .tonearm.is-manual {
+  filter: brightness(1.05) drop-shadow(0 0 8px rgba(var(--accent-rgb, 0, 0, 0), .40));
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .tonearm.is-dragging,
+  .tonearm.is-manual,
+  .tonearm.is-lifted,
+  .tonearm.is-on-record,
+  .tonearm:hover { filter: none; }
+}
+
+/* ============================================================
+   DISCO · solo el disco captura gestos (el scroll fuera no se ve afectado)
+   ============================================================ */
+.art-frame.is-interactive {
+  cursor: grab;
+  touch-action: none;
+  user-select: none;
+  -webkit-user-select: none;
+  -webkit-touch-callout: none;
+  -webkit-tap-highlight-color: transparent;
+  /* Solo filtro: la rotación (animation) no se toca */
+  transition: filter .28s cubic-bezier(.2, .7, .2, 1);
+}
+
+.art-frame.is-interactive img {
+  -webkit-user-drag: none;
+  user-select: none;
+}
+
+/* Zona central (play/pausa) */
+.art-frame.is-interactive.is-clickable {
+  cursor: pointer;
+}
+
+/* Puntero fino: el vinilo "responde" a la luz antes de tocarlo */
+@media (hover: hover) and (pointer: fine) {
+  .art-frame.is-interactive:hover:not(.is-dragging) {
+    filter: brightness(1.04) saturate(1.04);
+  }
+}
+
+/* Foco de teclado: aro del color del tema, separado del bisel */
+.art-frame.is-interactive:focus-visible {
+  outline: 2px solid rgba(var(--accent-rgb, 255, 255, 255), .85);
+  outline-offset: 6px;
+}
+
+/* Durante la búsqueda el disco no gira solo, aunque el reproductor aún no haya actualizado sus clases */
+.art-frame.is-seeking {
+  animation-play-state: paused !important;
+}
+
+/* Baby Scratch: el disco sigue el mismo delta angular que genera el audio.
+   La variable se actualiza en cada muestra del puntero, no solo por frame. */
+.art-frame.is-seeking,
+.art-frame.is-scratching {
+  transform: rotate(var(--vinyl-scratch-angle, 0deg)) !important;
+  will-change: transform;
+}
+
+/* Arrastre: leve subida de brillo y contraste (sin sombras con offset: el disco gira).
+   El halo vive en el anillo para no pisar las sombras de cada tema. */
+.art-frame.is-dragging {
+  cursor: grabbing;
+  filter: brightness(1.08) saturate(1.08) contrast(1.03);
+}
+
+[data-theme="light"] .art-frame.is-dragging {
+  filter: brightness(1.03) saturate(1.06) contrast(1.02);
+}
+
+/* ============================================================
+   ANILLO DE POSICIÓN · escala de dial sobre el borde del vinilo (no rota con el disco)
+   Capas: carril grabado (fondo) · marcas de dial (::after) · arco de latón (::before) · joya (marker)
+   Geometría: la fija el JS (position/inset/size); aquí solo aspecto.
+   ============================================================ */
+.vinyl-progress-ring {
+  --vinyl-progress: 0;
+
+  /* Tokens locales: leen el tema; un tema puede redefinirlos */
+  --vp-hi: var(--tone-hi, #fff);
+  --vp-mid: var(--tone-mid, rgb(var(--accent-rgb, 255, 255, 255)));
+  --vp-lo: var(--tone-lo, rgb(var(--accent-rgb, 255, 255, 255)));
+  --vp-glow: var(--accent-rgb, 255, 255, 255);
+  --vp-spec: var(--spec, 255, 255, 255);
+  --vp-rail: rgba(0, 0, 0, .34);
+  --vp-ink: rgba(0, 0, 0, .55);
+
+  position: absolute;
+  z-index: 4;
+  border-radius: 50%;
+  pointer-events: none;
+  opacity: 0;
+  /* Carril de 3px grabado en el borde: oclusión oscura + filo especular de .5px */
+  background: radial-gradient(
+    farthest-side,
+    transparent calc(100% - 3px),
+    var(--vp-rail) calc(100% - 3px),
+    var(--vp-rail) calc(100% - .5px),
+    rgba(var(--vp-spec), .16) calc(100% - .5px)
+  );
+  /* Resplandor simétrico (sin offset) sobre arco, marcas y joya a la vez */
+  filter: drop-shadow(0 0 2px rgba(var(--vp-glow), .35));
+  transition: opacity .35s ease, box-shadow .25s ease, filter .25s ease;
+}
+
+.vinyl-progress-ring.is-visible {
+  opacity: 1;
+}
+
+/* Marcas de dial cada 15° (24), 5px, dentro del arco y con 1px de aire */
+.vinyl-progress-ring::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  border-radius: 50%;
+  background: repeating-conic-gradient(
+    from -.3deg,
+    rgba(var(--vp-spec), .50) 0 .6deg,
+    transparent .6deg 15deg
+  );
+  -webkit-mask: radial-gradient(
+    farthest-side,
+    transparent calc(100% - 10px),
+    #000 calc(100% - 9px),
+    #000 calc(100% - 5px),
+    transparent calc(100% - 4px)
+  );
+          mask: radial-gradient(
+    farthest-side,
+    transparent calc(100% - 10px),
+    #000 calc(100% - 9px),
+    #000 calc(100% - 5px),
+    transparent calc(100% - 4px)
+  );
+  opacity: .45;
+  transition: opacity .25s ease;
+}
+
+/* Arco de progreso: cola tenue → latón → luz especular en la cabeza.
+   Parte de las 12 en punto (0deg), igual que el marcador. */
+.vinyl-progress-ring::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  background: conic-gradient(
+    from 0deg,
+    rgba(var(--vp-glow), .30) 0deg,
+    var(--vp-mid) calc(var(--vinyl-progress) * 306deg),
+    var(--vp-hi) calc(var(--vinyl-progress) * 360deg),
+    transparent calc(var(--vinyl-progress) * 360deg)
+  );
+  -webkit-mask: radial-gradient(farthest-side, transparent calc(100% - 3px), #000 calc(100% - 2.2px));
+          mask: radial-gradient(farthest-side, transparent calc(100% - 3px), #000 calc(100% - 2.2px));
+}
+
+/* Caja del tamaño del anillo que rota con el progreso; la joya queda arriba */
+.vinyl-progress-marker {
+  position: absolute;
+  inset: 0;
+  transform: rotate(calc(var(--vinyl-progress) * 360deg));
+}
+
+/* Estela de cometa: 18° de brillo especular justo detrás de la cabeza del arco */
+.vinyl-progress-marker::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  background: conic-gradient(
+    from -18deg,
+    transparent 0deg,
+    rgba(var(--vp-spec), .55) 18deg,
+    transparent 18.4deg
+  );
+  -webkit-mask: radial-gradient(farthest-side, transparent calc(100% - 8px), #000 calc(100% - 5px));
+          mask: radial-gradient(farthest-side, transparent calc(100% - 8px), #000 calc(100% - 5px));
+}
+
+/* Joya: cabujón de latón con reflejo fijo.
+   El contra-giro mantiene la luz siempre arriba-izquierda aunque la caja rote;
+   el "pop" usa la propiedad `scale` (con transición) para no frenar el giro, que se actualiza cada frame. */
+.vinyl-progress-marker::after {
+  content: "";
+  position: absolute;
+  top: -2.5px;
+  left: 50%;
+  width: 9px;
+  height: 9px;
+  margin-left: -4.5px;
+  border-radius: 50%;
+  background: radial-gradient(
+    circle at 34% 28%,
+    #fff 0 10%,
+    var(--vp-hi) 28%,
+    var(--vp-mid) 62%,
+    var(--vp-lo) 100%
+  );
+  box-shadow:
+    0 0 0 1px var(--vp-ink),
+    0 0 0 1.75px rgba(var(--vp-spec), .38),
+    inset 0 -1px 1.5px rgba(0, 0, 0, .45),
+    0 0 8px 1px rgba(var(--vp-glow), .75);
+  transform: rotate(calc(var(--vinyl-progress) * -360deg));
+  scale: 1;
+  transition: scale .22s cubic-bezier(.3, 1.5, .5, 1), box-shadow .22s ease;
+}
+
+/* Arrastre / búsqueda: halo en anillo, marcas más vivas, joya más grande */
+.vinyl-progress-ring.is-active {
+  box-shadow:
+    0 0 0 8px rgba(var(--vp-glow), .10),
+    0 0 34px rgba(var(--vp-glow), .32);
+  filter: drop-shadow(0 0 5px rgba(var(--vp-glow), .70));
+}
+
+.vinyl-progress-ring.is-active::after {
+  opacity: 1;
+}
+
+.vinyl-progress-ring.is-active .vinyl-progress-marker::after {
+  scale: 1.3;
+  box-shadow:
+    0 0 0 1px var(--vp-ink),
+    0 0 0 2px rgba(var(--vp-spec), .55),
+    inset 0 -1px 1.5px rgba(0, 0, 0, .45),
+    0 0 12px 3px rgba(var(--vp-glow), .85);
+}
+
+/* Tema claro: carril y tinta cálidos, resplandor más corto para no ensuciar el fondo */
+[data-theme="light"] .vinyl-progress-ring {
+  --vp-rail: rgba(46, 32, 8, .22);
+  --vp-ink: rgba(46, 32, 8, .50);
+  filter: drop-shadow(0 0 1.5px rgba(var(--vp-glow), .30));
+}
+[data-theme="light"] .vinyl-progress-ring.is-active {
+  box-shadow:
+    0 0 0 8px rgba(var(--vp-glow), .10),
+    0 0 26px rgba(var(--vp-glow), .24);
+  filter: drop-shadow(0 0 4px rgba(var(--vp-glow), .50));
+}
+
+/* Movimiento reducido: sin transiciones ni pop */
+@media (prefers-reduced-motion: reduce) {
+  .vinyl-progress-ring,
+  .vinyl-progress-ring::after,
+  .vinyl-progress-marker::after,
+  .art-frame.is-interactive {
+    transition: none;
+  }
+  .vinyl-progress-ring.is-active .vinyl-progress-marker::after {
+    scale: 1;
+  }
+  .art-frame.is-interactive:hover:not(.is-dragging) {
+    filter: none;
+  }
+}
+
+/* Alto contraste del sistema: colores del sistema, sin gradientes ni brillos */
+@media (forced-colors: active) {
+  .vinyl-progress-ring { filter: none; background: none; }
+  .vinyl-progress-ring::before { background: Highlight; }
+  .vinyl-progress-ring::after { background: repeating-conic-gradient(from -.3deg, CanvasText 0 .6deg, transparent .6deg 15deg); opacity: .6; }
+  .vinyl-progress-marker::before { display: none; }
+  .vinyl-progress-marker::after { background: Highlight; box-shadow: 0 0 0 1px CanvasText; }
+  .tonearm.is-dragging, .tonearm.is-manual, .tonearm.is-lifted, .tonearm.is-on-record { filter: none; }
+  .tonearm:focus-visible, .art-frame.is-interactive:focus-visible { outline-color: Highlight; }
+}

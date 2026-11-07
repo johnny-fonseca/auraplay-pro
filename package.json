@@ -1,0 +1,16 @@
+{
+  "name": "auraplay-pro",
+  "version": "1.0.0",
+  "private": true,
+  "description": "AuraPlay Pro static web app",
+  "scripts": {
+    "lint:scopes": "node scripts/lint-css-scopes.js",
+    "lint:surface-tokens": "node scripts/lint-surface-tokens.js",
+    "build:production": "node scripts/build-production.js",
+    "check:a11y:skins": "node scripts/check-skin-contrast.js"
+  },
+  "devDependencies": {
+    "clean-css": "5.3.3",
+    "terser": "5.51.2"
+  }
+}

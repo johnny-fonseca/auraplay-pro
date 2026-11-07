@@ -1,0 +1,1287 @@
+/* ==========================================================================
+   AuraPlay Pro · aurora.css
+   Modo visual 6: AURORA / GRADIENTES FLUIDOS  ·  html[data-ui="aurora"]
+
+   Fondo vivo de manchas de color difuminadas que se mezclan y derivan
+   lentamente (efecto aurora boreal) + superficies de cristal suave, formas
+   redondeadas, brillos de color y tipografía limpia y minimalista.
+
+   - Hoja autónoma: sin imports, sin fuentes de red, sin imágenes externas.
+   - TODAS las reglas visuales están limitadas a html[data-ui="aurora"].
+   - Cargar DESPUÉS de las hojas de los otros modos.
+   - Sin !important, sin ocultar controles, sin tocar animaciones de la app
+     (p. ej. el giro del vinilo): solo se anima lo que define esta hoja.
+   - El fondo usa html::before y html::after (capas fijas, z-index:-1,
+     pointer-events:none). El <body> y los contenedores raíz de la app deben
+     tener fondo transparente para que se vea (ver sección 2).
+
+   ÍNDICE
+     0. Selectores hipotéticos (ADAPTAR AL DOM REAL)
+     1. Tokens: paleta aurora, medidas, tema claro y oscuro
+     2. Fondo aurora y base tipográfica
+     3. Botones y toggles
+     4. Campos de formulario y rangos
+     5. Cabecera y logotipo
+     6. Paneles, biblioteca, cola, dropzone
+     7. Pestañas
+     8. Listas: hover / foco / seleccionada / en reproducción
+     9. Carátula, vinilo, ficha de pista
+    10. Transporte y botón Play
+    11. Progreso, tiempos, ecualizador, visualizador
+    12. Avisos y modales
+    13. Karaoke
+    14. Detalles: scrollbars y etiquetas
+    15. Estados globales: foco visible y deshabilitado
+    16. Responsive
+    17. Movimiento, transparencia y contraste reducidos; colores forzados
+    18. Keyframes (solo se ejecutan desde reglas de este modo)
+   ========================================================================== */
+
+
+/* ==========================================================================
+   0. SELECTORES HIPOTÉTICOS — ADAPTAR AL DOM REAL
+   --------------------------------------------------------------------------
+   Esta hoja NO conoce el DOM de AuraPlay Pro. Cada componente usa una lista
+   :is(...) con clases/atributos SUPUESTOS (los mismos que usa brutalism.css).
+   Una lista con selectores que no existen es inocua. Para adaptar: busca el
+   componente en los comentarios de cada sección y edita su lista :is().
+
+   Convenciones supuestas (NO confirmadas):
+     Tema oscuro ......... html[data-theme="dark"] | html.dark | html.theme-dark
+     Cabecera / logo ..... header, .app-header, .topbar | .logo, .brand
+     Paneles ............. .panel, .card, .sidebar, .library, .queue, .playlist
+     Pestañas ............ [role="tab"], .tab
+     Filas de pista ...... .track, .track-item, .song, li[role="option"]
+     Seleccionada ........ [aria-selected="true"], .selected, .is-selected
+     En reproducción ..... .playing, .is-playing, [aria-current="true"],
+                           [data-playing="true"], [data-state="playing"]
+     Transporte .......... .transport, .controls, .player-controls
+     Play / prev / next .. .play-btn, [data-action="play"] | [data-action="prev"],
+                           [data-action="next"]
+     Rangos .............. input[type="range"] (relleno opcional con la variable
+                           --range-fill o --progress, p. ej. "37%")
+     Karaoke ............. .karaoke, .lyrics, [data-view="karaoke"]; líneas
+                           .lyric-line; activa .active/.current; palabras .word
+     Avisos / modales .... .toast, [role="alert"] | dialog, [role="dialog"]
+   ========================================================================== */
+
+
+/* ==========================================================================
+   1. TOKENS
+   Por defecto = tema CLARO (lavanda helada con aurora pastel vibrante).
+   El tema OSCURO es la aurora clásica sobre noche azul profunda: no es una
+   inversión automática, tiene su propia paleta, brillos y superficies.
+   ========================================================================== */
+html[data-ui="aurora"] {
+  color-scheme: light;
+
+  /* Fondo y manchas de aurora (cinco colores que se mezclan) */
+  --au-bg: #eef2ff;
+  --au-c1: #6ff2c4; /* menta */
+  --au-c2: #6cc9ff; /* cielo */
+  --au-c3: #b39cff; /* violeta */
+  --au-c4: #ff9fe0; /* rosa */
+  --au-c5: #7f9bff; /* azul */
+  --au-aurora-opacity: 0.9;
+  --au-aurora-blur: 64px;
+
+  /* Superficies (cristal suave) */
+  --au-surface: rgba(255, 255, 255, 0.62);
+  --au-surface-strong: rgba(255, 255, 255, 0.82);
+  --au-surface-hover: rgba(255, 255, 255, 0.92);
+  --au-surface-solid: #ffffff;
+  --au-surface-sunken: rgba(226, 232, 255, 0.7);
+  --au-blur: 22px;
+  --au-blur-strong: 34px;
+
+  /* Texto y bordes */
+  --au-text: #0c1233;
+  --au-text-muted: #44507a;
+  --au-border: rgba(60, 70, 140, 0.2);
+  --au-border-strong: rgba(60, 70, 140, 0.42);
+
+  /* Acentos. --au-accent toma el acento del skin si existe (--accent o
+     --accent-color); es un color SÓLIDO para barras, rellenos y enlaces.
+     --au-on-accent es el texto sobre rellenos de acento / degradado. */
+  --au-accent: var(--accent, var(--accent-color, #4d36e8));
+  --au-grad: linear-gradient(120deg, var(--au-c1), var(--au-c2) 50%, var(--au-c3));
+  --au-grad-wide: linear-gradient(120deg, var(--au-c1), var(--au-c2), var(--au-c3), var(--au-c4), var(--au-c1));
+  --au-grad-text: linear-gradient(100deg, #078a66, #1b6fe0 45%, #6a3df0 75%, #b8199c);
+  --au-on-accent: #06102a;
+  --au-focus: #4d36e8;
+  --au-ring-rgb: 77, 54, 232;
+
+  /* Brillos (sombras difusas de color, nunca grises) */
+  --au-glow-sm: 0 4px 16px -4px rgba(98, 120, 255, 0.35);
+  --au-glow: 0 10px 36px -8px rgba(98, 120, 255, 0.4);
+  --au-glow-lg: 0 20px 60px -12px rgba(98, 120, 255, 0.5);
+
+  /* Escenario del karaoke: siempre oscuro, protagonista en ambos temas */
+  --au-stage: #070b22;
+  --au-stage-text: #eef2ff;
+  --au-stage-muted: #a9b6e0;
+  --au-stage-past: #8394c4;
+  --au-stage-active-bg: #18204f;
+
+  /* Medidas */
+  --au-radius-sm: 10px;
+  --au-radius: 18px;
+  --au-radius-lg: 28px;
+  --au-pill: 999px;
+  --au-gap: 16px;
+  --au-tap: 44px;
+
+  /* Tipografía local (sin red): limpia y minimalista */
+  --au-font: "Inter", "SF Pro Text", "SF Pro Display", "Segoe UI Variable", "Segoe UI", "Helvetica Neue", Arial, system-ui, sans-serif;
+  --au-font-mono: ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace;
+
+  /* Transición suave y fluida. Se anula con reduced-motion */
+  --au-transition: transform 260ms cubic-bezier(0.2, 0.8, 0.2, 1), box-shadow 260ms ease, background-color 220ms ease, border-color 220ms ease, color 200ms ease;
+
+  /* Etiqueta de pista en reproducción. Pon --au-now-label: none para quitarla */
+  --au-now-label: "Sonando";
+}
+
+html[data-ui="aurora"][data-theme="dark"],
+html[data-ui="aurora"].dark,
+html[data-ui="aurora"].theme-dark {
+  color-scheme: dark;
+
+  --au-bg: #050816;
+  --au-c1: #2bffb0;
+  --au-c2: #22c8ff;
+  --au-c3: #8a5cff;
+  --au-c4: #ff3fd0;
+  --au-c5: #3b6bff;
+  --au-aurora-opacity: 0.78;
+
+  --au-surface: rgba(16, 22, 52, 0.6);
+  --au-surface-strong: rgba(14, 20, 50, 0.82);
+  --au-surface-hover: rgba(38, 50, 108, 0.72);
+  --au-surface-solid: #0e1432;
+  --au-surface-sunken: rgba(5, 8, 22, 0.55);
+
+  --au-text: #eef2ff;
+  --au-text-muted: #a9b6e0;
+  --au-border: rgba(160, 180, 255, 0.24);
+  --au-border-strong: rgba(190, 205, 255, 0.52);
+
+  --au-accent: var(--accent, var(--accent-color, #5ff5d0));
+  --au-grad-text: linear-gradient(100deg, var(--au-c1), var(--au-c2) 45%, #b9a2ff 75%, #ff8ae6);
+  --au-focus: #7df3ff;
+  --au-ring-rgb: 95, 245, 208;
+
+  --au-glow-sm: 0 4px 18px -4px rgba(60, 255, 200, 0.32);
+  --au-glow: 0 10px 40px -8px rgba(60, 255, 200, 0.35);
+  --au-glow-lg: 0 20px 64px -12px rgba(138, 92, 255, 0.55);
+}
+
+
+/* ==========================================================================
+   2. FONDO AURORA Y BASE
+   Dos capas fijas, difuminadas y en lenta deriva (solo transform → barato).
+   Capa 1: manchas de color mezcladas. Capa 2: cintas diagonales tipo aurora.
+   El fondo sólido está en <html>; body y raíces de app deben ser transparentes.
+   ========================================================================== */
+html[data-ui="aurora"] {
+  background-color: var(--au-bg);
+  scrollbar-color: var(--au-accent) transparent;
+  scrollbar-width: thin;
+}
+
+html[data-ui="aurora"]::before,
+html[data-ui="aurora"]::after {
+  content: "";
+  position: fixed;
+  z-index: -1;
+  pointer-events: none;
+  will-change: transform;
+}
+
+html[data-ui="aurora"]::before {
+  inset: -25%;
+  background-image:
+    radial-gradient(42% 36% at 18% 28%, var(--au-c1) 0%, transparent 70%),
+    radial-gradient(36% 42% at 78% 22%, var(--au-c3) 0%, transparent 70%),
+    radial-gradient(46% 36% at 62% 82%, var(--au-c2) 0%, transparent 70%),
+    radial-gradient(32% 32% at 12% 86%, var(--au-c4) 0%, transparent 70%),
+    radial-gradient(30% 30% at 90% 62%, var(--au-c5) 0%, transparent 70%);
+  filter: blur(var(--au-aurora-blur)) saturate(1.2);
+  opacity: var(--au-aurora-opacity);
+  animation: au-drift 42s ease-in-out infinite alternate;
+}
+
+html[data-ui="aurora"]::after {
+  inset: -40%;
+  background-image: linear-gradient(115deg, transparent 22%, var(--au-c1) 36%, var(--au-c2) 48%, var(--au-c3) 60%, var(--au-c4) 70%, transparent 82%);
+  filter: blur(calc(var(--au-aurora-blur) * 1.4));
+  opacity: calc(var(--au-aurora-opacity) * 0.5);
+  animation: au-sway 58s ease-in-out infinite alternate-reverse;
+}
+
+html[data-ui="aurora"] body {
+  background: transparent;
+  color: var(--au-text);
+  font-family: var(--au-font);
+  font-weight: 400;
+  line-height: 1.5;
+  letter-spacing: -0.005em;
+  -webkit-font-smoothing: antialiased;
+}
+
+html[data-ui="aurora"] ::selection {
+  background: var(--au-accent);
+  color: var(--au-surface-solid);
+}
+
+html[data-ui="aurora"] :is(h1, h2, h3, h4, .title, .section-title, .heading) {
+  font-family: var(--au-font);
+  font-weight: 600;
+  letter-spacing: -0.025em;
+  line-height: 1.15;
+  text-transform: none;
+}
+
+html[data-ui="aurora"] a {
+  color: var(--au-accent);
+  font-weight: 500;
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 4px;
+  transition: var(--au-transition);
+}
+
+html[data-ui="aurora"] a:hover {
+  text-decoration-thickness: 2px;
+}
+
+html[data-ui="aurora"] hr {
+  border: 0;
+  height: 1px;
+  background: var(--au-border);
+}
+
+
+/* ==========================================================================
+   3. BOTONES Y TOGGLES  (skin, tema, estilo, cargar archivos/carpeta, etc.)
+   Píldoras de cristal. Hover: se elevan y brillan. Activo: se hunden un poco.
+   Toggle activo: relleno de degradado + brillo + anillo (no solo color).
+   ========================================================================== */
+html[data-ui="aurora"] :is(button, .btn, [role="button"]:not(.song-item), input[type="button"], input[type="submit"], input[type="reset"], .icon-btn, .chip, label.file-btn) {
+  -webkit-appearance: none;
+  appearance: none;
+  box-sizing: border-box;
+  min-height: 40px;
+  min-width: 40px;
+  padding-inline: 16px;
+  font-family: var(--au-font);
+  font-size: 0.875rem;
+  font-weight: 500;
+  letter-spacing: 0;
+  text-transform: none;
+  color: var(--au-text);
+  background-color: var(--au-surface);
+  background-image: none;
+  border: 1px solid var(--au-border);
+  border-radius: var(--au-pill);
+  box-shadow: var(--au-glow-sm);
+  -webkit-backdrop-filter: blur(var(--au-blur));
+  backdrop-filter: blur(var(--au-blur));
+  cursor: pointer;
+  transition: var(--au-transition);
+}
+
+html[data-ui="aurora"] :is(button, .btn, [role="button"]:not(.song-item), input[type="button"], input[type="submit"], input[type="reset"], .icon-btn, .chip, label.file-btn):hover {
+  background-color: var(--au-surface-hover);
+  border-color: var(--au-border-strong);
+  transform: translateY(-2px);
+  box-shadow: var(--au-glow);
+}
+
+html[data-ui="aurora"] :is(button, .btn, [role="button"]:not(.song-item), input[type="button"], input[type="submit"], input[type="reset"], .icon-btn, .chip, label.file-btn):active {
+  transform: translateY(0) scale(0.97);
+  box-shadow: var(--au-glow-sm);
+}
+
+/* Toggles activos (skin / tema / estilo / shuffle / repeat…) */
+html[data-ui="aurora"] :is(button, .btn, [role="button"], .icon-btn, .chip)[aria-pressed="true"],
+html[data-ui="aurora"] :is(button, .btn, [role="button"], .icon-btn, .chip)[aria-checked="true"],
+html[data-ui="aurora"] :is(button, .btn, .icon-btn, .chip):is(.is-active, .toggled) {
+  color: var(--au-on-accent);
+  background-image: var(--au-grad);
+  border-color: transparent;
+  box-shadow: var(--au-glow), inset 0 0 0 2px rgba(255, 255, 255, 0.55);
+  font-weight: 600;
+}
+
+html[data-ui="aurora"] :is(button, .btn, .icon-btn) :is(svg, img) {
+  pointer-events: none;
+}
+
+/* Iconos más proporcionados en los botones de Aurora. */
+html[data-ui="aurora"] button.btn-icon {
+  padding: 0;
+}
+
+html[data-ui="aurora"] :is(button, .btn, .icon-btn) > svg {
+  width: 26px;
+  height: 26px;
+  flex: none;
+}
+
+
+/* ==========================================================================
+   4. CAMPOS Y RANGOS
+   ========================================================================== */
+html[data-ui="aurora"] :is(input:not([type]), input[type="text"], input[type="search"], input[type="email"], input[type="url"], input[type="number"], input[type="password"], textarea, select, .search-input, input.search) {
+  box-sizing: border-box;
+  min-height: 40px;
+  padding: 8px 16px;
+  font-family: var(--au-font);
+  font-size: 0.95rem;
+  font-weight: 400;
+  color: var(--au-text);
+  background-color: var(--au-surface);
+  background-image: none;
+  border: 1px solid var(--au-border);
+  border-radius: var(--au-pill);
+  box-shadow: none;
+  -webkit-backdrop-filter: blur(var(--au-blur));
+  backdrop-filter: blur(var(--au-blur));
+  transition: var(--au-transition);
+}
+
+html[data-ui="aurora"] :is(textarea) {
+  border-radius: var(--au-radius);
+}
+
+html[data-ui="aurora"] :is(input, textarea, select)::placeholder {
+  color: var(--au-text-muted);
+  opacity: 1;
+}
+
+html[data-ui="aurora"] :is(input:not([type]), input[type="text"], input[type="search"], input[type="email"], input[type="url"], input[type="number"], input[type="password"], textarea, select, .search-input, input.search):hover {
+  background-color: var(--au-surface-hover);
+  border-color: var(--au-border-strong);
+}
+
+html[data-ui="aurora"] :is(input:not([type]), input[type="text"], input[type="search"], input[type="email"], input[type="url"], input[type="number"], input[type="password"], textarea, select, .search-input, input.search):focus {
+  background-color: var(--au-surface-strong);
+  border-color: var(--au-accent);
+  box-shadow: var(--au-glow);
+}
+
+html[data-ui="aurora"] :is(input[type="checkbox"], input[type="radio"]) {
+  width: 20px;
+  height: 20px;
+  accent-color: var(--au-accent);
+  cursor: pointer;
+}
+
+/* Rangos: progreso y volumen. Relleno opcional vía --range-fill / --progress */
+html[data-ui="aurora"] input[type="range"] {
+  -webkit-appearance: none;
+  appearance: none;
+  box-sizing: border-box;
+  height: 28px;
+  margin: 0;
+  background: transparent;
+  cursor: pointer;
+}
+
+html[data-ui="aurora"] input[type="range"]::-webkit-slider-runnable-track {
+  height: 6px;
+  background-color: var(--au-surface-sunken);
+  background-image: linear-gradient(to right, var(--au-c1), var(--au-c2) calc(var(--range-fill, var(--progress, 0%)) * 0.55), var(--au-c3) var(--range-fill, var(--progress, 0%)), transparent var(--range-fill, var(--progress, 0%)));
+  border: 0;
+  border-radius: var(--au-pill);
+  box-shadow: 0 0 0 1px var(--au-border);
+}
+
+html[data-ui="aurora"] input[type="range"]::-moz-range-track {
+  height: 6px;
+  background-color: var(--au-surface-sunken);
+  border: 0;
+  border-radius: var(--au-pill);
+  box-shadow: 0 0 0 1px var(--au-border);
+}
+
+html[data-ui="aurora"] input[type="range"]::-moz-range-progress {
+  height: 6px;
+  background-image: var(--au-grad);
+  border-radius: var(--au-pill);
+}
+
+html[data-ui="aurora"] input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  box-sizing: border-box;
+  width: 20px;
+  height: 20px;
+  margin-top: -7px;
+  background: #ffffff;
+  border: 3px solid var(--au-accent);
+  border-radius: 50%;
+  box-shadow: var(--au-glow-sm);
+}
+
+html[data-ui="aurora"] input[type="range"]::-moz-range-thumb {
+  box-sizing: border-box;
+  width: 20px;
+  height: 20px;
+  background: #ffffff;
+  border: 3px solid var(--au-accent);
+  border-radius: 50%;
+  box-shadow: var(--au-glow-sm);
+}
+
+html[data-ui="aurora"] input[type="range"]:hover::-webkit-slider-thumb {
+  box-shadow: var(--au-glow);
+}
+
+html[data-ui="aurora"] input[type="range"]:hover::-moz-range-thumb {
+  box-shadow: var(--au-glow);
+}
+
+html[data-ui="aurora"] input[type="range"]:active::-webkit-slider-thumb {
+  background: var(--au-accent);
+  border-color: #ffffff;
+}
+
+html[data-ui="aurora"] input[type="range"]:active::-moz-range-thumb {
+  background: var(--au-accent);
+  border-color: #ffffff;
+}
+
+html[data-ui="aurora"] input[type="range"]:focus-visible::-webkit-slider-thumb {
+  outline: 3px solid var(--au-focus);
+  outline-offset: 3px;
+}
+
+html[data-ui="aurora"] input[type="range"]:focus-visible::-moz-range-thumb {
+  outline: 3px solid var(--au-focus);
+  outline-offset: 3px;
+}
+
+
+/* ==========================================================================
+   5. CABECERA Y LOGOTIPO   (header, .app-header, .topbar | .logo, .brand)
+   ========================================================================== */
+html[data-ui="aurora"] :is(header, .app-header, .topbar, [data-role="header"]) {
+  background-color: var(--au-surface);
+  background-image: none;
+  color: var(--au-text);
+  border-bottom: 1px solid var(--au-border);
+  border-radius: 0;
+  box-shadow: 0 8px 32px -16px rgba(98, 120, 255, 0.35);
+  -webkit-backdrop-filter: blur(var(--au-blur-strong)) saturate(1.3);
+  backdrop-filter: blur(var(--au-blur-strong)) saturate(1.3);
+}
+
+html[data-ui="aurora"] :is(.logo, .brand, .app-logo, [data-role="logo"]) {
+  font-family: var(--au-font);
+  font-weight: 700;
+  font-size: clamp(1.3rem, 2.8vw, 1.9rem);
+  letter-spacing: -0.04em;
+  line-height: 1;
+  text-transform: none;
+  color: var(--au-text);
+  background-image: var(--au-grad-text);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+
+/* ==========================================================================
+   6. PANELES, BIBLIOTECA, COLA, DROPZONE
+   ========================================================================== */
+html[data-ui="aurora"] :is(.panel, .card, .sidebar, .library, .queue, .playlist, .eq-panel, [data-panel]) {
+  background-color: var(--au-surface);
+  background-image: none;
+  color: var(--au-text);
+  border: 1px solid var(--au-border);
+  border-radius: var(--au-radius-lg);
+  box-shadow: var(--au-glow);
+  -webkit-backdrop-filter: blur(var(--au-blur-strong)) saturate(1.3);
+  backdrop-filter: blur(var(--au-blur-strong)) saturate(1.3);
+}
+
+/* Cabeceras de panel: etiqueta minimalista con filete de degradado */
+html[data-ui="aurora"] :is(.panel-header, .panel-title, .card-header, .section-header) {
+  background-color: transparent;
+  background-image: var(--au-grad);
+  background-repeat: no-repeat;
+  background-position: left bottom;
+  background-size: 100% 2px;
+  color: var(--au-text);
+  font-family: var(--au-font);
+  font-size: 0.78rem;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  border: 0;
+  border-radius: 0;
+}
+
+html[data-ui="aurora"] :is(.dropzone, .drop-area, [data-role="dropzone"]) {
+  background-color: var(--au-surface);
+  color: var(--au-text);
+  border: 2px dashed var(--au-border-strong);
+  border-radius: var(--au-radius-lg);
+  transition: var(--au-transition);
+}
+
+html[data-ui="aurora"] :is(.dropzone, .drop-area, [data-role="dropzone"]):is(.dragover, .is-dragover, .drag-over) {
+  background-color: var(--au-surface-hover);
+  border-style: solid;
+  border-color: var(--au-accent);
+  box-shadow: var(--au-glow-lg);
+}
+
+
+/* ==========================================================================
+   7. PESTAÑAS   ([role="tablist"], [role="tab"], .tab)
+   Segmentadas en píldora. Seleccionada = relleno de degradado + brillo.
+   ========================================================================== */
+html[data-ui="aurora"] :is([role="tablist"], .tabs, .tab-list) {
+  border-bottom: 0;
+  gap: 4px;
+}
+
+html[data-ui="aurora"] :is([role="tab"], .tab) {
+  box-sizing: border-box;
+  min-height: var(--au-tap);
+  padding-inline: 18px;
+  font-family: var(--au-font);
+  font-size: 0.875rem;
+  font-weight: 500;
+  letter-spacing: 0;
+  text-transform: none;
+  color: var(--au-text-muted);
+  background-color: transparent;
+  background-image: none;
+  border: 1px solid transparent;
+  border-radius: var(--au-pill);
+  box-shadow: none;
+  cursor: pointer;
+  transition: var(--au-transition);
+}
+
+html[data-ui="aurora"] :is([role="tab"], .tab):hover {
+  color: var(--au-text);
+  background-color: var(--au-surface);
+  border-color: var(--au-border);
+  transform: none;
+}
+
+html[data-ui="aurora"] :is([role="tab"], .tab):is([aria-selected="true"], .active, .is-active, .selected) {
+  color: var(--au-on-accent);
+  background-image: var(--au-grad);
+  border-color: transparent;
+  font-weight: 600;
+  box-shadow: var(--au-glow), inset 0 0 0 2px rgba(255, 255, 255, 0.5);
+}
+
+
+/* ==========================================================================
+   8. LISTAS: biblioteca y cola
+   Cuatro estados con geometría distinta (no solo color):
+     hover ........ fondo de cristal más claro + borde
+     foco ......... anillo exterior (sección 15) + fondo fuerte
+     seleccionada . fondo fuerte + borde interior de acento + barra fina
+     en reproducción . degradado + barra gruesa + etiqueta "Sonando" + negrita
+   ========================================================================== */
+html[data-ui="aurora"] :is(.track-list, .library-list, .queue-list, ul.tracks, [role="listbox"]) {
+  list-style: none;
+}
+
+html[data-ui="aurora"] :is(.track, .track-item, .song, .queue-item, li[role="option"], [data-role="track"]) {
+  position: relative;
+  box-sizing: border-box;
+  min-height: 52px;
+  padding-block: 10px;
+  padding-inline: 16px;
+  margin-block: 2px;
+  color: var(--au-text);
+  background-color: transparent;
+  background-image: none;
+  border: 1px solid transparent;
+  border-radius: var(--au-radius);
+  box-shadow: none;
+  font-family: var(--au-font);
+  font-weight: 400;
+  text-align: start;
+  transition: var(--au-transition);
+}
+
+html[data-ui="aurora"] :is(.track, .track-item, .song, .queue-item, li[role="option"], [data-role="track"]):hover {
+  background-color: var(--au-surface-hover);
+  border-color: var(--au-border);
+  color: var(--au-text);
+  transform: none;
+}
+
+html[data-ui="aurora"] :is(.track, .track-item, .song, .queue-item, li[role="option"], [data-role="track"]):focus-visible {
+  background-color: var(--au-surface-strong);
+  transform: none;
+}
+
+html[data-ui="aurora"] :is(.track, .track-item, .song, .queue-item, li[role="option"], [data-role="track"]):is([aria-selected="true"], .selected, .is-selected) {
+  background-color: var(--au-surface-strong);
+  border-color: var(--au-accent);
+  box-shadow: inset 4px 0 0 var(--au-accent), var(--au-glow-sm);
+  font-weight: 500;
+  transform: none;
+}
+
+html[data-ui="aurora"] :is(.track, .track-item, .song, .queue-item, li[role="option"], [data-role="track"]):is(.playing, .is-playing, [aria-current="true"], [data-playing="true"], [data-state="playing"]) {
+  background-color: var(--au-surface-strong);
+  background-image: linear-gradient(100deg, rgba(var(--au-ring-rgb), 0.2), transparent 70%);
+  border-color: var(--au-accent);
+  box-shadow: inset 8px 0 0 var(--au-accent), var(--au-glow);
+  padding-inline-start: 24px;
+  font-weight: 700;
+  transform: none;
+}
+
+html[data-ui="aurora"] :is(.track, .track-item, .song, .queue-item, li[role="option"], [data-role="track"]):is(.playing, .is-playing, [aria-current="true"], [data-playing="true"], [data-state="playing"])::after {
+  content: var(--au-now-label);
+  position: absolute;
+  top: 6px;
+  right: 10px;
+  padding: 1px 10px;
+  font-family: var(--au-font);
+  font-size: 0.66rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--au-on-accent);
+  background-image: var(--au-grad);
+  border-radius: var(--au-pill);
+  pointer-events: none;
+}
+
+/* Texto secundario dentro de filas */
+html[data-ui="aurora"] :is(.track, .track-item, .song, .queue-item, li[role="option"], [data-role="track"]) :is(.artist, .duration, .meta, .subtitle, small) {
+  color: var(--au-text-muted);
+}
+
+
+/* ==========================================================================
+   9. CARÁTULA, VINILO, FICHA DE PISTA
+   El vinilo conserva border-radius:50% y NO se toca su transform/animation.
+   ========================================================================== */
+html[data-ui="aurora"] :is(.cover, .album-art, .artwork, .cover-art, [data-role="cover"]) {
+  border: 1px solid var(--au-border-strong);
+  border-radius: var(--au-radius-lg);
+  background-color: var(--au-surface-sunken);
+  box-shadow: var(--au-glow-lg);
+  object-fit: cover;
+}
+
+html[data-ui="aurora"] :is(.vinyl, .record, .turntable-disc, .disc, [data-role="vinyl"]) {
+  border: 1px solid var(--au-border-strong);
+  border-radius: 50%;
+  box-shadow: var(--au-glow-lg);
+}
+
+html[data-ui="aurora"] :is(.now-title, .np-title, [data-role="now-title"]) {
+  font-family: var(--au-font);
+  font-size: clamp(1.4rem, 3vw, 2.3rem);
+  font-weight: 700;
+  line-height: 1.1;
+  letter-spacing: -0.035em;
+  color: var(--au-text);
+}
+
+html[data-ui="aurora"] :is(.now-artist, .np-artist, [data-role="now-artist"]) {
+  font-family: var(--au-font);
+  font-size: 0.95rem;
+  font-weight: 500;
+  letter-spacing: 0.01em;
+  color: var(--au-text-muted);
+}
+
+
+/* ==========================================================================
+   10. TRANSPORTE Y BOTÓN PLAY   (foco visual principal)
+   ========================================================================== */
+html[data-ui="aurora"] :is(.transport, .controls, .player-controls, [data-role="transport"]) {
+  align-items: center;
+  gap: var(--au-gap);
+}
+
+html[data-ui="aurora"] :is(footer.player, .player-bar, .now-bar, [data-role="player-bar"]) {
+  background-color: var(--au-surface-strong);
+  background-image: none;
+  border-top: 1px solid var(--au-border);
+  border-radius: var(--au-radius-lg) var(--au-radius-lg) 0 0;
+  box-shadow: 0 -12px 40px -16px rgba(98, 120, 255, 0.4);
+  -webkit-backdrop-filter: blur(var(--au-blur-strong)) saturate(1.3);
+  backdrop-filter: blur(var(--au-blur-strong)) saturate(1.3);
+}
+
+/* Anterior / siguiente: círculos de cristal */
+html[data-ui="aurora"] :is(.prev, .next, .btn-prev, .btn-next, [data-action="prev"], [data-action="previous"], [data-action="next"]) {
+  min-width: 52px;
+  min-height: 52px;
+  padding: 0;
+  color: var(--au-text);
+  background-color: var(--au-surface-strong);
+  border: 1px solid var(--au-border-strong);
+  border-radius: 50%;
+  box-shadow: var(--au-glow);
+}
+
+html[data-ui="aurora"] :is(.prev, .next, .btn-prev, .btn-next, [data-action="prev"], [data-action="previous"], [data-action="next"]):hover {
+  background-color: var(--au-surface-hover);
+  transform: translateY(-2px) scale(1.05);
+  box-shadow: var(--au-glow-lg);
+}
+
+html[data-ui="aurora"] :is(.prev, .next, .btn-prev, .btn-next, [data-action="prev"], [data-action="previous"], [data-action="next"]):active {
+  transform: scale(0.94);
+}
+
+/* PLAY: orbe de aurora. Degradado fluido, doble anillo y gran brillo. */
+html[data-ui="aurora"] :is(.play, .play-btn, .btn-play, .play-pause, [data-action="play"], [data-action="toggle-play"], #playBtn, #play-btn) {
+  width: 80px;
+  height: 80px;
+  min-width: 80px;
+  min-height: 80px;
+  padding: 0;
+  color: var(--au-on-accent);
+  background-color: var(--au-c2);
+  background-image: var(--au-grad-wide);
+  background-size: 220% 220%;
+  background-position: 0% 50%;
+  border: 2px solid rgba(255, 255, 255, 0.75);
+  border-radius: 50%;
+  box-shadow: 0 0 0 6px var(--au-surface), var(--au-glow-lg);
+}
+
+html[data-ui="aurora"] :is(.play, .play-btn, .btn-play, .play-pause, [data-action="play"], [data-action="toggle-play"], #playBtn, #play-btn) :is(svg, img) {
+  width: 46%;
+  height: 46%;
+}
+
+html[data-ui="aurora"] :is(.play, .play-btn, .btn-play, .play-pause, [data-action="play"], [data-action="toggle-play"], #playBtn, #play-btn):hover {
+  background-color: var(--au-c2);
+  color: var(--au-on-accent);
+  transform: translateY(-3px) scale(1.06);
+  box-shadow: 0 0 0 6px var(--au-surface), 0 24px 70px -10px rgba(var(--au-ring-rgb), 0.65);
+}
+
+html[data-ui="aurora"] :is(.play, .play-btn, .btn-play, .play-pause, [data-action="play"], [data-action="toggle-play"], #playBtn, #play-btn):active {
+  transform: scale(0.94);
+}
+
+/* ESTADO ACTIVO inequívoco: el degradado fluye, doble anillo sólido (estático)
+   y un pulso que se expande. El anillo doble se mantiene sin movimiento. */
+html[data-ui="aurora"] :is(.play, .play-btn, .btn-play, .play-pause, [data-action="play"], [data-action="toggle-play"], #playBtn, #play-btn):is(.playing, .is-playing, [aria-pressed="true"], [data-state="playing"], [data-playing="true"]) {
+  color: var(--au-on-accent);
+  border-color: #ffffff;
+  box-shadow: 0 0 0 5px var(--au-surface-solid), 0 0 0 9px var(--au-accent), var(--au-glow-lg);
+  animation: au-flow 7s ease-in-out infinite alternate, au-ring 2.6s ease-out infinite;
+}
+
+
+/* ==========================================================================
+   11. PROGRESO, TIEMPOS, ECUALIZADOR, VISUALIZADOR
+   ========================================================================== */
+/* Barras de progreso que NO son <input type="range"> (div con relleno) */
+html[data-ui="aurora"] :is(div.progress, .progress-track, .seek-track) {
+  height: 8px;
+  background-color: var(--au-surface-sunken);
+  background-image: none;
+  border: 1px solid var(--au-border);
+  border-radius: var(--au-pill);
+  overflow: hidden;
+}
+
+html[data-ui="aurora"] :is(.progress-fill, .progress-bar, .seek-fill) {
+  background-color: var(--au-c2);
+  background-image: var(--au-grad);
+  border-radius: var(--au-pill);
+}
+
+html[data-ui="aurora"] :is(.time, .current-time, .duration-label, .time-current, .time-total, [data-role="time"]) {
+  font-family: var(--au-font);
+  font-size: 0.8rem;
+  font-weight: 500;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0.02em;
+  color: var(--au-text-muted);
+}
+
+html[data-ui="aurora"] :is(.visualizer, .viz, .spectrum, [data-role="visualizer"]) {
+  background-color: var(--au-stage);
+  border: 1px solid var(--au-border-strong);
+  border-radius: var(--au-radius-lg);
+  box-shadow: var(--au-glow-lg);
+}
+
+html[data-ui="aurora"] :is(.eq, .equalizer, [data-panel="eq"]) :is(label, .band-label, .eq-label) {
+  font-family: var(--au-font);
+  font-size: 0.7rem;
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--au-text-muted);
+}
+
+
+/* ==========================================================================
+   12. AVISOS Y MODALES
+   Los avisos llevan un símbolo en un círculo: el color nunca es el único
+   indicador. Borde de degradado vía capas padding-box / border-box.
+   ========================================================================== */
+html[data-ui="aurora"] :is(.toast, .snackbar, .notification, .notice, [role="alert"]) {
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  max-width: min(92vw, 460px);
+  padding: 12px 20px;
+  font-family: var(--au-font);
+  font-size: 0.92rem;
+  font-weight: 500;
+  color: var(--au-text);
+  background-color: transparent;
+  background-image: linear-gradient(var(--au-surface-solid), var(--au-surface-solid)), var(--au-grad-wide);
+  background-origin: border-box;
+  background-clip: padding-box, border-box;
+  border: 2px solid transparent;
+  border-radius: var(--au-radius);
+  box-shadow: var(--au-glow-lg);
+}
+
+html[data-ui="aurora"] :is(.toast, .snackbar, .notification, .notice, [role="alert"])::before {
+  content: "!";
+  flex: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 22px;
+  height: 22px;
+  font-size: 0.8rem;
+  font-weight: 800;
+  color: var(--au-on-accent);
+  background-image: var(--au-grad);
+  border-radius: 50%;
+}
+
+html[data-ui="aurora"] :is(.toast, .snackbar, .notification, .notice, [role="alert"]):is(.error, .toast-error, [data-type="error"])::before {
+  content: "\2715";
+  background-image: none;
+  background-color: #ff6b6b;
+}
+
+html[data-ui="aurora"] :is(.toast, .snackbar, .notification, .notice, [role="alert"]):is(.success, .toast-success, [data-type="success"])::before {
+  content: "\2713";
+  background-image: none;
+  background-color: var(--au-c1);
+}
+
+html[data-ui="aurora"] :is(.toast, .snackbar, .notification, .notice, [role="alert"]):is(.info, .toast-info, [data-type="info"])::before {
+  content: "i";
+  background-image: none;
+  background-color: var(--au-c2);
+}
+
+html[data-ui="aurora"] :is(dialog, [role="dialog"], [role="alertdialog"], .modal-content, .modal-dialog, .modal-box) {
+  color: var(--au-text);
+  background-color: var(--au-surface-strong);
+  background-image: none;
+  border: 1px solid var(--au-border-strong);
+  border-radius: var(--au-radius-lg);
+  box-shadow: var(--au-glow-lg);
+  -webkit-backdrop-filter: blur(var(--au-blur-strong)) saturate(1.3);
+  backdrop-filter: blur(var(--au-blur-strong)) saturate(1.3);
+}
+
+html[data-ui="aurora"] dialog::backdrop {
+  background: rgba(5, 8, 22, 0.5);
+  -webkit-backdrop-filter: blur(8px);
+  backdrop-filter: blur(8px);
+}
+
+html[data-ui="aurora"] :is(.modal-backdrop, .overlay, .scrim) {
+  background-color: rgba(5, 8, 22, 0.5);
+  -webkit-backdrop-filter: blur(8px);
+  backdrop-filter: blur(8px);
+}
+
+html[data-ui="aurora"] :is(.modal-close, .dialog-close, [data-action="close"]) {
+  min-width: var(--au-tap);
+  min-height: var(--au-tap);
+  border-radius: 50%;
+}
+
+
+/* ==========================================================================
+   13. KARAOKE
+   Escenario nocturno en ambos temas con su propia aurora estática suave.
+   Línea activa: más grande, negrita, fondo propio, barra de degradado y brillo
+   (protagonista sin tapar el resto). Pasadas = apagadas; futuras = legibles;
+   palabras cantadas = color + subrayado.
+   ========================================================================== */
+html[data-ui="aurora"] :is(.karaoke, .lyrics, .lyrics-view, .karaoke-view, [data-view="karaoke"]) {
+  color: var(--au-stage-text);
+  background-color: var(--au-stage);
+  background-image:
+    radial-gradient(60% 50% at 15% 10%, rgba(138, 92, 255, 0.35), transparent 70%),
+    radial-gradient(55% 50% at 88% 90%, rgba(34, 200, 255, 0.28), transparent 70%),
+    radial-gradient(45% 40% at 60% 40%, rgba(43, 255, 176, 0.14), transparent 70%);
+  border: 1px solid var(--au-border-strong);
+  border-radius: var(--au-radius-lg);
+  box-shadow: var(--au-glow-lg);
+}
+
+html[data-ui="aurora"] :is(.lyric-line, .lyrics-line, .karaoke-line, .lrc-line, [data-lyric-line]) {
+  margin-block: 6px;
+  padding: 6px 18px;
+  font-family: var(--au-font);
+  font-size: clamp(1.1rem, 2.6vw, 1.8rem);
+  font-weight: 500;
+  line-height: 1.25;
+  letter-spacing: -0.015em;
+  color: var(--au-stage-muted);
+  background-color: transparent;
+  border-left: 4px solid transparent;
+  border-radius: var(--au-radius);
+  transition: var(--au-transition);
+}
+
+html[data-ui="aurora"] :is(.lyric-line, .lyrics-line, .karaoke-line, .lrc-line, [data-lyric-line]):is(.past, .done, .sung, .is-past) {
+  color: var(--au-stage-past);
+}
+
+html[data-ui="aurora"] :is(.lyric-line, .lyrics-line, .karaoke-line, .lrc-line, [data-lyric-line]):is(.active, .current, .is-active, [aria-current="true"], [data-active="true"]) {
+  font-size: clamp(1.5rem, 3.6vw, 2.8rem);
+  font-weight: 700;
+  color: #ffffff;
+  background-color: var(--au-stage-active-bg);
+  border-left-color: var(--au-c1);
+  box-shadow: 0 8px 40px -8px rgba(43, 255, 176, 0.45);
+  text-shadow: 0 0 28px rgba(43, 255, 176, 0.55);
+}
+
+html[data-ui="aurora"] :is(.word, .lyric-word, [data-word]):is(.sung, .done, .is-sung) {
+  color: var(--au-c1);
+  text-decoration: underline;
+  text-decoration-thickness: 3px;
+  text-decoration-color: var(--au-c2);
+  text-underline-offset: 6px;
+}
+
+html[data-ui="aurora"] :is(.word, .lyric-word, [data-word]):is(.active, .current, .is-active) {
+  color: #ffffff;
+  text-decoration: underline;
+  text-decoration-thickness: 3px;
+  text-decoration-color: var(--au-c4);
+  text-underline-offset: 6px;
+}
+
+
+/* ==========================================================================
+   14. DETALLES: scrollbars y etiquetas
+   ========================================================================== */
+html[data-ui="aurora"] ::-webkit-scrollbar {
+  width: 12px;
+  height: 12px;
+}
+
+html[data-ui="aurora"] ::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+html[data-ui="aurora"] ::-webkit-scrollbar-thumb {
+  background-color: var(--au-accent);
+  background-clip: padding-box;
+  border: 3px solid transparent;
+  border-radius: var(--au-pill);
+}
+
+html[data-ui="aurora"] ::-webkit-scrollbar-thumb:hover {
+  background-color: var(--au-c2);
+}
+
+html[data-ui="aurora"] :is(.badge, .tag, .pill, .label) {
+  display: inline-block;
+  padding: 1px 10px;
+  font-family: var(--au-font);
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--au-text);
+  background-color: var(--au-surface-strong);
+  border: 1px solid var(--au-border-strong);
+  border-radius: var(--au-pill);
+}
+
+
+/* ==========================================================================
+   15. ESTADOS GLOBALES  (van al final: ganan a hover/active por orden)
+   ========================================================================== */
+/* Foco visible: anillo sólido de 3px separado del elemento */
+html[data-ui="aurora"] :is(a, button, input, select, textarea, summary, [tabindex]:not([tabindex="-1"]), [role="button"], [role="tab"], [role="option"], [role="slider"], [role="switch"], [role="menuitem"], [role="checkbox"], [role="radio"]):focus-visible {
+  outline: 3px solid var(--au-focus);
+  outline-offset: 3px;
+}
+
+html[data-ui="aurora"] .skip-link:focus {
+  position: fixed;
+  top: 12px;
+  left: 12px;
+  z-index: 9999;
+  padding: 10px 20px;
+  font-weight: 600;
+  color: var(--au-on-accent);
+  background-image: var(--au-grad);
+  border-radius: var(--au-pill);
+  box-shadow: var(--au-glow);
+}
+
+/* Deshabilitado: atenuado, sin brillo, desaturado y con cursor distinto */
+html[data-ui="aurora"] :is(button, .btn, [role="button"], input[type="button"], input[type="submit"], .icon-btn, .chip, [role="tab"], .tab, input, select, textarea):is(:disabled, [aria-disabled="true"], .disabled, .is-disabled) {
+  color: var(--au-text-muted);
+  background-color: var(--au-surface-sunken);
+  background-image: none;
+  border-style: dashed;
+  border-color: var(--au-border);
+  box-shadow: none;
+  transform: none;
+  opacity: 0.6;
+  filter: grayscale(1);
+  cursor: not-allowed;
+}
+
+
+/* ==========================================================================
+   16. RESPONSIVE
+   Menos desenfoque y sombras más contenidas en pantallas pequeñas
+   (el difuminado grande es costoso en móviles).
+   ========================================================================== */
+@media (max-width: 900px) {
+  html[data-ui="aurora"] {
+    --au-aurora-blur: 48px;
+    --au-blur-strong: 26px;
+    --au-radius-lg: 24px;
+  }
+}
+
+@media (max-width: 600px) {
+  html[data-ui="aurora"] {
+    --au-aurora-blur: 38px;
+    --au-blur: 16px;
+    --au-blur-strong: 20px;
+    --au-radius-lg: 20px;
+    --au-gap: 10px;
+  }
+
+  html[data-ui="aurora"]::after {
+    inset: -30%;
+  }
+
+  html[data-ui="aurora"] :is(header, .app-header, .topbar, [data-role="header"]) {
+    padding-block: 8px;
+  }
+
+  html[data-ui="aurora"] :is(.logo, .brand, .app-logo, [data-role="logo"]) {
+    font-size: 1.25rem;
+  }
+
+  html[data-ui="aurora"] :is(.play, .play-btn, .btn-play, .play-pause, [data-action="play"], [data-action="toggle-play"], #playBtn, #play-btn) {
+    width: 68px;
+    height: 68px;
+    min-width: 68px;
+    min-height: 68px;
+  }
+
+  html[data-ui="aurora"] :is(.prev, .next, .btn-prev, .btn-next, [data-action="prev"], [data-action="previous"], [data-action="next"]) {
+    min-width: var(--au-tap);
+    min-height: var(--au-tap);
+  }
+
+  html[data-ui="aurora"] :is(button, .btn, [role="button"], .icon-btn, .chip, [role="tab"], .tab) {
+    min-height: var(--au-tap);
+    min-width: var(--au-tap);
+    padding-inline: 12px;
+  }
+
+  html[data-ui="aurora"] :is(.lyric-line, .lyrics-line, .karaoke-line, .lrc-line, [data-lyric-line]) {
+    padding: 4px 12px;
+    border-left-width: 3px;
+  }
+
+  html[data-ui="aurora"] :is(.toast, .snackbar, .notification, .notice, [role="alert"]) {
+    max-width: calc(100vw - 24px);
+  }
+
+  html[data-ui="aurora"] :is(dialog, [role="dialog"], [role="alertdialog"], .modal-content, .modal-dialog, .modal-box) {
+    max-width: calc(100vw - 20px);
+  }
+
+  html[data-ui="aurora"] input[type="range"]::-webkit-slider-thumb {
+    width: 24px;
+    height: 24px;
+    margin-top: -9px;
+  }
+
+  html[data-ui="aurora"] input[type="range"]::-moz-range-thumb {
+    width: 24px;
+    height: 24px;
+  }
+}
+
+@media (max-width: 380px) {
+  html[data-ui="aurora"] :is(button, .btn, [role="button"], .chip, [role="tab"], .tab) {
+    font-size: 0.8rem;
+  }
+
+  html[data-ui="aurora"] :is(.play, .play-btn, .btn-play, .play-pause, [data-action="play"], [data-action="toggle-play"], #playBtn, #play-btn) {
+    width: 60px;
+    height: 60px;
+    min-width: 60px;
+    min-height: 60px;
+  }
+}
+
+@media (pointer: coarse) {
+  html[data-ui="aurora"] :is(button, .btn, [role="button"], input, select, .icon-btn, .chip, [role="tab"], .tab) {
+    min-height: 48px;
+  }
+
+  html[data-ui="aurora"] input[type="checkbox"],
+  html[data-ui="aurora"] input[type="radio"] {
+    width: 26px;
+    height: 26px;
+  }
+}
+
+
+/* ==========================================================================
+   17. MOVIMIENTO, TRANSPARENCIA Y CONTRASTE REDUCIDOS; COLORES FORZADOS
+   Solo se anulan las animaciones y transiciones DE ESTA HOJA. No se tocan las
+   de la app (vinilo, visualizador, progreso): la reproducción no se afecta.
+   Con movimiento reducido la aurora queda como fondo estático.
+   ========================================================================== */
+@media (prefers-reduced-motion: reduce) {
+  html[data-ui="aurora"] {
+    --au-transition: none;
+  }
+
+  html[data-ui="aurora"]::before,
+  html[data-ui="aurora"]::after {
+    animation: none;
+  }
+
+  html[data-ui="aurora"] :is(.play, .play-btn, .btn-play, .play-pause, [data-action="play"], [data-action="toggle-play"], #playBtn, #play-btn):is(.playing, .is-playing, [aria-pressed="true"], [data-state="playing"], [data-playing="true"]) {
+    animation: none;
+  }
+}
+
+/* Sin transparencia: superficies sólidas y sin desenfoque */
+@media (prefers-reduced-transparency: reduce) {
+  html[data-ui="aurora"] {
+    --au-surface: var(--au-surface-solid);
+    --au-surface-strong: var(--au-surface-solid);
+    --au-surface-hover: var(--au-surface-solid);
+    --au-blur: 0px;
+    --au-blur-strong: 0px;
+    --au-aurora-opacity: 0.5;
+  }
+}
+
+/* Navegadores sin backdrop-filter: superficies más opacas para conservar contraste */
+@supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+  html[data-ui="aurora"] {
+    --au-surface: var(--au-surface-strong);
+  }
+}
+
+@media (prefers-contrast: more) {
+  html[data-ui="aurora"] {
+    --au-border: var(--au-border-strong);
+    --au-text-muted: var(--au-text);
+    --au-aurora-opacity: 0.55;
+  }
+}
+
+@media (forced-colors: active) {
+  html[data-ui="aurora"]::before,
+  html[data-ui="aurora"]::after {
+    display: none;
+  }
+
+  html[data-ui="aurora"] :is(.logo, .brand, .app-logo, [data-role="logo"]) {
+    -webkit-text-fill-color: CanvasText;
+    background-image: none;
+  }
+
+  html[data-ui="aurora"] :is(button, .btn, [role="button"], [role="tab"], .tab, input, select, textarea) {
+    border-color: ButtonText;
+  }
+
+  html[data-ui="aurora"] :is(a, button, input, select, textarea, [tabindex], [role="button"], [role="tab"], [role="option"], [role="slider"]):focus-visible {
+    outline-color: Highlight;
+  }
+
+  html[data-ui="aurora"] :is(.track, .track-item, .song, .queue-item, li[role="option"], [data-role="track"]):is([aria-selected="true"], .selected, .is-selected) {
+    outline: 3px solid Highlight;
+    outline-offset: -3px;
+  }
+
+  html[data-ui="aurora"] :is(.track, .track-item, .song, .queue-item, li[role="option"], [data-role="track"]):is(.playing, .is-playing, [aria-current="true"], [data-playing="true"], [data-state="playing"]) {
+    outline: 3px dashed Highlight;
+    outline-offset: -3px;
+  }
+}
+
+
+/* ==========================================================================
+   18. KEYFRAMES
+   Solo se ejecutan desde reglas limitadas a html[data-ui="aurora"].
+   Las capas de fondo animan únicamente transform (barato para la GPU).
+   ========================================================================== */
+@keyframes au-drift {
+  0% {
+    transform: translate3d(0, 0, 0) rotate(0deg) scale(1);
+  }
+  50% {
+    transform: translate3d(4%, -3%, 0) rotate(8deg) scale(1.1);
+  }
+  100% {
+    transform: translate3d(-4%, 3%, 0) rotate(-6deg) scale(1.05);
+  }
+}
+
+@keyframes au-sway {
+  0% {
+    transform: translate3d(-6%, 2%, 0) rotate(-4deg) scale(1);
+  }
+  100% {
+    transform: translate3d(6%, -2%, 0) rotate(5deg) scale(1.12);
+  }
+}
+
+@keyframes au-flow {
+  0% {
+    background-position: 0% 50%;
+  }
+  100% {
+    background-position: 100% 50%;
+  }
+}
+
+@keyframes au-ring {
+  0% {
+    box-shadow: 0 0 0 5px var(--au-surface-solid), 0 0 0 9px var(--au-accent), 0 0 0 9px rgba(var(--au-ring-rgb), 0.5), var(--au-glow-lg);
+  }
+  100% {
+    box-shadow: 0 0 0 5px var(--au-surface-solid), 0 0 0 9px var(--au-accent), 0 0 0 26px rgba(var(--au-ring-rgb), 0), var(--au-glow-lg);
+  }
+}

@@ -1,0 +1,308 @@
+@layer base {
+/*!
+ * AuraPlay Pro · Karaoke · Guilloché Zafiro
+ * slug: guilloche  ·  ruta: karaoke/guilloche/guilloche.css
+ *
+ * Reglas visuales exclusivas del tema. Se carga DESPUÉS del CSS común de Karaoke.
+ * Todo vive bajo #karaokeOverlay[data-karaoke-style="guilloche"], salvo la muestra
+ * .k-style-preview.guilloche y las reglas de palabra, que usan :where() a propósito
+ * (ver "Palabras") para no pisar los estados que defina el CSS compartido.
+ */
+
+/* ───────────────────────── Tokens ───────────────────────── */
+
+#karaokeOverlay[data-karaoke-style="guilloche"] {
+  --k-gl-abyss: #04060e;
+  --k-gl-ink: #070b1d;
+  --k-gl-sapphire: #0b1433;
+  --k-gl-deep: #16235a;
+  --k-gl-frost: #c9d6ff;
+  --k-gl-platinum: #eef1f8;
+  --k-gl-mist: #a6b2d2;
+  --k-gl-rose: #e8aa90;
+  --k-gl-champagne: #f4d9c2;
+  --k-gl-hair: rgba(238, 241, 248, 0.14);
+  --k-gl-ease: cubic-bezier(0.2, 0.7, 0.2, 1);
+
+  /* Serif didona de sistema (sin descargas): alto contraste, trazos finos de joyería. */
+  --k-gl-serif: "Bodoni 72", "Bodoni MT", "Didot", "Didot LT STD", "Hoefler Text",
+    "Iowan Old Style", "Palatino Linotype", Palatino, "Book Antiqua", Georgia, serif;
+  --k-gl-sans: "Avenir Next", "Segoe UI Variable", "Segoe UI", system-ui,
+    -apple-system, "Helvetica Neue", Arial, sans-serif;
+
+  background-color: var(--k-gl-ink);
+  color: var(--k-gl-platinum);
+}
+
+/* ───────────────────────── Fondo y atmósfera ───────────────────────── */
+
+/* La carátula difuminada queda como un velo de zafiro, nunca como protagonista. */
+#karaokeOverlay[data-karaoke-style="guilloche"] .k-bg {
+  opacity: 0.3;
+  filter: blur(54px) saturate(0.6) brightness(0.62);
+}
+
+/* Atmósfera estática: luz cenital fría, resplandor rosado en una esquina,
+   un velo oscuro tras la letra y un satinado de hilos finos (acabado cepillado). */
+#karaokeOverlay[data-karaoke-style="guilloche"] .k-overlay {
+  background:
+    radial-gradient(70% 58% at 50% 54%, rgba(4, 6, 14, 0.58), transparent 76%),
+    radial-gradient(120% 78% at 50% -12%, rgba(127, 155, 255, 0.17), transparent 58%),
+    radial-gradient(80% 64% at 100% 104%, rgba(232, 170, 144, 0.11), transparent 62%),
+    repeating-linear-gradient(115deg, rgba(238, 241, 248, 0.016) 0 1px, transparent 1px 3px),
+    linear-gradient(180deg, #0b1433 0%, #070b1d 54%, #04060e 100%);
+  box-shadow:
+    inset 0 0 0 1px rgba(238, 241, 248, 0.055),
+    inset 0 0 140px rgba(0, 0, 0, 0.55);
+}
+
+/* Entrada única del lienzo al activar el tema. */
+#karaokeOverlay[data-karaoke-style="guilloche"] .k-fx {
+  animation: k-gl-reveal 1.6s var(--k-gl-ease) both;
+}
+
+@keyframes k-gl-reveal {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+/* ───────────────────────── Cabecera ───────────────────────── */
+
+/* Carátula como pieza enmarcada: filete platino, paspartú oscuro y filete rosado. */
+#karaokeOverlay[data-karaoke-style="guilloche"] .k-track-art {
+  border-radius: 3px;
+  box-shadow:
+    0 0 0 1px rgba(238, 241, 248, 0.3),
+    0 0 0 5px var(--k-gl-abyss),
+    0 0 0 6px rgba(232, 170, 144, 0.45),
+    0 22px 44px -10px rgba(0, 0, 0, 0.7);
+}
+
+#karaokeOverlay[data-karaoke-style="guilloche"] .k-track-title {
+  font-family: var(--k-gl-serif);
+  font-weight: 500;
+  letter-spacing: 0.01em;
+  font-kerning: normal;
+  color: var(--k-gl-platinum);
+  text-shadow: 0 2px 18px rgba(4, 6, 14, 0.7);
+}
+
+#karaokeOverlay[data-karaoke-style="guilloche"] .k-track-artist {
+  font-family: var(--k-gl-serif);
+  font-style: italic;
+  font-weight: 400;
+  letter-spacing: 0.02em;
+  color: var(--k-gl-champagne);
+  opacity: 0.88;
+  text-shadow: 0 1px 12px rgba(4, 6, 14, 0.7);
+}
+
+/* ───────────────────────── Selector de estilos ───────────────────────── */
+
+#karaokeOverlay[data-karaoke-style="guilloche"] .k-style-btn {
+  font-family: var(--k-gl-sans);
+  color: var(--k-gl-mist);
+  background-color: rgba(11, 20, 51, 0.55);
+  border: 1px solid var(--k-gl-hair);
+  -webkit-backdrop-filter: blur(12px) saturate(1.2);
+  backdrop-filter: blur(12px) saturate(1.2);
+  transition: color 0.25s ease, border-color 0.25s ease, background-color 0.25s ease;
+}
+
+#karaokeOverlay[data-karaoke-style="guilloche"] .k-style-btn:hover,
+#karaokeOverlay[data-karaoke-style="guilloche"] .k-style-btn[aria-pressed="true"],
+#karaokeOverlay[data-karaoke-style="guilloche"] .k-style-btn[aria-checked="true"],
+#karaokeOverlay[data-karaoke-style="guilloche"] .k-style-btn.active,
+#karaokeOverlay[data-karaoke-style="guilloche"] .k-style-btn.is-active {
+  color: var(--k-gl-platinum);
+  border-color: rgba(232, 170, 144, 0.6);
+  background-color: rgba(22, 35, 90, 0.6);
+}
+
+/* Muestra del botón: dos guilloché de esquina enfrentados que generan moiré. */
+#karaokeOverlay .k-style-preview.guilloche {
+  background:
+    repeating-radial-gradient(circle at 0 100%, rgba(201, 214, 255, 0.62) 0 1px, transparent 1px 5px),
+    repeating-radial-gradient(circle at 100% 0, rgba(232, 170, 144, 0.55) 0 1px, transparent 1px 5px),
+    linear-gradient(135deg, #16235a 0%, #0b1433 55%, #04060e 100%);
+  background-color: #0b1433;
+  box-shadow: inset 0 0 0 1px rgba(238, 241, 248, 0.22);
+}
+
+/* ───────────────────────── Letras ───────────────────────── */
+
+#karaokeOverlay[data-karaoke-style="guilloche"] .k-lyrics-viewport {
+  -webkit-mask-image: linear-gradient(180deg, transparent 0, #000 14%, #000 86%, transparent 100%);
+  mask-image: linear-gradient(180deg, transparent 0, #000 14%, #000 86%, transparent 100%);
+}
+
+/* No cantadas: platino apagado con contraste ≥ 3:1 sobre el fondo (texto grande). */
+#karaokeOverlay[data-karaoke-style="guilloche"] .k-line {
+  font-family: var(--k-gl-serif);
+  font-weight: 500;
+  letter-spacing: 0.004em;
+  font-kerning: normal;
+  font-variant-ligatures: common-ligatures discretionary-ligatures;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  text-wrap: balance;
+  color: rgba(166, 178, 210, 0.62);
+  text-shadow: 0 1px 14px rgba(4, 6, 14, 0.7);
+  transition:
+    color 0.7s var(--k-gl-ease),
+    text-shadow 0.7s var(--k-gl-ease),
+    opacity 0.7s var(--k-gl-ease),
+    transform 0.7s var(--k-gl-ease),
+    filter 0.7s var(--k-gl-ease);
+}
+
+/* Línea actual: platino pleno con halo zafiro y un hilo rosado apenas perceptible. */
+#karaokeOverlay[data-karaoke-style="guilloche"] .k-line.current {
+  color: var(--k-gl-platinum);
+  text-shadow:
+    0 0 34px rgba(127, 155, 255, 0.26),
+    0 0 2px rgba(232, 170, 144, 0.18),
+    0 2px 18px rgba(4, 6, 14, 0.75);
+}
+
+/* Palabras.
+   El contrato del núcleo no enumera los estados de .k-word. Las reglas usan :where()
+   para quedar con especificidad mínima: si el CSS compartido define su propio estado
+   "cantada" con otro nombre, ese estado gana; si usa alguno de los nombres habituales
+   listados aquí, se pinta con la identidad del tema. */
+:where(#karaokeOverlay[data-karaoke-style="guilloche"] .k-line.current) .k-word {
+  color: rgba(214, 222, 243, 0.74);
+  transition: color 0.4s ease, text-shadow 0.6s ease;
+}
+
+:where(#karaokeOverlay[data-karaoke-style="guilloche"] .k-line.current) .k-word:is(
+    .sung, .done, .active, .lit, .on, .is-sung, .is-active
+  ) {
+  color: #fdf1e6;
+  text-shadow:
+    0 0 22px rgba(232, 170, 144, 0.42),
+    0 0 2px rgba(255, 255, 255, 0.3),
+    0 2px 16px rgba(4, 6, 14, 0.7);
+}
+
+/* ───────────────────────── Pie y controles ───────────────────────── */
+
+#karaokeOverlay[data-karaoke-style="guilloche"] .k-control,
+#karaokeOverlay[data-karaoke-style="guilloche"] .k-close {
+  color: var(--k-gl-platinum);
+  background-color: rgba(11, 20, 51, 0.55);
+  border: 1px solid var(--k-gl-hair);
+  -webkit-backdrop-filter: blur(14px) saturate(1.2);
+  backdrop-filter: blur(14px) saturate(1.2);
+  transition: border-color 0.25s ease, background-color 0.25s ease, color 0.25s ease;
+}
+
+#karaokeOverlay[data-karaoke-style="guilloche"] .k-control:hover,
+#karaokeOverlay[data-karaoke-style="guilloche"] .k-close:hover {
+  border-color: rgba(232, 170, 144, 0.6);
+  background-color: rgba(22, 35, 90, 0.62);
+}
+
+#karaokeOverlay[data-karaoke-style="guilloche"] .k-control:focus-visible,
+#karaokeOverlay[data-karaoke-style="guilloche"] .k-close:focus-visible,
+#karaokeOverlay[data-karaoke-style="guilloche"] .k-style-btn:focus-visible {
+  outline: 2px solid var(--k-gl-champagne);
+  outline-offset: 3px;
+}
+
+#karaokeOverlay[data-karaoke-style="guilloche"] .k-progress {
+  background-color: rgba(238, 241, 248, 0.14);
+  accent-color: var(--k-gl-rose);
+}
+
+#karaokeOverlay[data-karaoke-style="guilloche"] .k-progress > * {
+  background-image: linear-gradient(90deg, var(--k-gl-frost), var(--k-gl-champagne) 68%, var(--k-gl-rose));
+  box-shadow: 0 0 12px rgba(232, 170, 144, 0.32);
+}
+
+/* ───────────────────────── Movimiento reducido ───────────────────────── */
+
+@media (prefers-reduced-motion: reduce) {
+  #karaokeOverlay[data-karaoke-style="guilloche"] .k-fx {
+    animation: none;
+  }
+
+  #karaokeOverlay[data-karaoke-style="guilloche"] .k-line,
+  #karaokeOverlay[data-karaoke-style="guilloche"] .k-style-btn,
+  #karaokeOverlay[data-karaoke-style="guilloche"] .k-control,
+  #karaokeOverlay[data-karaoke-style="guilloche"] .k-close,
+  :where(#karaokeOverlay[data-karaoke-style="guilloche"] .k-line.current) .k-word {
+    transition: none;
+  }
+}
+
+
+/* Integración completa con el motor compartido: chrome, dock y progreso de palabras. */
+#karaokeOverlay[data-karaoke-style="guilloche"] {
+  --k-a1: var(--k-gl-frost);
+  --k-a2: var(--k-gl-rose);
+  --k-style-accent: var(--k-gl-champagne);
+  --k-font-lyric: var(--k-gl-serif);
+  --k-font-title: var(--k-gl-serif);
+  --k-font-ui: var(--k-gl-sans);
+  --k-lyric-weight: 500;
+  --k-lyric-track: .004em;
+  --k-lyric-lh: 1.16;
+  --k-title-weight: 500;
+  --k-art-r: 3px;
+  --k-ink: var(--k-gl-platinum);
+  --k-ink-dim: var(--k-gl-mist);
+  --k-panel: rgba(11, 20, 51, .68);
+  --k-line: var(--k-gl-hair);
+  --k-focus: var(--k-gl-champagne);
+  --k-scrim: rgba(4, 6, 14, .76);
+  --k-dock-bg: rgba(7, 11, 29, .82);
+  --k-dock-r: 22px;
+  --k-dock-ring: linear-gradient(135deg, rgba(238,241,248,.48), rgba(127,155,255,.16) 48%, rgba(232,170,144,.44));
+  --k-dock-shadow: 0 18px 55px -18px rgba(0,0,0,.82), 0 0 34px -16px rgba(127,155,255,.42);
+  --k-primary-bg: linear-gradient(135deg, #eef1f8, #c9d6ff 58%, #e8aa90);
+  --k-primary-ink: #070b1d;
+  --k-primary-glow: rgba(127,155,255,.35);
+  --k-track-h: 5px;
+  --k-track-bg: rgba(238,241,248,.18);
+  --k-fill: linear-gradient(90deg, #c9d6ff, #eef1f8 48%, #f4d9c2 78%, #e8aa90);
+  --k-thumb-w: 12px;
+  --k-thumb-h: 12px;
+  --k-thumb-r: 50%;
+  --k-thumb-bg: #f4d9c2;
+  --k-thumb-bd: 2px solid #070b1d;
+  --k-thumb-sh: 0 0 12px rgba(232,170,144,.56), 0 0 22px rgba(127,155,255,.32);
+  --k-glow: #7f9bff;
+  --k-glow-r: 26px;
+  --k-glow2: #e8aa90;
+  --k-glow2-r: 52px;
+}
+#karaokeOverlay[data-karaoke-style="guilloche"] .k-line {
+  /* El motor compartido aplica --word-p de 0 a 100 en cada sílaba/palabra sincronizada. */
+  --k-sung-top: color-mix(in srgb, #fff calc(84% + var(--k-beat, 0) * 16%), #c9d6ff);
+  --k-sung-bot: color-mix(in srgb, #e8aa90 34%, #eef1f8);
+  --k-rest-top: rgba(201, 214, 255, .52);
+  --k-rest-bot: rgba(166, 178, 210, .32);
+  --k-edge: #f4d9c2;
+  --k-edge-w: .58em;
+  --k-edge-w-sustain: 1em;
+}
+#karaokeOverlay[data-karaoke-style="guilloche"] .k-control.primary {
+  color: var(--k-primary-ink);
+  background: var(--k-primary-bg);
+  border-color: rgba(244, 217, 194, .72);
+  box-shadow: 0 0 20px rgba(127, 155, 255, .24), inset 0 1px 0 rgba(255,255,255,.72);
+}
+#karaokeOverlay[data-karaoke-style="guilloche"] .k-control:hover,
+#karaokeOverlay[data-karaoke-style="guilloche"] .k-close:hover {
+  color: #eef1f8;
+  border-color: rgba(232, 170, 144, .72);
+  background-color: rgba(22, 35, 90, .82);
+  box-shadow: 0 0 16px rgba(127, 155, 255, .18);
+}
+#karaokeOverlay[data-karaoke-style="guilloche"] .k-control.primary:hover {
+  color: var(--k-primary-ink);
+  background: var(--k-primary-bg);
+  filter: brightness(1.08);
+}
+}

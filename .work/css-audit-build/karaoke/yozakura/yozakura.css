@@ -1,0 +1,486 @@
+/* ==========================================================================
+   AuraPlay Pro · Karaoke · YOZAKURA (night hanami)
+   Archivo : karaoke/yozakura/yozakura.css
+   Slug    : yozakura
+   Alcance : #karaokeOverlay[data-karaoke-style="yozakura"]
+             (+ la muestra  #karaokeOverlay .k-style-preview.yozakura)
+
+   Concepto: una noche de hanami bajo la luna. Montanas de tinta en
+   perspectiva atmosferica, el Fuji lejano, una pagoda sobre la colina,
+   una rama de cerezo con chochin encendidos y petalos a la deriva.
+   La escena Canvas vive en yozakura-effects.js; aqui se estilan fondo,
+   cabecera, letra, dock, controles y selector.
+
+   Paleta (detalle completo y contrastes en README.md):
+     abismo #06070a · noche #12121b · ocaso ciruela #2b2030 · laca #14111a
+     washi #f7f0e0 · washi 2 #d9cfbd · washi 3 #b9ae9c
+     sakura #f0b4c4 · shu (laca bermellon) #b3301e · asagi (foco) #8fd6cf
+
+   SUPUESTOS A CONTRASTAR CON EL REPOSITORIO (ver INTEGRATION.md):
+   - Los 7 tokens de letra (--k-sung-top, --k-sung-bot, --k-rest-top,
+     --k-rest-bot, --k-edge, --k-edge-w, --k-edge-w-sustain) vienen del
+     contrato. El resto de tokens --k-* de la seccion 1 son nombres
+     supuestos; ademas cada componente se estila directamente, asi que el
+     tema no depende de que esos nombres coincidan.
+   - --k-edge-w y --k-edge-w-sustain se suponen longitudes (em).
+   - Este archivo NO escribe --word-p ni --p ni toca background-size,
+     background-clip o -webkit-text-fill-color de .k-word (salvo el modo
+     de colores forzados, donde el relleno degradado desaparece).
+   ========================================================================== */
+
+
+/* 1. TOKENS ================================================================ */
+
+#karaokeOverlay[data-karaoke-style="yozakura"] {
+  color-scheme: dark;
+
+  /* Paleta semantica propia */
+  --yz-abyss: #06070a;          /* fondo mas profundo, extremos y velos */
+  --yz-night: #12121b;          /* cielo alto / atmosfera */
+  --yz-dusk: #2b2030;           /* horizonte ciruela (peor caso tras la letra) */
+  --yz-lacquer: #14111a;        /* superficie del dock (laca urushi) */
+  --yz-lacquer-hi: #221c29;     /* superficie hover / activa */
+  --yz-washi: #f7f0e0;          /* texto principal */
+  --yz-washi-2: #d9cfbd;        /* texto secundario, no cantado (arriba) */
+  --yz-washi-3: #b9ae9c;        /* no cantado (abajo), etiquetas */
+  --yz-sung-top: #fff6e6;       /* palabra cantada, arriba */
+  --yz-sung-bot: #f6b8c8;       /* palabra cantada, abajo (sakura) */
+  --yz-sakura: #f0b4c4;         /* acento primario: hover, seleccion */
+  --yz-shu: #b3301e;            /* acento secundario: laca bermellon */
+  --yz-shu-lo: #8f2415;         /* laca presionada */
+  --yz-edge: #ff7a5c;           /* borde luminoso de la palabra activa */
+  --yz-asagi: #8fd6cf;          /* foco visible (solo foco) */
+  --yz-line: rgba(247, 240, 224, 0.22);
+  --yz-line-hi: rgba(247, 240, 224, 0.42);
+  --yz-track: rgba(247, 240, 224, 0.40);
+  --yz-fill: #ffe0e8;
+
+  /* Tipografia por rol (sin descargas, con fallbacks reales) */
+  --yz-font-lyrics: "Hiragino Mincho ProN", "Hiragino Mincho Pro", "Yu Mincho", "YuMincho",
+    "Noto Serif JP", "Noto Serif CJK JP", "Source Han Serif JP", "Source Han Serif",
+    "Iowan Old Style", "Palatino Linotype", "Book Antiqua", Georgia, "Times New Roman", serif;
+  --yz-font-ui: "Hiragino Sans", "Hiragino Kaku Gothic ProN", "Yu Gothic UI", "Yu Gothic",
+    "Meiryo UI", "Noto Sans JP", "Noto Sans CJK JP", system-ui, -apple-system, "Segoe UI",
+    Roboto, "Helvetica Neue", Arial, sans-serif;
+  --yz-font-mono: ui-monospace, "SF Mono", "Cascadia Mono", Menlo, Consolas,
+    "Liberation Mono", monospace;
+
+  /* Mapeo a tokens compartidos (nombres supuestos salvo los de letra) */
+  --k-font-lyrics: var(--yz-font-lyrics);
+  --k-font-title: var(--yz-font-lyrics);
+  --k-font-ui: var(--yz-font-ui);
+  --k-font-mono: var(--yz-font-mono);
+  --k-text: var(--yz-washi);
+  --k-text-dim: var(--yz-washi-2);
+  --k-accent: var(--yz-sakura);
+  --k-accent-2: var(--yz-shu);
+  --k-border: var(--yz-line);
+  --k-focus: var(--yz-asagi);
+  --k-dock-bg: rgba(20, 17, 26, 0.86);
+  --k-dock-border: var(--yz-line);
+  --k-dock-ring: rgba(240, 180, 196, 0.28);
+  --k-dock-shadow: 0 -22px 44px -26px rgba(0, 0, 0, 0.85);
+  --k-btn-bg: rgba(247, 240, 224, 0.07);
+  --k-btn-bg-hover: rgba(240, 180, 196, 0.16);
+  --k-btn-bg-active: rgba(240, 180, 196, 0.24);
+  --k-btn-fg: var(--yz-washi);
+  --k-btn-border: var(--yz-line);
+  --k-primary-bg: var(--yz-shu);
+  --k-primary-bg-hover: var(--yz-shu);
+  --k-primary-fg: var(--yz-washi);
+  --k-track: var(--yz-track);
+  --k-fill: var(--yz-fill);
+  --k-thumb: var(--yz-washi);
+  --k-shadow: rgba(0, 0, 0, 0.55);
+}
+
+
+/* 2. FONDO Y VELO ========================================================= */
+
+/* Cielo de respaldo y textura de papel (fibras casi invisibles). La escena
+   Canvas dibuja luna, montanas, agua y ornamentos encima. */
+#karaokeOverlay[data-karaoke-style="yozakura"] .k-bg {
+  background-color: var(--yz-abyss);
+  background-image:
+    radial-gradient(90% 55% at 14% 34%, rgba(244, 236, 214, 0.09), rgba(244, 236, 214, 0) 62%),
+    radial-gradient(120% 70% at 18% 118%, rgba(88, 56, 86, 0.55), rgba(88, 56, 86, 0) 62%),
+    radial-gradient(80% 60% at 92% -8%, rgba(34, 40, 70, 0.5), rgba(34, 40, 70, 0) 66%),
+    repeating-linear-gradient(92deg, rgba(247, 240, 224, 0.016) 0 1px, rgba(247, 240, 224, 0) 1px 3px),
+    linear-gradient(180deg, #090b12 0%, #12121b 34%, #1d1722 62%, #2b2030 85%, #14101a 100%);
+}
+
+/* Velo: oscurece suavemente el centro (la letra manda) y los bordes donde
+   viven cabecera y dock. */
+#karaokeOverlay[data-karaoke-style="yozakura"] .k-overlay {
+  background-image:
+    radial-gradient(ellipse 62% 52% at 50% 46%, rgba(8, 7, 12, 0.58) 0, rgba(8, 7, 12, 0.36) 46%, rgba(8, 7, 12, 0) 100%),
+    linear-gradient(180deg, rgba(6, 7, 10, 0.62) 0, rgba(6, 7, 10, 0) 24%, rgba(6, 7, 10, 0) 66%, rgba(6, 7, 10, 0.66) 100%);
+}
+
+
+/* 3. CABECERA ============================================================= */
+
+#karaokeOverlay[data-karaoke-style="yozakura"] .k-header {
+  background-image: linear-gradient(180deg, rgba(6, 7, 10, 0.7), rgba(6, 7, 10, 0));
+}
+
+/* Portada enmarcada como grabado con paspartu */
+#karaokeOverlay[data-karaoke-style="yozakura"] .k-track-art {
+  border-radius: 5px;
+  box-shadow:
+    0 0 0 1px var(--yz-line-hi),
+    0 0 0 4px var(--yz-lacquer),
+    0 0 0 5px var(--yz-line),
+    0 12px 26px -10px rgba(0, 0, 0, 0.85);
+}
+
+#karaokeOverlay[data-karaoke-style="yozakura"] .k-track-title {
+  font-family: var(--yz-font-lyrics);
+  font-weight: 700;
+  font-size: clamp(1.05rem, 0.92rem + 0.9vw, 1.55rem);
+  line-height: 1.25;
+  letter-spacing: 0.03em;
+  text-transform: none;
+  color: var(--yz-washi);
+}
+
+#karaokeOverlay[data-karaoke-style="yozakura"] .k-track-artist {
+  font-family: var(--yz-font-ui);
+  font-weight: 500;
+  font-size: clamp(0.78rem, 0.72rem + 0.35vw, 0.98rem);
+  line-height: 1.3;
+  letter-spacing: 0.06em;
+  text-transform: none;
+  color: var(--yz-washi-2);
+}
+
+/* Hanko: sello bermellon con marco interior y un trazo de pincel.
+   Es solo forma (sin texto) para no depender de fuentes CJK ni leerse en
+   lectores de pantalla. */
+#karaokeOverlay[data-karaoke-style="yozakura"] .k-track-artist:not(:empty)::before {
+  content: "";
+  display: inline-block;
+  width: 0.95em;
+  height: 0.95em;
+  margin-right: 0.6em;
+  vertical-align: -0.12em;
+  border-radius: 2px;
+  background-color: var(--yz-shu);
+  background-image: linear-gradient(135deg, rgba(0, 0, 0, 0) 46%, rgba(247, 240, 224, 0.92) 47% 54%, rgba(0, 0, 0, 0) 55%);
+  box-shadow: inset 0 0 0 0.1em var(--yz-shu), inset 0 0 0 0.17em rgba(247, 240, 224, 0.85);
+  transform: rotate(-4deg);
+}
+
+
+/* 4. LETRAS (karaoke palabra por palabra) ================================= */
+
+/* El relleno progresivo lo pone el motor compartido (.k-word, --word-p,
+   background-clip:text). Aqui solo se aportan colores, tipografia y
+   jerarquia. NO se redefine --word-p ni se toca background-size. */
+
+#karaokeOverlay[data-karaoke-style="yozakura"] .k-lyrics {
+  font-family: var(--yz-font-lyrics);
+}
+
+#karaokeOverlay[data-karaoke-style="yozakura"] .k-line {
+  /* Linea futura o pasada: lectura clara, sin brillo de borde */
+  --k-sung-top: var(--yz-sung-top);
+  --k-sung-bot: var(--yz-sung-bot);
+  --k-rest-top: var(--yz-washi-2);
+  --k-rest-bot: var(--yz-washi-3);
+  --k-edge: transparent;
+  --k-edge-w: 0.34em;
+  --k-edge-w-sustain: 0.62em;
+
+  font-family: var(--yz-font-lyrics);
+  font-weight: 600;
+  line-height: 1.3;
+  letter-spacing: 0.012em;
+  text-transform: none;
+  font-kerning: normal;
+  font-variant-ligatures: none;
+  line-break: strict;
+  text-wrap: balance;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+  opacity: 0.8;
+}
+
+/* Linea actual: domina la jerarquia; el borde bermellon marca el frente de
+   progreso (no solo el color del relleno). */
+#karaokeOverlay[data-karaoke-style="yozakura"] .k-line.current {
+  --k-edge: var(--yz-edge);
+  --k-edge-w: 0.34em;
+  --k-edge-w-sustain: 0.62em;
+  opacity: 1;
+  filter: drop-shadow(0 0.05em 0.14em rgba(6, 7, 10, 0.6));
+}
+
+/* Respaldo si el navegador no soporta background-clip:text: colores planos
+   por estado (la sincronia sigue marcada por data-state). */
+@supports not ((background-clip: text) or (-webkit-background-clip: text)) {
+  #karaokeOverlay[data-karaoke-style="yozakura"] .k-word {
+    color: var(--yz-washi-2);
+  }
+  #karaokeOverlay[data-karaoke-style="yozakura"] .k-word[data-state="past"] {
+    color: var(--yz-sung-bot);
+  }
+  #karaokeOverlay[data-karaoke-style="yozakura"] .k-word[data-state="active"] {
+    color: var(--yz-edge);
+  }
+}
+
+
+/* 5. DOCK, PROGRESO Y TIEMPOS ============================================= */
+
+/* Laca oscura con retícula kumiko casi invisible (dos diagonales finas). */
+#karaokeOverlay[data-karaoke-style="yozakura"] .k-footer {
+  color: var(--yz-washi);
+  font-family: var(--yz-font-ui);
+  background-color: rgba(20, 17, 26, 0.86);
+  background-image:
+    linear-gradient(180deg, rgba(247, 240, 224, 0.05), rgba(247, 240, 224, 0) 46%),
+    repeating-linear-gradient(45deg, rgba(247, 240, 224, 0.032) 0 1px, rgba(247, 240, 224, 0) 1px 13px),
+    repeating-linear-gradient(-45deg, rgba(247, 240, 224, 0.032) 0 1px, rgba(247, 240, 224, 0) 1px 13px);
+  border-top: 1px solid var(--yz-line);
+  box-shadow: 0 -22px 44px -26px rgba(0, 0, 0, 0.85);
+  -webkit-backdrop-filter: blur(10px) saturate(1.1);
+  backdrop-filter: blur(10px) saturate(1.1);
+}
+
+#karaokeOverlay[data-karaoke-style="yozakura"] .k-time,
+#karaokeOverlay[data-karaoke-style="yozakura"] .k-times,
+#karaokeOverlay[data-karaoke-style="yozakura"] .k-offset {
+  font-family: var(--yz-font-mono);
+  font-size: 0.82rem;
+  letter-spacing: 0.02em;
+  font-variant-numeric: tabular-nums;
+  color: var(--yz-washi-2);
+}
+
+/* Barra de progreso: la forma y el relleno los resuelve la estructura
+   compartida con --k-track / --k-fill / --k-thumb. Aqui solo se afina color,
+   sombra del pulgar y foco, sin tocar su fondo. */
+#karaokeOverlay[data-karaoke-style="yozakura"] #kProgress {
+  accent-color: var(--yz-sakura);
+}
+#karaokeOverlay[data-karaoke-style="yozakura"] #kProgress::-webkit-slider-thumb {
+  box-shadow: 0 0 0 2px var(--yz-shu), 0 2px 8px rgba(0, 0, 0, 0.55);
+}
+#karaokeOverlay[data-karaoke-style="yozakura"] #kProgress::-moz-range-thumb {
+  box-shadow: 0 0 0 2px var(--yz-shu), 0 2px 8px rgba(0, 0, 0, 0.55);
+}
+#karaokeOverlay[data-karaoke-style="yozakura"] #kProgress:focus-visible {
+  outline: 2px solid var(--yz-asagi);
+  outline-offset: 4px;
+}
+
+
+/* 6. CONTROLES ============================================================ */
+
+#karaokeOverlay[data-karaoke-style="yozakura"] .k-control,
+#karaokeOverlay[data-karaoke-style="yozakura"] .k-close,
+#karaokeOverlay[data-karaoke-style="yozakura"] .k-style-btn {
+  font-family: var(--yz-font-ui);
+  color: var(--yz-washi);
+  background-color: rgba(247, 240, 224, 0.07);
+  border: 1px solid var(--yz-line);
+  border-radius: 10px;
+  letter-spacing: 0.04em;
+  text-transform: none;
+  -webkit-tap-highlight-color: transparent;
+  transition: background-color 0.18s ease, border-color 0.18s ease, box-shadow 0.18s ease,
+    transform 0.12s ease, color 0.18s ease;
+}
+
+/* Hover */
+#karaokeOverlay[data-karaoke-style="yozakura"] .k-control:hover:not(:disabled):not([aria-disabled="true"]),
+#karaokeOverlay[data-karaoke-style="yozakura"] .k-close:hover:not(:disabled),
+#karaokeOverlay[data-karaoke-style="yozakura"] .k-style-btn:hover {
+  background-color: rgba(240, 180, 196, 0.16);
+  border-color: rgba(240, 180, 196, 0.6);
+  box-shadow: 0 0 0 1px rgba(240, 180, 196, 0.18), 0 6px 16px -8px rgba(0, 0, 0, 0.7);
+}
+
+/* Presionado */
+#karaokeOverlay[data-karaoke-style="yozakura"] .k-control:active:not(:disabled):not([aria-disabled="true"]),
+#karaokeOverlay[data-karaoke-style="yozakura"] .k-close:active:not(:disabled),
+#karaokeOverlay[data-karaoke-style="yozakura"] .k-style-btn:active {
+  background-color: rgba(240, 180, 196, 0.24);
+  box-shadow: inset 0 1px 6px rgba(0, 0, 0, 0.5);
+  transform: translateY(1px) scale(0.985);
+}
+
+/* Foco visible (asagi: color reservado solo para foco) */
+#karaokeOverlay[data-karaoke-style="yozakura"] .k-control:focus-visible,
+#karaokeOverlay[data-karaoke-style="yozakura"] .k-close:focus-visible,
+#karaokeOverlay[data-karaoke-style="yozakura"] .k-style-btn:focus-visible {
+  outline: 2px solid var(--yz-asagi);
+  outline-offset: 2px;
+}
+
+/* Deshabilitado */
+#karaokeOverlay[data-karaoke-style="yozakura"] .k-control:disabled,
+#karaokeOverlay[data-karaoke-style="yozakura"] .k-control[aria-disabled="true"],
+#karaokeOverlay[data-karaoke-style="yozakura"] .k-close:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+  box-shadow: none;
+  transform: none;
+}
+
+/* Play / pausa: laca bermellon con brillo de urushi */
+#karaokeOverlay[data-karaoke-style="yozakura"] .k-control.primary {
+  color: var(--yz-washi);
+  background-color: var(--yz-shu);
+  background-image: radial-gradient(70% 70% at 30% 18%, rgba(255, 214, 190, 0.38), rgba(255, 214, 190, 0) 62%);
+  border-color: rgba(255, 196, 170, 0.55);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 236, 220, 0.45),
+    inset 0 -3px 6px rgba(60, 8, 2, 0.45),
+    0 8px 22px -8px rgba(224, 69, 47, 0.6);
+}
+#karaokeOverlay[data-karaoke-style="yozakura"] .k-control.primary:hover:not(:disabled) {
+  background-color: var(--yz-shu);
+  border-color: rgba(255, 214, 190, 0.85);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 236, 220, 0.55),
+    inset 0 -3px 6px rgba(60, 8, 2, 0.45),
+    0 10px 28px -6px rgba(224, 69, 47, 0.85);
+}
+#karaokeOverlay[data-karaoke-style="yozakura"] .k-control.primary:active:not(:disabled) {
+  background-color: var(--yz-shu-lo);
+  box-shadow: inset 0 2px 8px rgba(30, 4, 0, 0.6);
+  transform: scale(0.96);
+}
+
+
+/* 7. SELECTOR DE ESTILO Y MUESTRA ========================================= */
+
+/* Seleccionado: borde sakura + filete bermellon inferior (no solo color). */
+#karaokeOverlay[data-karaoke-style="yozakura"] .k-style-btn[aria-pressed="true"] {
+  background-color: rgba(240, 180, 196, 0.14);
+  border-color: var(--yz-sakura);
+  box-shadow: 0 0 0 1px rgba(240, 180, 196, 0.35), inset 0 -2px 0 var(--yz-shu);
+}
+
+/* Muestra del boton: luna, flor, chochin y dos crestas sobre cielo de noche */
+#karaokeOverlay .k-style-preview.yozakura {
+  background:
+    radial-gradient(circle at 24% 30%, #f4ecd6 0 9%, rgba(244, 236, 214, 0.28) 10% 17%, rgba(244, 236, 214, 0) 18%),
+    radial-gradient(circle at 80% 26%, #f0b4c4 0 5%, rgba(240, 180, 196, 0) 6%),
+    radial-gradient(circle at 70% 17%, #f6c6d3 0 4%, rgba(246, 198, 211, 0) 5%),
+    radial-gradient(circle at 88% 44%, #e0452f 0 6%, rgba(224, 69, 47, 0) 7%),
+    linear-gradient(158deg, rgba(58, 52, 80, 0) 56%, #3a3450 57% 66%, rgba(58, 52, 80, 0) 67%),
+    linear-gradient(178deg, rgba(26, 24, 36, 0) 66%, #1a1824 67% 80%, #0b0a10 81%),
+    linear-gradient(180deg, #090b12, #1d1722 60%, #2b2030);
+}
+
+#karaokeOverlay .k-style-btn[aria-pressed="true"] .k-style-preview.yozakura {
+  animation: yz-stamp 0.42s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+
+/* 8. ESTADO VACIO (sin letra) ============================================= */
+
+/* Enso: circulo de pincel abierto. Solo forma, sin texto. */
+#karaokeOverlay[data-karaoke-style="yozakura"] .k-lyrics:empty::before {
+  content: "";
+  display: block;
+  width: clamp(3rem, 9vmin, 5rem);
+  aspect-ratio: 1 / 1;
+  margin: 0 auto;
+  border: 2px solid rgba(247, 240, 224, 0.5);
+  border-right-color: rgba(247, 240, 224, 0);
+  border-radius: 50%;
+  transform: rotate(-24deg);
+}
+
+
+/* 9. RESPONSIVE =========================================================== */
+
+@media (max-width: 640px) {
+  #karaokeOverlay[data-karaoke-style="yozakura"] .k-track-title {
+    letter-spacing: 0.02em;
+  }
+  #karaokeOverlay[data-karaoke-style="yozakura"] .k-controls {
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 0.4rem;
+  }
+  #karaokeOverlay[data-karaoke-style="yozakura"] .k-control,
+  #karaokeOverlay[data-karaoke-style="yozakura"] .k-close {
+    min-height: 2.5rem;
+  }
+  #karaokeOverlay[data-karaoke-style="yozakura"] .k-footer {
+    -webkit-backdrop-filter: none;
+    backdrop-filter: none;
+    background-color: rgba(20, 17, 26, 0.94);
+  }
+}
+
+@media (max-height: 520px) {
+  #karaokeOverlay[data-karaoke-style="yozakura"] .k-line {
+    line-height: 1.2;
+  }
+  #karaokeOverlay[data-karaoke-style="yozakura"] .k-track-art {
+    box-shadow: 0 0 0 1px var(--yz-line-hi), 0 0 0 3px var(--yz-lacquer);
+  }
+}
+
+
+/* 10. ACCESIBILIDAD ======================================================= */
+
+@media (prefers-reduced-motion: reduce) {
+  #karaokeOverlay[data-karaoke-style="yozakura"] .k-control,
+  #karaokeOverlay[data-karaoke-style="yozakura"] .k-close,
+  #karaokeOverlay[data-karaoke-style="yozakura"] .k-style-btn {
+    transition: none;
+  }
+  #karaokeOverlay[data-karaoke-style="yozakura"] .k-control:active:not(:disabled),
+  #karaokeOverlay[data-karaoke-style="yozakura"] .k-close:active:not(:disabled),
+  #karaokeOverlay[data-karaoke-style="yozakura"] .k-style-btn:active,
+  #karaokeOverlay[data-karaoke-style="yozakura"] .k-control.primary:active:not(:disabled) {
+    transform: none;
+  }
+  #karaokeOverlay .k-style-btn[aria-pressed="true"] .k-style-preview.yozakura {
+    animation: none;
+  }
+}
+
+@media (prefers-reduced-transparency: reduce) {
+  #karaokeOverlay[data-karaoke-style="yozakura"] .k-footer {
+    -webkit-backdrop-filter: none;
+    backdrop-filter: none;
+    background-color: #14111a;
+  }
+}
+
+/* Colores forzados: el degradado recortado a texto desaparece, asi que se
+   usa el color del sistema y data-state marca la palabra activa. */
+@media (forced-colors: active) {
+  #karaokeOverlay[data-karaoke-style="yozakura"] .k-word {
+    background: none;
+    -webkit-text-fill-color: CanvasText;
+    color: CanvasText;
+  }
+  #karaokeOverlay[data-karaoke-style="yozakura"] .k-word[data-state="active"] {
+    -webkit-text-fill-color: Highlight;
+    color: Highlight;
+  }
+  #karaokeOverlay[data-karaoke-style="yozakura"] .k-control,
+  #karaokeOverlay[data-karaoke-style="yozakura"] .k-close,
+  #karaokeOverlay[data-karaoke-style="yozakura"] .k-style-btn {
+    border-color: ButtonText;
+  }
+}
+
+
+/* 11. KEYFRAMES (nombres exclusivos) ====================================== */
+
+/* El sello "se estampa" al elegir el tema. */
+@keyframes yz-stamp {
+  0% { transform: scale(1.22) rotate(-6deg); opacity: 0.55; }
+  60% { transform: scale(0.96) rotate(1deg); opacity: 1; }
+  100% { transform: none; opacity: 1; }
+}

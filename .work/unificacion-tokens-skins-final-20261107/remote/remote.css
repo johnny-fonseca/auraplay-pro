@@ -1,0 +1,532 @@
+@layer base {
+/* ==========================================================================
+   remote.css — Mando remoto móvil de AuraPlay Pro
+   Minimalista, botones grandes (uso desde el sofá), sin dependencias ni fuentes
+   externas. Tema oscuro por defecto; claro si el sistema lo pide.
+
+   NOTA: remoteClient.js alterna .play-icon / .pause-icon con style.display.
+   Por eso aquí NO se oculta ninguno por CSS (el .pause-icon arranca oculto con
+   style="display:none" en el HTML). Mute sí se alterna por [aria-pressed].
+   ========================================================================== */
+
+:root {
+  color-scheme: dark;
+
+  /* Paleta: tinta azul-verdosa de noche + verde aurora como único acento */
+  --bg: #0a1316;
+  --surface: #121f24;
+  --surface-2: #1a2b32;
+  --track: #25393f;
+  --text: #eef5f3;
+  --muted: #92a8a6;
+  --accent: #9ee6c4;
+  --accent-ink: #06231a;
+  --glow: rgba(158, 230, 196, 0.22);
+
+  --ok: #6fe3a8;
+  --warn: #ffcf70;
+  --err: #ff8a80;
+  --idle: #6c8280;
+
+  --font: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+}
+
+:root[data-theme="light"] {
+    color-scheme: light;
+    --bg: #eef3f2;
+    --surface: #ffffff;
+    --surface-2: #e1eae8;
+    --track: #cddad7;
+    --text: #0f1f1d;
+    --muted: #51675f;
+    --accent: #0f6e5a;
+    --accent-ink: #ffffff;
+    --glow: rgba(15, 110, 90, 0.16);
+
+    --ok: #0f7a4f;
+    --warn: #8a5a00;
+    --err: #b3261e;
+    --idle: #7d908c;
+}
+
+*,
+*::before,
+*::after { box-sizing: border-box; }
+
+html {
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+}
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  font: 400 1rem/1.4 var(--font);
+  overscroll-behavior: none;
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* --------------------------------------------------------------------------
+   Estructura: una columna, centrada, respetando las zonas seguras del móvil
+   -------------------------------------------------------------------------- */
+.remote {
+  min-height: 100vh;
+  min-height: 100dvh;
+  max-width: 30rem;
+  margin: 0 auto;
+  padding:
+    calc(env(safe-area-inset-top, 0px) + 12px)
+    calc(env(safe-area-inset-right, 0px) + 20px)
+    calc(env(safe-area-inset-bottom, 0px) + 16px)
+    calc(env(safe-area-inset-left, 0px) + 20px);
+  display: flex;
+  flex-direction: column;
+  gap: clamp(12px, 2.4dvh, 24px);
+}
+
+/* --------------------------------------------------------------------------
+   Estado de conexión
+   -------------------------------------------------------------------------- */
+.topbar { position: relative; display: flex; align-items: center; justify-content: center; min-height: 44px; }
+.btn-theme { position: absolute; right: 0; min-height: 40px; padding: 0 11px; gap: 7px; border-radius: 14px; font-size: 0.8125rem; }
+.btn-theme .icon { width: 18px; height: 18px; }
+
+.status {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 9px 16px;
+  border-radius: 999px;
+  background: var(--surface);
+  font-size: 0.9375rem;
+  font-weight: 500;
+}
+
+.status-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: var(--idle);
+  flex: none;
+}
+.status[data-state="connected"] .status-dot { background: var(--ok); }
+.status[data-state="connecting"] .status-dot {
+  background: var(--warn);
+  animation: pulse 1.2s ease-in-out infinite;
+}
+.status[data-state="error"] .status-dot { background: var(--err); }
+
+@keyframes pulse {
+  50% { opacity: 0.3; }
+}
+
+/* --------------------------------------------------------------------------
+   Pista actual
+   -------------------------------------------------------------------------- */
+.now {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: clamp(14px, 2.6dvh, 26px);
+}
+
+/* Lo más llamativo de la pantalla: un resplandor suave tipo aurora */
+.art {
+  width: min(70vw, 32dvh, 17rem);
+  aspect-ratio: 1;
+  border-radius: 32px;
+  display: grid;
+  place-items: center;
+  color: var(--accent);
+  background:
+    radial-gradient(120% 90% at 20% 0%, var(--glow), transparent 60%),
+    linear-gradient(160deg, var(--surface-2), var(--surface));
+  box-shadow: 0 0 56px var(--glow);
+}
+.art .icon { width: 38%; height: 38%; stroke-width: 1.4; }
+.art.has-cover { overflow: hidden; padding: 0; }
+.track-cover { display: block; width: 100%; height: 100%; object-fit: cover; }
+.track-cover[hidden] { display: none; }
+.art.has-cover > .icon { display: none; }
+
+.info { width: 100%; text-align: center; }
+
+.state {
+  margin: 0 0 6px;
+  font-size: 0.875rem;
+  color: var(--muted);
+}
+
+.title {
+  margin: 0 0 4px;
+  font-size: clamp(1.375rem, 6vw, 1.75rem);
+  font-weight: 650;
+  line-height: 1.2;
+  letter-spacing: -0.01em;
+  overflow-wrap: anywhere;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+  overflow: hidden;
+}
+
+.artist {
+  margin: 0;
+  font-size: 1.0625rem;
+  color: var(--muted);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.lyric-panel { width: 100%; min-height: 2.8em; display: grid; place-items: center; padding: 4px 8px; }
+.lyric-panel[hidden] { display: none; }
+.current-lyric { margin: 0; color: var(--accent); text-align: center; font-size: clamp(1.05rem, 4.5vw, 1.3rem); font-weight: 600; line-height: 1.35; overflow-wrap: anywhere; }
+
+/* --------------------------------------------------------------------------
+   Sliders (progreso y volumen): zona táctil de 48 px, pista fina
+   -------------------------------------------------------------------------- */
+.range {
+  -webkit-appearance: none;
+  appearance: none;
+  display: block;
+  width: 100%;
+  height: 48px;
+  margin: 0;
+  padding: 0;
+  background: transparent;
+  cursor: pointer;
+  touch-action: pan-y;
+  outline: none;
+}
+
+.range::-webkit-slider-runnable-track {
+  height: 8px;
+  border-radius: 999px;
+  background: var(--track);
+}
+.range::-moz-range-track {
+  height: 8px;
+  border-radius: 999px;
+  background: var(--track);
+}
+.range::-moz-range-progress {
+  height: 8px;
+  border-radius: 999px;
+  background: var(--accent);
+}
+
+.range::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 28px;
+  height: 28px;
+  margin-top: -10px; /* centra el pulgar en la pista de 8 px */
+  border: 0;
+  border-radius: 50%;
+  background: var(--accent);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.35);
+}
+.range::-moz-range-thumb {
+  width: 28px;
+  height: 28px;
+  border: 0;
+  border-radius: 50%;
+  background: var(--accent);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.35);
+}
+
+.range:focus-visible::-webkit-slider-thumb { outline: 3px solid var(--text); outline-offset: 3px; }
+.range:focus-visible::-moz-range-thumb { outline: 3px solid var(--text); outline-offset: 3px; }
+
+.range:disabled { opacity: 0.4; cursor: not-allowed; }
+
+.times {
+  display: flex;
+  justify-content: space-between;
+  margin-top: -2px;
+  font-size: 0.9375rem;
+  color: var(--muted);
+  font-variant-numeric: tabular-nums;
+}
+
+/* --------------------------------------------------------------------------
+   Botones
+   -------------------------------------------------------------------------- */
+.btn {
+  appearance: none;
+  -webkit-appearance: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background: var(--surface-2);
+  color: var(--text);
+  font: inherit;
+  cursor: pointer;
+  touch-action: manipulation; /* sin zoom por doble toque ni retardo */
+  user-select: none;
+  -webkit-user-select: none;
+  transition: transform 0.1s ease, background-color 0.15s ease, color 0.15s ease;
+}
+
+.btn:not(:disabled):active { transform: scale(0.94); }
+.btn:focus-visible { outline: 3px solid var(--accent); outline-offset: 3px; }
+.btn:disabled { opacity: 0.4; cursor: not-allowed; }
+
+@media (hover: hover) {
+  .btn:not(:disabled):hover { background: var(--track); }
+  .btn-play:not(:disabled):hover { background: var(--accent); filter: brightness(1.08); }
+}
+
+/* Iconos */
+.icon { display: block; width: 28px; height: 28px; flex: none; }
+.icon-fill { fill: currentColor; }
+.icon-stroke {
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+/* Transporte: anterior · reproducir/pausar · siguiente */
+.transport {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: clamp(18px, 7vw, 34px);
+}
+
+.btn-skip {
+  width: 68px;
+  height: 68px;
+  border-radius: 50%;
+}
+.btn-skip .icon { width: 30px; height: 30px; }
+
+.btn-play {
+  width: 96px;
+  height: 96px;
+  border-radius: 50%;
+  background: var(--accent);
+  color: var(--accent-ink);
+  box-shadow: 0 8px 32px var(--glow);
+}
+.btn-play .icon { width: 46px; height: 46px; }
+
+/* Aleatorio y repetición */
+.modes {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+.btn-mode {
+  min-height: 60px;
+  padding: 0 14px;
+  gap: 10px;
+  border-radius: 18px;
+  font-size: 1rem;
+  font-weight: 500;
+}
+.btn-mode[aria-pressed="true"] {
+  background: var(--accent);
+  color: var(--accent-ink);
+}
+
+.icon-wrap { position: relative; display: grid; }
+
+/* Insignia «1» solo en el modo «repetir una pista» */
+.badge {
+  display: none;
+  position: absolute;
+  right: -7px;
+  bottom: -7px;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: var(--accent-ink);
+  color: var(--accent);
+  font-size: 0.6875rem;
+  font-weight: 700;
+  line-height: 16px;
+  text-align: center;
+}
+#btnRepeat[data-mode="one"] .badge { display: block; }
+
+/* Volumen */
+.volume-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 6px 18px 6px 6px;
+  border-radius: 999px;
+  background: var(--surface);
+}
+
+.btn-mute {
+  width: 56px;
+  height: 56px;
+  flex: none;
+  border-radius: 50%;
+}
+.btn-mute .mute-icon { display: none; }
+.btn-mute[aria-pressed="true"] .volume-icon { display: none; }
+.btn-mute[aria-pressed="true"] .mute-icon { display: block; }
+.btn-mute[aria-pressed="true"] { background: var(--accent); color: var(--accent-ink); }
+
+.volume-row .range { flex: 1; min-width: 0; }
+
+.volume-value {
+  min-width: 3.4ch;
+  text-align: right;
+  font-size: 0.9375rem;
+  font-variant-numeric: tabular-nums;
+  color: var(--muted);
+}
+
+/* --------------------------------------------------------------------------
+   Pie: ayuda de conexión
+   -------------------------------------------------------------------------- */
+.foot {
+  margin-top: auto;
+  padding-top: 4px;
+  text-align: center;
+  font-size: 0.875rem;
+  color: var(--muted);
+}
+.foot p { margin: 0; }
+
+/* --------------------------------------------------------------------------
+   Pantallas muy bajas (móviles pequeños o en horizontal): compactar
+   -------------------------------------------------------------------------- */
+@media (max-height: 640px) {
+  .art { width: min(50vw, 24dvh); }
+  .btn-play { width: 84px; height: 84px; }
+  .btn-skip { width: 60px; height: 60px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .btn { transition: none; }
+  .btn:not(:disabled):active { transform: none; }
+  .status[data-state="connecting"] .status-dot { animation: none; }
+}
+
+/* Ajuste compacto: prioriza que la letra y los controles quepan en el móvil. */
+.remote { gap: clamp(6px, 1.1dvh, 10px); padding-top: calc(env(safe-area-inset-top, 0px) + 8px); padding-bottom: calc(env(safe-area-inset-bottom, 0px) + 8px); padding-left: calc(env(safe-area-inset-left, 0px) + 14px); padding-right: calc(env(safe-area-inset-right, 0px) + 14px); }
+.topbar { min-height: 40px; }
+.status { gap: 8px; padding: 6px 12px; font-size: 0.8125rem; }
+.now { gap: 8px; }
+.art { width: min(44vw, 22dvh, 10rem); border-radius: 22px; }
+.title { font-size: clamp(1.125rem, 5vw, 1.45rem); }
+.artist { font-size: 0.9rem; }
+.lyric-panel { min-height: 2.2em; padding: 2px 8px; }
+.current-lyric { font-size: clamp(0.95rem, 4vw, 1.15rem); line-height: 1.3; }
+.range { height: 36px; }
+.btn-skip { width: 54px; height: 54px; }
+.btn-skip .icon { width: 24px; height: 24px; }
+.btn-play { width: 72px; height: 72px; }
+.btn-play .icon { width: 36px; height: 36px; }
+.btn-mode { min-height: 44px; padding: 0 10px; gap: 8px; border-radius: 14px; font-size: 0.875rem; }
+.btn-mute { width: 44px; height: 44px; }
+.volume-row { padding: 4px 12px 4px 4px; }
+.foot { font-size: 0.75rem; }
+@media (max-height: 640px) {
+  .art { width: min(34vw, 16dvh, 8rem); }
+  .btn-play { width: 64px; height: 64px; }
+  .btn-skip { width: 48px; height: 48px; }
+}
+.btn-theme { width: 40px; height: 40px; min-height: 40px; padding: 0; border-radius: 50%; }
+.btn-theme .icon { width: 21px; height: 21px; }
+.btn-theme [hidden] { display: none; }
+
+/* UX adaptativa: áreas táctiles consistentes y composición según el dispositivo. */
+.remote { max-width: 34rem; }
+.topbar .status { max-width: calc(100% - 56px); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.btn-theme { width: 44px; height: 44px; min-height: 44px; }
+.btn-mode, .btn-mute, .btn-skip, .btn-play { touch-action: manipulation; }
+.btn:focus-visible, .range:focus-visible { outline: 3px solid var(--accent); outline-offset: 3px; }
+.progress .range { height: 40px; }
+.volume-row .range { height: 44px; }
+.times { font-size: 0.8125rem; }
+
+@media (min-width: 520px) and (orientation: portrait) {
+  .remote { max-width: 38rem; padding-left: 24px; padding-right: 24px; gap: 12px; }
+  .art { width: min(38vw, 24dvh, 11rem); }
+  .now { gap: 10px; }
+  .btn-mode { min-height: 48px; }
+}
+
+@media (orientation: landscape) and (max-height: 560px) {
+  .remote {
+    max-width: 58rem;
+    min-height: 100dvh;
+    display: grid;
+    grid-template-columns: minmax(150px, 0.8fr) minmax(0, 1.2fr);
+    grid-template-rows: 44px auto auto auto auto 1fr;
+    align-content: stretch;
+    column-gap: clamp(14px, 4vw, 40px);
+    row-gap: 5px;
+    padding: calc(env(safe-area-inset-top, 0px) + 6px) calc(env(safe-area-inset-right, 0px) + 16px) calc(env(safe-area-inset-bottom, 0px) + 6px) calc(env(safe-area-inset-left, 0px) + 16px);
+  }
+  .topbar { grid-column: 1 / -1; grid-row: 1; }
+  .now { grid-column: 1; grid-row: 2 / 6; justify-content: center; gap: 6px; }
+  .art { width: min(27vw, 28dvh, 9rem); }
+  .title { font-size: clamp(1rem, 3vw, 1.25rem); }
+  .artist, .state { font-size: 0.78rem; }
+  .lyric-panel { min-height: 1.8em; }
+  .current-lyric { font-size: clamp(0.88rem, 3vw, 1.05rem); }
+  .progress { grid-column: 2; grid-row: 2; align-self: end; }
+  .transport { grid-column: 2; grid-row: 3; }
+  .modes { grid-column: 2; grid-row: 4; }
+  .volume-row { grid-column: 2; grid-row: 5; }
+  .foot { grid-column: 1 / -1; grid-row: 6; align-self: end; margin-top: 0; padding-top: 2px; }
+  .btn-play { width: 60px; height: 60px; }
+  .btn-skip { width: 46px; height: 46px; }
+}
+
+/* Espaciado táctil amplio: controles separados y cómodos para el pulgar. */
+.remote { gap: clamp(14px, 2.2dvh, 22px); padding-top: calc(env(safe-area-inset-top, 0px) + 14px); padding-bottom: calc(env(safe-area-inset-bottom, 0px) + 14px); padding-left: calc(env(safe-area-inset-left, 0px) + 18px); padding-right: calc(env(safe-area-inset-right, 0px) + 18px); }
+.topbar { min-height: 48px; }
+.status { padding: 9px 14px; font-size: 0.9rem; }
+.btn-theme { width: 48px; height: 48px; min-height: 48px; }
+.btn-theme .icon { width: 23px; height: 23px; }
+.now { gap: 14px; }
+.art { width: min(48vw, 27dvh, 11rem); border-radius: 24px; }
+.title { font-size: clamp(1.25rem, 5.5vw, 1.65rem); }
+.artist { font-size: 1rem; }
+.lyric-panel { min-height: 3em; padding: 8px 12px; }
+.current-lyric { font-size: clamp(1.05rem, 4.5vw, 1.3rem); line-height: 1.4; }
+.progress .range { height: 48px; }
+.times { margin-top: 2px; font-size: 0.9rem; }
+.transport { gap: clamp(24px, 8vw, 40px); }
+.btn-skip { width: 64px; height: 64px; }
+.btn-skip .icon { width: 28px; height: 28px; }
+.btn-play { width: 88px; height: 88px; }
+.btn-play .icon { width: 42px; height: 42px; }
+.modes { gap: 14px; }
+.btn-mode { min-height: 56px; padding: 0 14px; gap: 10px; font-size: 0.95rem; }
+.btn-mute { width: 52px; height: 52px; }
+.volume-row { gap: 12px; padding: 7px 15px 7px 7px; }
+.volume-row .range { height: 48px; }
+.volume-value { font-size: 1rem; }
+.foot { padding-top: 8px; font-size: 0.82rem; }
+
+@media (orientation: landscape) and (max-height: 560px) {
+  .remote { row-gap: 8px; padding-top: calc(env(safe-area-inset-top, 0px) + 8px); padding-bottom: calc(env(safe-area-inset-bottom, 0px) + 8px); }
+  .topbar { min-height: 44px; }
+  .now { gap: 8px; }
+  .art { width: min(30vw, 29dvh, 9.5rem); }
+  .lyric-panel { min-height: 2.4em; padding: 4px 8px; }
+  .current-lyric { font-size: clamp(0.95rem, 3.4vw, 1.15rem); }
+  .btn-play { width: 72px; height: 72px; }
+  .btn-skip { width: 54px; height: 54px; }
+  .btn-mode { min-height: 52px; }
+  .btn-mute { width: 48px; height: 48px; }
+}
+}

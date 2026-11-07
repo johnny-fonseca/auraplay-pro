@@ -1,0 +1,21 @@
+@layer skin {
+  /* Alto contraste: sin velos ni grano, bordes firmes. */
+  @media (prefers-contrast: more) {
+    :root[data-skin="paper"]:not([data-theme="light"]) {
+      --surface-border: rgba(255, 255, 255, .34);
+      --surface-border-strong: rgba(255, 255, 255, .6);
+      --color-text-muted: #c9c2ae;
+    }
+
+    :root[data-skin="paper"][data-theme="light"] {
+      --surface-border: rgba(30, 22, 8, .50);
+      --surface-border-strong: rgba(120, 30, 15, .85);
+      --color-text-muted: #2e3246;
+    }
+
+    :root[data-skin="paper"]::before,
+    :root[data-skin="paper"]::after {
+      display: none;
+    }
+  }
+}

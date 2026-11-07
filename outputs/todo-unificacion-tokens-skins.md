@@ -298,6 +298,8 @@ Cada skin debe proporcionar valores para los mismos nombres; los componentes no 
 - [x] `npm run check:a11y:skins` calcula 20 combinaciones (10 skins × 2 temas) y no detecta fallos en los pares de tokens auditados.
 - [x] `paper.css` y `paper-accessibility.css` pasan CleanCSS 5.3.3 niveles 0 y 1 sin errores ni warnings; los overrides `prefers-contrast` permanecen en la hoja complementaria.
 - [x] `lint:scopes`, `lint:surface-tokens` y build de producción en `.work/unificacion-tokens-skins-final-20261107` pasaron; el build temporal incluye `paper-accessibility.css` y no se escribió en `dist/`.
+- [x] Las diez skins publican los aliases semánticos obligatorios de borde, estado, foco y superficies seleccionadas/deshabilitadas; se eliminaron los selectores de tema claro que no coinciden con el DOM real.
+- [x] Tras este lote, `check:a11y:skins` calcula 20/20 combinaciones sin fallos; `lint:scopes`, `lint:surface-tokens` y `build:production` pasan usando `npm.cmd` en Windows.
 - [ ] El inventario estructural detectó reglas compartidas aún directas en Glaciar y Rubí; quedan para el siguiente lote.
 - [ ] Las capturas/matriz visual, pruebas interactivas, lector de pantalla, colores forzados y combinaciones con `data-ui` no se ejecutaron en esta tanda.
 

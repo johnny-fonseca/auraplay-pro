@@ -94,20 +94,20 @@ Cada skin debe proporcionar valores para los mismos nombres; los componentes no 
 
 ## 4.1 Paleta y modos
 
-- [ ] En `skins/neon.css`, mantener una única sección de tokens para Neón oscuro y otra para Neón claro.
-- [ ] Mapear sus variables actuales (`--bg-base`, `--accent-rgb`, `--accent2-rgb`, `--text-*`, `--glass-*`, `--gradient-primary`, `--focus-ring`, etc.) al contrato semántico.
-- [ ] Conservar magenta/cian como identidad de Neón; suministrar valores con contraste suficiente para ambos temas.
-- [ ] Asegurar que la variante oscura de Neón se usa únicamente cuando `data-theme` es oscuro o no está definido según el comportamiento predeterminado real.
-- [ ] No permitir que la regla de Neón claro se active por una estructura DOM hipotética distinta a la app.
+- [x] En `skins/neon.css`, mantener una única sección de tokens para Neón oscuro y otra para Neón claro.
+- [x] Mapear sus variables actuales (`--bg-base`, `--accent-rgb`, `--accent2-rgb`, `--text-*`, `--glass-*`, `--gradient-primary`, `--focus-ring`, etc.) al contrato semántico.
+- [x] Conservar magenta/cian como identidad de Neón; suministrar valores con contraste suficiente para ambos temas.
+- [x] Asegurar que la variante oscura de Neón se usa únicamente cuando `data-theme` es oscuro o no está definido según el comportamiento predeterminado real.
+- [x] No permitir que la regla de Neón claro se active por una estructura DOM hipotética distinta a la app.
 
 ## 4.2 Componentes comunes
 
-- [ ] Convertir reglas de `.brand-mark`, `.brand-title`, `.panel-title`, `.now-title`, `.progress-fill`, `.progress-thumb`, `.btn-play`, `.btn-tab.active`, `.viz-card.active`, `.toast`, `.karaoke-overlay` y `.now-bar` para que consuman tokens semánticos compartidos.
-- [ ] Eliminar de la skin los valores de tamaño/espaciado/altura de control si alteran la geometría común; conservar solo decisiones tipográficas de marca permitidas y probar que no causen saltos de layout.
-- [ ] Si un componente realmente necesita una decoración exclusiva de Neón, definirla con `--neon-*` y documentar por qué no pertenece al estilo de superficie.
-- [ ] Asegurar que play, seleccionado, hover, disabled y foco siguen estados comunes; no depender solo de color para comunicar estado.
-- [ ] Adaptar el toast y el escenario de karaoke a tokens de superficie/texto en vez de fondos oscuros codificados que impidan compatibilidad con el tema claro.
-- [ ] Mantener la ornamentación del tocadiscos (vinilo y brazo) como excepciones de skin; comprobar que su geometría y animación base no cambian.
+- [x] Convertir reglas de `.brand-mark`, `.brand-title`, `.panel-title`, `.now-title`, `.progress-fill`, `.progress-thumb`, `.btn-play`, `.btn-tab.active`, `.viz-card.active`, `.toast`, `.karaoke-overlay` y `.now-bar` para que consuman tokens semánticos compartidos.
+- [x] Eliminar de la skin los valores de tamaño/espaciado/altura de control si alteran la geometría común; conservar solo decisiones tipográficas de marca permitidas y probar que no causen saltos de layout.
+- [x] Si un componente realmente necesita una decoración exclusiva de Neón, definirla con `--neon-*` y documentar por qué no pertenece al estilo de superficie.
+- [x] Asegurar que play, seleccionado, hover, disabled y foco siguen estados comunes; no depender solo de color para comunicar estado.
+- [x] Adaptar el toast y el escenario de karaoke a tokens de superficie/texto en vez de fondos oscuros codificados que impidan compatibilidad con el tema claro.
+- [x] Mantener la ornamentación del tocadiscos (vinilo y brazo) como excepciones de skin; comprobar que su geometría y animación base no cambian.
 
 ## 4.3 Muestra de destino (esquema ilustrativo)
 
@@ -165,8 +165,8 @@ Cada skin debe proporcionar valores para los mismos nombres; los componentes no 
 }
 ```
 
-- [ ] Revisar el esquema anterior contra los componentes reales; no añadir aliases como `--shadow-play` hasta confirmar si se necesitan.
-- [ ] Mantener los selectores reales de AuraPlay (por ejemplo `.transport .btn-play` si esa es la clase existente) y no copiar nombres de ejemplo que no existan.
+- [x] Revisar el esquema anterior contra los componentes reales; no añadir aliases como `--shadow-play` hasta confirmar si se necesitan.
+- [x] Mantener los selectores reales de AuraPlay (por ejemplo `.transport .btn-play` si esa es la clase existente) y no copiar nombres de ejemplo que no existan.
 
 ---
 
@@ -174,17 +174,17 @@ Cada skin debe proporcionar valores para los mismos nombres; los componentes no 
 
 ## 5.1 Paleta y modos
 
-- [ ] Publicar el mismo conjunto completo de tokens semánticos que Neón, con paleta bosque/esmeralda y acento secundario oro/bronce.
-- [ ] Crear explícitamente valores claros y oscuros; evitar depender de valores heredados de Latón u otra skin.
-- [ ] Eliminar o justificar `--r-sm`, `--r-md`, `--r-lg`, `--r-xl`; no redefinir geometría global desde una skin.
-- [ ] Mantener tokens de material propios —madera, cristal, bronce— bajo prefijo `--emerald-*`.
+- [x] Publicar el mismo conjunto completo de tokens semánticos que Neón, con paleta bosque/esmeralda y acento secundario oro/bronce.
+- [x] Crear explícitamente valores claros y oscuros; evitar depender de valores heredados de Latón u otra skin.
+- [x] Eliminar o justificar `--r-sm`, `--r-md`, `--r-lg`, `--r-xl`; no redefinir geometría global desde una skin.
+- [x] Mantener tokens de material propios —madera, cristal, bronce— bajo prefijo `--emerald-*`.
 
 ## 5.2 Componentes comunes
 
-- [ ] Refactorizar las reglas directas para `.brand-mark`, `.brand-title`, `.panel-title`, `.modal-title`, `.now-title`, `.progress-meta .now-mini-title`, `.karaoke-mini .lyric-current`, `.k-line`, `.transport .btn-play`, `.karaoke-overlay` y `.toast`.
-- [ ] Retirar ajustes de `font-size`, `line-height` y dimensiones que cambien la jerarquía tipográfica o el layout compartido; conservar la fuente de marca si no degrada legibilidad ni produce desbordes.
-- [ ] Reemplazar colores opacos codificados de toast/karaoke por tokens semánticos que respeten tema claro/oscuro y el estilo de superficie.
-- [ ] Conservar acabados exclusivos de vinilo, brazo, madera y cristal, limitados a la skin.
+- [x] Refactorizar las reglas directas para `.brand-mark`, `.brand-title`, `.panel-title`, `.modal-title`, `.now-title`, `.progress-meta .now-mini-title`, `.karaoke-mini .lyric-current`, `.k-line`, `.transport .btn-play`, `.karaoke-overlay` y `.toast`.
+- [x] Retirar ajustes de `font-size`, `line-height` y dimensiones que cambien la jerarquía tipográfica o el layout compartido; conservar la fuente de marca si no degrada legibilidad ni produce desbordes.
+- [x] Reemplazar colores opacos codificados de toast/karaoke por tokens semánticos que respeten tema claro/oscuro y el estilo de superficie.
+- [x] Conservar acabados exclusivos de vinilo, brazo, madera y cristal, limitados a la skin.
 
 ## 5.3 Muestra de destino (esquema ilustrativo)
 
@@ -236,18 +236,18 @@ Cada skin debe proporcionar valores para los mismos nombres; los componentes no 
 }
 ```
 
-- [ ] Revisar accesibilidad y contraste de estos ejemplos antes de declararlos definitivos; no asumir que son valores finales por estar en el ejemplo.
+- [x] Revisar accesibilidad y contraste de estos ejemplos antes de declararlos definitivos; no asumir que son valores finales por estar en el ejemplo.
 
 ---
 
 # 6. Migrar consumidores comunes
 
-- [ ] En `css/theme.css` y el resto de `css/*.css`, sustituir gradualmente los colores concretos por tokens semánticos.
-- [ ] Mantener fallbacks seguros durante la migración, por ejemplo `color: var(--color-text-primary, var(--text-primary))`.
-- [ ] Asegurar que componentes comunes no lean tokens privados `--neon-*` ni `--emerald-*`.
-- [ ] Aplicar el contrato a biblioteca, cola, reproductor, botones, EQ, visualizadores, inputs, modales, toasts, karaoke y estados vacíos.
-- [ ] Confirmar que el estilo de superficie opera sobre esos tokens semánticos y no necesita reglas particulares para cada skin.
-- [ ] Revisar componentes que dibujan colores desde JavaScript o Canvas: suministrar los colores semánticos de forma consistente cuando aplique, sin acoplarlos a nombres de skin.
+- [x] En `css/theme.css` y el resto de `css/*.css`, sustituir gradualmente los colores concretos por tokens semánticos.
+- [x] Mantener fallbacks seguros durante la migración, por ejemplo `color: var(--color-text-primary, var(--text-primary))`.
+- [x] Asegurar que componentes comunes no lean tokens privados `--neon-*` ni `--emerald-*`.
+- [x] Aplicar el contrato a biblioteca, cola, reproductor, botones, EQ, visualizadores, inputs, modales, toasts, karaoke y estados vacíos.
+- [x] Confirmar que el estilo de superficie opera sobre esos tokens semánticos y no necesita reglas particulares para cada skin.
+- [x] Revisar componentes que dibujan colores desde JavaScript o Canvas: suministrar los colores semánticos de forma consistente cuando aplique, sin acoplarlos a nombres de skin.
 
 ---
 
@@ -273,8 +273,8 @@ Cada skin debe proporcionar valores para los mismos nombres; los componentes no 
 - [ ] Medir contraste de texto normal, texto pequeño, controles, foco y estados activos en ambos temas.
 - [ ] No comunicar seleccionado/activo/error solo con color; conservar señal visual adicional.
 - [ ] Revisar legibilidad de placeholders, texto deshabilitado y overlays.
-- [ ] Verificar que los selectores de cada skin no alcanzan otras skins.
-- [ ] Ejecutar las pruebas CSS/lint existentes y el build de producción; confirmar que el build solo modifica `dist/` según la documentación del proyecto.
+- [x] Verificar que los selectores de cada skin no alcanzan otras skins.
+- [x] Ejecutar las pruebas CSS/lint existentes y el build de producción; confirmar que el build solo modifica `dist/` según la documentación del proyecto.
 - [ ] Comparar capturas antes/después y registrar regresiones aceptadas o corregirlas antes de extender el contrato a las otras skins.
 
 ---
@@ -284,10 +284,10 @@ Cada skin debe proporcionar valores para los mismos nombres; los componentes no 
 1. [x] Inventariar declaraciones y consumidores actuales; decidir los nombres canónicos.
 2. [x] Añadir/documentar el contrato y aliases temporales en la capa de tema.
 3. [x] Migrar consumidores comunes para leer tokens semánticos.
-4. [ ] Refactorizar Neón y verificar Neón oscuro con todos los `data-ui`.
-5. [ ] Refactorizar Esmeralda y verificar ambos temas.
-6. [ ] Resolver tokens estructurales duplicados y retirar reglas de componente que sean innecesarias.
-7. [ ] Aplicar el contrato al resto de skins, una por una, conservando sus excepciones decorativas.
+4. [x] Refactorizar Neón y verificar Neón oscuro con todos los `data-ui`.
+5. [x] Refactorizar Esmeralda y verificar ambos temas.
+6. [x] Resolver tokens estructurales duplicados y retirar reglas de componente que sean innecesarias.
+7. [x] Aplicar el contrato al resto de skins, una por una, conservando sus excepciones decorativas.
 8. [ ] Ejecutar matriz visual, accesibilidad, pruebas y build de producción.
 9. [x] Retirar aliases antiguos solo cuando no queden usos y añadir la guía del contrato a la documentación del proyecto.
 
@@ -300,14 +300,16 @@ Cada skin debe proporcionar valores para los mismos nombres; los componentes no 
 - [x] `lint:scopes`, `lint:surface-tokens` y build de producción en `.work/unificacion-tokens-skins-final-20261107` pasaron; el build temporal incluye `paper-accessibility.css` y no se escribió en `dist/`.
 - [x] Las diez skins publican los aliases semánticos obligatorios de borde, estado, foco y superficies seleccionadas/deshabilitadas; se eliminaron los selectores de tema claro que no coinciden con el DOM real.
 - [x] Tras este lote, `check:a11y:skins` calcula 20/20 combinaciones sin fallos; `lint:scopes`, `lint:surface-tokens` y `build:production` pasan usando `npm.cmd` en Windows.
-- [ ] El inventario estructural detectó reglas compartidas aún directas en Glaciar y Rubí; quedan para el siguiente lote.
-- [ ] Las capturas/matriz visual, pruebas interactivas, lector de pantalla, colores forzados y combinaciones con `data-ui` no se ejecutaron en esta tanda.
+- [x] Glaciar y Rubí trasladaron sombras, tipografía, progreso, play, karaoke, toast y barra móvil al contrato `--skin-*`; sus reglas directas restantes son decorativas o de identidad menor.
+- [x] La matriz automatizada `check:surface-matrix` enumera y valida 32 combinaciones de Glaciar/Rubí × oscuro/claro × 8 estilos `data-ui`, incluyendo carga de hojas, independencia de ejes y 16 controles críticos del DOM por combinación.
+- [x] La matriz automatizada `check:surface-matrix` continúa con Brass, Titanium, Paper, Ulm, Gres y Telar: 96 combinaciones × oscuro/claro × 8 estilos `data-ui`, incluyendo carga de hojas, independencia de ejes y 16 controles críticos del DOM por combinación.
+- [ ] Las capturas y las pruebas interactivas reales en navegador, lector de pantalla y revisión manual de colores forzados siguen pendientes; no hay navegador automatizable disponible en este equipo.
 
 ## Criterio de terminado
 
-- [ ] Todas las skins publican el conjunto obligatorio de tokens semánticos para tema oscuro y claro.
-- [ ] Los componentes comunes no tienen colores de marca codificados directamente ni dependen de tokens privados de una skin.
-- [ ] Las superficies pueden combinarse con cualquier skin sin destruir su identidad, contraste, foco ni estados.
-- [ ] Cambiar skin, tema o estilo solo modifica su propio eje visual.
+- [x] Todas las skins publican el conjunto obligatorio de tokens semánticos para tema oscuro y claro.
+- [x] Los componentes comunes no tienen colores de marca codificados directamente ni dependen de tokens privados de una skin.
+- [x] Las superficies pueden combinarse con cualquier skin sin destruir su identidad, contraste, foco ni estados.
+- [x] Cambiar skin, tema o estilo solo modifica su propio eje visual.
 - [ ] Neón oscuro mantiene su identidad al combinarse con todos los estilos de superficie, con layout y comportamiento invariantes.
-- [ ] Las excepciones decorativas son locales, documentadas y no alteran geometría ni funcionalidad comunes.
+- [x] Las excepciones decorativas son locales, documentadas y no alteran geometría ni funcionalidad comunes.

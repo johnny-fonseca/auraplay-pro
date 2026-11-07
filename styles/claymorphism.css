@@ -28,14 +28,14 @@
 --cl-candy-2:color-mix(in srgb,rgb(var(--color-accent-soft-rgb)) 62%,#fff);
 --cl-font:ui-rounded,"SF Pro Rounded","Nunito","Quicksand","Varela Round",var(--font-body),system-ui,sans-serif;
 }
-/* Texto oscuro sobre pasteles (!important para ganar a cualquier skin) */
+/* Texto oscuro sobre pasteles; la capa surface ya prevalece sobre skin. */
 :root[data-ui="clay"]{
 --radius-xs:6px;--radius-sm:9px;--radius-control:14px;--radius-md:18px;--radius-lg:20px;
 --radius-xl:24px;--radius-2xl:26px;--radius-3xl:30px;--radius-4xl:44px;--radius-pill:999px;
---color-text-primary:var(--cl-ink) !important;
---color-text-secondary:var(--cl-ink-2) !important;
---color-text-muted:var(--cl-ink-3) !important;
---color-text-disabled:var(--cl-ink-4) !important;
+--color-text-primary:var(--cl-ink);
+--color-text-secondary:var(--cl-ink-2);
+--color-text-muted:var(--cl-ink-3);
+--color-text-disabled:var(--cl-ink-4);
 }
 
 /* ================= Fondo ================= */
@@ -77,8 +77,8 @@ color:var(--cl-ink)}
 --cl-candy:color-mix(in srgb,rgb(var(--color-accent-rgb)) 42%,#292630);
 --cl-candy-2:color-mix(in srgb,rgb(var(--color-accent-soft-rgb)) 42%,#292630);
 --cl-ink:#f1edf5;--cl-ink-2:#d0c9d8;--cl-ink-3:#aaa2b3;--cl-ink-4:#91899a;
---color-text-primary:var(--cl-ink) !important;--color-text-secondary:var(--cl-ink-2) !important;
---color-text-muted:var(--cl-ink-3) !important;--color-text-disabled:var(--cl-ink-4) !important;
+--color-text-primary:var(--cl-ink);--color-text-secondary:var(--cl-ink-2);
+--color-text-muted:var(--cl-ink-3);--color-text-disabled:var(--cl-ink-4);
 }
 :root[data-ui="clay"][data-theme="dark"] :is(.search-input,.playlist-search input,.reset-confirm-input,.progress-bar,input[type="range"].slider,.reset-confirm-panel,.karaoke-mini){background:rgba(255,255,255,.055);color:var(--cl-ink);box-shadow:inset 5px 6px 12px rgba(0,0,0,.38),inset -3px -3px 8px rgba(255,255,255,.045)}
 :root[data-ui="clay"][data-theme="dark"] .btn-ghost:hover:not(:disabled),:root[data-ui="clay"][data-theme="dark"] .btn-tab:hover:not(:disabled):not(.active){background:rgba(255,255,255,.08);box-shadow:inset 0 1px 0 rgba(255,255,255,.1),0 4px 10px rgba(0,0,0,.2)}

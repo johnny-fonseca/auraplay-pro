@@ -7,7 +7,8 @@
     "lint:scopes": "node scripts/lint-css-scopes.js",
     "lint:surface-tokens": "node scripts/lint-surface-tokens.js",
     "build:production": "node scripts/build-production.js",
-    "check:a11y:skins": "node scripts/check-skin-contrast.js"
+    "check:a11y:skins": "node scripts/check-skin-contrast.js",
+    "check:surface-matrix": "node scripts/check-surface-matrix.js"
   },
   "devDependencies": {
     "clean-css": "5.3.3",

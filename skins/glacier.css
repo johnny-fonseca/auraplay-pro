@@ -35,37 +35,28 @@
 --surface-border:rgba(15,40,60,.10);--surface-border-strong:rgba(31,110,159,.35);
 --color-text-primary:#0f1c26;--color-text-secondary:#34495a;--color-text-muted:#566b7b;--color-text-disabled:#8a9eac;
 --shadow-surface:inset 0 1px 0 rgba(255,255,255,.95),0 1px 2px rgba(20,55,80,.10),0 24px 50px -24px rgba(20,55,80,.30);
---shadow-focus:0 0 0 2px #fff,0 0 0 4px #1f6e9f}
+--shadow-focus:0 0 0 2px #fff,0 0 0 4px #1f6e9f;--skin-notice-background:rgba(255,255,255,.93);--skin-now-bar-background:rgba(255,255,255,.88)}
 
+:root[data-skin="glacier"]{
+ --skin-brand-mark-shadow:inset 0 0 0 1px rgba(255,255,255,.45),inset 0 -6px 10px rgba(10,60,100,.35),0 8px 20px -6px rgba(var(--color-accent-rgb),.55);
+ --skin-brand-title-size:22px;--skin-brand-weight:600;--skin-brand-letter-spacing:-.01em;
+ --skin-panel-title-size:17px;--skin-heading-weight:600;--skin-heading-letter-spacing:-.005em;
+ --skin-modal-title-size:26px;--skin-modal-title-weight:600;--skin-modal-title-letter-spacing:-.01em;
+ --skin-track-title-size:clamp(30px,3.6vw,52px);--skin-track-title-size-mobile:clamp(28px,8.5vw,42px);--skin-track-title-weight:500;--skin-track-title-line-height:1.05;--skin-track-title-letter-spacing:-.025em;
+ --skin-progress-fill:var(--gradient-accent);--skin-progress-glow:0 0 12px rgba(var(--color-accent-rgb),.6);--skin-progress-thumb-background:#fff;--skin-progress-thumb-border:2px solid var(--color-accent);--skin-progress-thumb-shadow:0 0 0 4px rgba(var(--color-accent-rgb),.22);
+ --skin-play-control-shadow:inset 0 1px 0 rgba(255,255,255,.7),inset 0 -4px 8px rgba(10,60,100,.3),0 0 0 4px rgba(var(--color-accent-rgb),.14),0 12px 28px -6px rgba(var(--color-accent-rgb),.55);
+ --skin-karaoke-overlay-background:linear-gradient(145deg,rgba(4,9,14,.96),rgba(9,20,30,.92));--skin-notice-background:rgba(9,17,25,.92);--skin-now-bar-background:rgba(8,16,24,.9);
+ --skin-ambient-opacity:.6;--skin-ambient-filter:blur(100px) saturate(130%);
+}
 /* ============================================================
    INTERFAZ · líneas finas, esquinas más rectas y brillo de escarcha
    ============================================================ */
-:root[data-skin="glacier"] .aurora-bg{opacity:.6;filter:blur(100px) saturate(130%)}
-:root[data-skin="glacier"] .brand-mark{box-shadow:inset 0 0 0 1px rgba(255,255,255,.45),inset 0 -6px 10px rgba(10,60,100,.35),0 8px 20px -6px rgba(var(--color-accent-rgb),.55)}
-:root[data-skin="glacier"] .brand-title{font-size:22px;font-weight:600;letter-spacing:-.01em}
 :root[data-skin="glacier"] .brand-subtitle{text-transform:uppercase;letter-spacing:.16em;font-size:10px}
-:root[data-skin="glacier"] .panel-title{font-size:17px;font-weight:600;letter-spacing:-.005em}
-:root[data-skin="glacier"] .modal-title{font-size:26px;font-weight:600;letter-spacing:-.01em}
 :root[data-skin="glacier"] .now-eyebrow{letter-spacing:.24em}
-:root[data-skin="glacier"] .now-title{font-size:clamp(30px,3.6vw,52px);font-weight:500;line-height:1.05;letter-spacing:-.025em}
 :root[data-skin="glacier"] .btn-tab{text-transform:uppercase;letter-spacing:.1em;font-size:11px}
-:root[data-skin="glacier"] .song-item{border-radius:10px}
-:root[data-skin="glacier"] .song-thumb{border-radius:8px}
-:root[data-skin="glacier"] .progress-bar{height:4px;background:var(--surface-bg-active)}
-:root[data-skin="glacier"] .progress-bar:hover{height:6px}
-:root[data-skin="glacier"] .progress-fill{background:var(--gradient-accent);box-shadow:0 0 12px rgba(var(--color-accent-rgb),.6)}
-:root[data-skin="glacier"] .progress-thumb{width:12px;height:12px;border-radius:3px;background:#fff;border:2px solid var(--color-accent);box-shadow:0 0 0 4px rgba(var(--color-accent-rgb),.22)}
-:root[data-skin="glacier"] .transport .btn-play{border-radius:32%;box-shadow:inset 0 1px 0 rgba(255,255,255,.7),inset 0 -4px 8px rgba(10,60,100,.3),0 0 0 4px rgba(var(--color-accent-rgb),.14),0 12px 28px -6px rgba(var(--color-accent-rgb),.55)}
-:root[data-skin="glacier"] .karaoke-overlay{background:linear-gradient(145deg,rgba(4,9,14,.96),rgba(9,20,30,.92))}
-:root[data-skin="glacier"] .toast{background:rgba(9,17,25,.92)}
-:root[data-skin="glacier"][data-theme="light"] .toast .toast{background:rgba(255,255,255,.93)}
 :root[data-skin="glacier"] .player-panel::before{background:
  radial-gradient(60% 50% at 20% 0%,rgba(150,220,255,.10),transparent 70%),
  radial-gradient(50% 40% at 90% 100%,rgba(120,230,210,.07),transparent 70%)}
-@media(max-width:820px){
-:root[data-skin="glacier"] .now-title{font-size:clamp(28px,8.5vw,42px)}
-:root[data-skin="glacier"] .now-bar{background:rgba(8,16,24,.9)}
-:root[data-skin="glacier"][data-theme="light"] .now-bar .now-bar{background:rgba(255,255,255,.88)}}
 
 /* ============================================================
    PLATO · bloque macizo de zafiro tallado (mismo tamaño exterior que Neón y Esmeralda: inset -8.5%)

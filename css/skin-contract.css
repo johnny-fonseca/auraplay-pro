@@ -30,6 +30,12 @@
     --ease-out: cubic-bezier(.22, 1, .36, 1);
     --ease-in-out: cubic-bezier(.65, 0, .35, 1);
 
+    /* Tipografía canónica: cada skin publica display/body; estos son fallbacks.
+       Mono permanece global para métricas, códigos y controles técnicos. */
+    --font-display: system-ui, -apple-system, "Segoe UI", sans-serif;
+    --font-body: system-ui, -apple-system, "Segoe UI", sans-serif;
+    --font-mono: ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace;
+
     /* Paleta de respaldo para casos sin skin aplicada. */
     --color-canvas: #0c0c0f;
     --color-canvas-raised: #141418;

@@ -25,6 +25,7 @@ const runtimeEntries = [
   'styles',
   'svg',
   'visualizers',
+  'fonts',
 ];
 const karaokeAssets = [
   'karaoke/shared/karaoke-core.js',

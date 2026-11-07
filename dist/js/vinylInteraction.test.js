@@ -90,6 +90,73 @@ test("arrastre sin salto inicial y con pausa/reanudación", () => {
   assert.strictEqual(artFrame.captured.size, 0);
 });
 
+test("scratch conserva estados angulares separados según su origen", () => {
+  const paused = setup();
+  paused.audio.paused = true;
+  paused.v.visualStates.paused = 12;
+  paused.v.visualStates.playing = 240;
+  fire(paused.artFrame, "pointerdown", polar(0));
+  fire(paused.artFrame, "pointermove", polar(20));
+  fire(paused.artFrame, "pointermove", polar(60));
+  fire(paused.artFrame, "pointerup", polar(60));
+  assert.notStrictEqual(paused.v.visualStates.paused, 12, "actualiza el estado pausado");
+  assert.strictEqual(paused.v.visualStates.playing, 240, "no toca el estado reproduciendo");
+
+  const playing = setup();
+  playing.v.visualStates.paused = 18;
+  playing.v.visualStates.playing = 300;
+  fire(playing.artFrame, "pointerdown", polar(0));
+  fire(playing.artFrame, "pointermove", polar(20));
+  fire(playing.artFrame, "pointermove", polar(60));
+  fire(playing.artFrame, "pointerup", polar(60));
+  assert.notStrictEqual(playing.v.visualStates.playing, 300, "actualiza el estado reproduciendo");
+  assert.strictEqual(playing.v.visualStates.paused, 18, "no toca el estado pausado");
+});
+
+test("play, pause y restore no sobrescriben scratch activo", () => {
+  const { v, audio } = setup();
+  v.visualStates.paused = 25;
+  v.visualStates.playing = 210;
+  v.visualStates.restored = 90;
+  v.visualStates.scratch.active = true;
+  audio.currentTime = 100;
+
+  assert.strictEqual(v.enterPausedVisualState(40), false);
+  assert.strictEqual(v.enterPlayingVisualState(300), false);
+  assert.strictEqual(v.restoreVisualStateFromAudio(), false);
+  assert.strictEqual(v.visualStates.paused, 25);
+  assert.strictEqual(v.visualStates.playing, 210);
+  assert.strictEqual(v.visualStates.restored, 90);
+});
+
+test("inercia y backspin no sobrescriben estados angulares", () => {
+  const { v } = setup();
+  v.visualStates.paused = 35;
+  v.visualStates.playing = 225;
+  v.visualStates.restored = 80;
+
+  v.inertia = { velocity: 2, wasPlaying: true };
+  assert.strictEqual(v.enterPausedVisualState(10), false);
+  assert.strictEqual(v.enterPlayingVisualState(140), false);
+  v.inertia = null;
+
+  v.backspin = { velocity: -2, wasPlaying: true };
+  assert.strictEqual(v.restoreVisualStateFromAudio(), false);
+  assert.strictEqual(v.enterPlayingVisualState(300), false);
+  assert.strictEqual(v.visualStates.paused, 35);
+  assert.strictEqual(v.visualStates.playing, 225);
+  assert.strictEqual(v.visualStates.restored, 80);
+});
+
+test("reanudar conserva el ángulo visible al pausar", () => {
+  const { v } = setup();
+  v.enterPlayingVisualState(72);
+  v._readVinylAngle = () => 148;
+  v.enterPausedVisualState();
+  v.enterPlayingVisualState();
+  assert.strictEqual(v.visualStates.playing, 148);
+});
+
 test("cruce ±180° sin salto", () => {
   const { artFrame, audio } = setup();
   audio.currentTime = 100;

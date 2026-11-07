@@ -1,4 +1,7 @@
 @layer surface {
+:root[data-ui="clay"] {
+--cl-font:"Fredoka", var(--font-body), system-ui, sans-serif;
+}
 /* claymorphism.css — Claymorfismo: figuras infladas de plastilina.
    Formas muy redondeadas, colores pastel y sombras dobles pronunciadas:
    luz interna arriba-izquierda + sombra interna abajo-derecha + sombra externa tintada.
@@ -26,7 +29,7 @@
 --cl-rose:color-mix(in srgb,var(--color-danger,#ff6b6b) 30%,var(--cl-paper));
 --cl-candy:color-mix(in srgb,rgb(var(--color-accent-rgb)) 62%,#fff);
 --cl-candy-2:color-mix(in srgb,rgb(var(--color-accent-soft-rgb)) 62%,#fff);
---cl-font:ui-rounded,"SF Pro Rounded","Nunito","Quicksand","Varela Round",var(--font-body),system-ui,sans-serif;
+
 }
 /* Texto oscuro sobre pasteles; la capa surface ya prevalece sobre skin. */
 :root[data-ui="clay"]{
@@ -141,6 +144,8 @@ box-shadow:inset calc(var(--s)*.7) calc(var(--s)*.9) calc(var(--s)*1.6) rgba(80,
 :root[data-ui="clay"] .now-eyebrow::before{box-shadow:0 0 0 3px rgba(255,255,255,.7),0 2px 6px rgba(80,55,110,.35)}
 :root[data-ui="clay"] .tag-chip{--c:var(--cl-mint);--s:4px;font-weight:700;color:color-mix(in srgb,var(--color-success,#7be0b0) 40%,#143024)}
 :root[data-ui="clay"] .karaoke-mini{background:rgba(95,70,130,.1);border:0;border-radius:var(--radius-xl);padding:14px 20px 8px;box-shadow:inset 6px 8px 14px rgba(80,55,110,.28),inset -5px -6px 12px rgba(255,255,255,.9)}
+:root[data-ui="clay"][data-theme="light"] .karaoke-mini{background:var(--cl-cream)}
+:root[data-ui="clay"][data-theme="dark"] .karaoke-mini{background:rgba(255,255,255,.055);box-shadow:inset 5px 6px 12px rgba(0,0,0,.38),inset -3px -3px 8px rgba(255,255,255,.045)}
 :root[data-ui="clay"] .karaoke-mini .lyric-current{color:var(--cl-ink);font-style:normal}
 :root[data-ui="clay"] .karaoke-mini .lyric-variant-toggle,:root[data-ui="clay"] .karaoke-mini .lyric-translation-toggle,:root[data-ui="clay"] .karaoke-mini button.fullscreen-toggle{color:color-mix(in srgb,var(--color-accent,#ff8a73) 55%,#2a1f2e);border-radius:var(--radius-pill)}
 :root[data-ui="clay"] .karaoke-mini .lyric-variant-toggle:hover,:root[data-ui="clay"] .karaoke-mini .lyric-translation-toggle:hover,:root[data-ui="clay"] .karaoke-mini button.fullscreen-toggle:hover{border-color:transparent;background:rgba(255,255,255,.7);box-shadow:0 3px 8px rgba(80,55,110,.18)}

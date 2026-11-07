@@ -9,9 +9,9 @@
   --k-a2: #00e5ff;
   --k-style-accent: #ff2bd6;
 
-  --k-font-lyric: "Tilt Neon", "Bricolage Grotesque", "Space Grotesk", "Segoe UI", system-ui, sans-serif;
+  --k-font-lyric: "Tilt Neon", "Noto Sans Symbols 2", sans-serif;
   --k-font-title: var(--k-font-lyric);
-  --k-font-ui: "Space Mono", "JetBrains Mono", "SFMono-Regular", ui-monospace, Menlo, Consolas, monospace;
+  --k-font-ui: "Orbitron", "Noto Sans Symbols 2", sans-serif;
   --k-lyric-weight: 600;
   --k-lyric-track: .015em;
   --k-lyric-lh: 1.12;

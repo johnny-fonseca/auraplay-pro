@@ -20,9 +20,11 @@
    ============================================================ */
 :root[data-skin="telar"]{
 --skin-name:"telar";
---font-display:"Fraunces","Newsreader","Iowan Old Style",Georgia,serif;
---font-body:"Hanken Grotesk","Instrument Sans","Inter",system-ui,sans-serif;
---font-mono:"JetBrains Mono","IBM Plex Mono",ui-monospace,"SF Mono",Menlo,monospace;
+--font-display:"Fraunces",Georgia,serif;
+--font-body:"Nunito","Inter",system-ui,sans-serif;
+
+
+--font-mono:ui-monospace,"SF Mono",Menlo,monospace;
 --spec:250,247,255;
 /* hilo de gualda: es un objeto (carrete, aguja), por eso no cambia entre claro y oscuro */
 --tl-thread-hi:#e6f07f;--tl-thread:#c4d640;--tl-thread-lo:#8a9c1f;
@@ -257,7 +259,7 @@ color-scheme:light;
 /* ============================================================
    COMPONENTES OPT-IN (.tl-*) · [SUPUESTO] No conozco el HTML de AuraPlay Pro: son clases propuestas.
    Se mapean añadiendo la clase o copiando sus declaraciones al selector real (botón de reproducción, barra de progreso, cola, etc.).
-   Jerarquía tipográfica: Fraunces para títulos y letra de karaoke; Hanken Grotesk para controles y metadatos en versalitas con tracking;
+   Jerarquía tipográfica: Fraunces para títulos y letra de karaoke; Nunito para controles y metadatos en versalitas con tracking;
    mono tabular solo para tiempos, dB y números de pista.
    ============================================================ */
 :root[data-skin="telar"] .tl-num{font-family:var(--font-mono);font-variant-numeric:tabular-nums;letter-spacing:.02em}

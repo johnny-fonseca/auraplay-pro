@@ -14,8 +14,10 @@
    ============================================================ */
 :root[data-skin="paper"]{
 --skin-name:"paper";
---font-display:"Newsreader","Iowan Old Style","Palatino Linotype",Georgia,serif;
---font-body:"Instrument Sans","Inter",system-ui,sans-serif;
+--font-display:"Source Serif 4",Georgia,serif;
+--font-body:"Inter","Inter",system-ui,sans-serif;
+
+
 --spec:255,250,238;
 --pp-seal:#a9301b;
 /* texturas SVG inline (poro, fibra, moteado y marmolado); si se borran, cada superficie cae a su color liso */

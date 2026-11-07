@@ -18,13 +18,15 @@
 :root[data-skin="gres"]{
 --color-canvas:#121413;--color-canvas-sunken:#0a0c0b;--color-canvas-raised:#1a1d1b;
 --ambient-1:#3a2218;--ambient-2:#1e2a27;--ambient-3:#4a2c1b;--ambient-4:#232a2e;
---skin-name:"gres";--color-accent-rgb:214,122,76;--color-accent-soft-rgb:183,188,176;--tone-hi:#ecc1a0;--tone-mid:#d67a4c;--tone-lo:#7a3a1c;--tone-deep:#a24f27;--color-on-accent:#140a05;--platter:#2a1d16;--platter-edge:#0b0807;
+--skin-name:"gres";
+--font-display:"Zen Old Mincho",Georgia,serif;
+--font-body:"DM Sans","Inter",system-ui,sans-serif;--color-accent-rgb:214,122,76;--color-accent-soft-rgb:183,188,176;--tone-hi:#ecc1a0;--tone-mid:#d67a4c;--tone-lo:#7a3a1c;--tone-deep:#a24f27;--color-on-accent:#140a05;--platter:#2a1d16;--platter-edge:#0b0807;
 --color-accent:#d67a4c;--color-accent-strong:var(--color-accent);--color-info:var(--color-accent-soft);--color-focus:var(--color-accent-soft);--color-border:var(--surface-border);--color-border-strong:var(--surface-border-strong);--color-divider:var(--surface-border);--surface-bg-selected:var(--surface-bg-active);--surface-bg-disabled:var(--surface-bg);--color-accent-soft:#b7bcb0;--color-warning:#d9a37e;--color-success:#93b5a1;--color-danger:#ea6553;
 --gradient-accent:linear-gradient(145deg,#e79c76 0%,#d67a4c 58%,#c4683c 100%);
 --gradient-accent-secondary:linear-gradient(145deg,#cdd1c7 0%,#a9afa3 100%);
 --color-text-primary:#efe9df;--color-text-secondary:#c4bcaf;--color-text-muted:#968f84;--color-text-disabled:#5f5c55;
---font-display:"Shippori Mincho","Iowan Old Style","Palatino Linotype",Georgia,serif;
---font-body:"Manrope","Inter",system-ui,sans-serif;
+
+
 /* luz especular casi nula (mate), luz ambiental reflejada baja y sombras de contacto largas y blandas */
 --spec:255,240,224;
 --amb-1:.10;--amb-2:.07;--amb-3:.03;

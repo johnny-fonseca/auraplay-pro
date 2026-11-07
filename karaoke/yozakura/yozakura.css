@@ -57,15 +57,10 @@
   --yz-fill: #ffe0e8;
 
   /* Tipografia por rol (sin descargas, con fallbacks reales) */
-  --yz-font-lyrics: "Hiragino Mincho ProN", "Hiragino Mincho Pro", "Yu Mincho", "YuMincho",
-    "Noto Serif JP", "Noto Serif CJK JP", "Source Han Serif JP", "Source Han Serif",
-    "Iowan Old Style", "Palatino Linotype", "Book Antiqua", Georgia, "Times New Roman", serif;
-  --yz-font-ui: "Hiragino Sans", "Hiragino Kaku Gothic ProN", "Yu Gothic UI", "Yu Gothic",
-    "Meiryo UI", "Noto Sans JP", "Noto Sans CJK JP", system-ui, -apple-system, "Segoe UI",
-    Roboto, "Helvetica Neue", Arial, sans-serif;
+  --yz-font-lyrics: "Zen Old Mincho", "Noto Sans Symbols 2", "Noto Serif JP", serif;
+  --yz-font-ui: "Zen Old Mincho", "Noto Sans Symbols 2", "Noto Serif JP", sans-serif;
   --yz-font-mono: ui-monospace, "SF Mono", "Cascadia Mono", Menlo, Consolas,
     "Liberation Mono", monospace;
-
   /* Mapeo a tokens compartidos (nombres supuestos salvo los de letra) */
   --k-font-lyrics: var(--yz-font-lyrics);
   --k-font-title: var(--yz-font-lyrics);

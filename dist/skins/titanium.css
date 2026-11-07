@@ -3,8 +3,8 @@
    Opuesto a Latón: metal FRÍO (acero/hielo), un solo gesto de color (el anodizado del bisel) y el resto contenido.
    Se activa con <html data-skin="titanium">. Cargar DESPUÉS de theme.css, vinyl.css y brass.css (antes o después de neon/emerald es indiferente: solo hay una skin activa).
    Sin imágenes externas: todo es gradiente + box-shadow + filter nativos.
-   Fuentes (opcionales, con fallback del sistema): Jost (display) e Inter Tight (cuerpo) →
-   <link href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@400;500;600&family=Jost:wght@300;400;500&display=swap" rel="stylesheet">
+   Fuentes (opcionales, con fallback del sistema): Barlow Condensed (display) y Barlow (cuerpo) →
+   <link href="fonts/fonts.css" rel="stylesheet">
    Regla de oro (igual que Latón): lo que GIRA (.art-frame) lleva sombras SIN desplazamiento; la luz direccional vive en lo estático. */
 
 /* ============================================================
@@ -13,9 +13,11 @@
    ============================================================ */
 :root[data-skin="titanium"]{
 --skin-name:"titanium";
+--font-display:"Barlow Condensed","Avenir Next","Century Gothic",system-ui,sans-serif;
+--font-body:"Barlow","Inter",system-ui,sans-serif;
 --tone-hi:#eef5ff;--tone-mid:#8fb2dc;--tone-lo:#4b6a91;--tone-deep:#6f93bd;--color-on-accent:#08111c;
---font-display:"Jost","Avenir Next","Century Gothic",system-ui,sans-serif;
---font-body:"Inter Tight","Inter",system-ui,sans-serif;
+
+
 --spec:232,243,255}
 
 :root[data-skin="titanium"]:not([data-theme="light"]){

@@ -219,6 +219,12 @@
     this._cx = 0;
     this._cy = 0;
     this._radius = 0;
+    this.visualStates = {
+      restored: null,
+      paused: null,
+      playing: null,
+      scratch: { active: false, angle: null, origin: null }
+    };
     this._lastPct = -1;
     this._lastProgress = -1;
     this._hoverCenter = false;
@@ -302,12 +308,7 @@
   proto.bind = function () {
     if (this.disabled || this._ac) return;
     const el = this.artFrame;
-    const ac = (this._ac = new AbortController());
-    const sig = { signal: ac.signal };
-    const sigPassive = { signal: ac.signal, passive: true };
-    const listen = (target, handlers) => {
-      for (const type in handlers) target.addEventListener(type, handlers[type], sig);
-    };
+    this._ac = new AbortController();
 
     this._useRawPointer = this.opts.rawPointerUpdates !== false && ("onpointerrawupdate" in el);
 
@@ -320,8 +321,27 @@
     el.setAttribute("aria-valuemax", "100");
     el.setAttribute("aria-valuenow", "0");
 
-    // Puntero (disco)
-    listen(el, {
+    this._bindRecordListeners();
+    this._bindTonearmListeners();
+    this._bindAudioListeners();
+    this._bindGeometryListeners();
+    this._bindOverlayListeners();
+    this._syncProgress();
+  };
+
+  proto._bindOptions = function (passive) {
+    return passive ? { signal: this._ac.signal, passive: true } : { signal: this._ac.signal };
+  };
+
+  proto._listenBound = function (target, handlers, options) {
+    if (!target) return;
+    const listenerOptions = options || this._bindOptions(false);
+    for (const type in handlers) target.addEventListener(type, handlers[type], listenerOptions);
+  };
+
+  proto._bindRecordListeners = function () {
+    const el = this.artFrame;
+    this._listenBound(el, {
       pointerdown: (e) => this._onPointerDown(e),
       // pointermove llega alineado al frame (hasta ~16 ms de retraso en Chrome).
       // Donde existe, pointerrawupdate entrega el movimiento en cuanto se produce;
@@ -341,10 +361,11 @@
       dragstart: (e) => e.preventDefault(),
       contextmenu: (e) => { if (this.drag && this.drag.active) e.preventDefault(); }
     });
+  };
 
-    // Puntero (brazo). Degrada en silencio si no hay brazo.
+  proto._bindTonearmListeners = function () {
     if (this.tonearm && this.opts.manualArmEnabled) {
-      listen(this.tonearm, {
+      this._listenBound(this.tonearm, {
         pointerdown: (e) => this._onArmPointerDown(e),
         pointermove: (e) => this._onArmPointerMove(e),
         pointerup: (e) => this._onArmPointerUp(e),
@@ -352,10 +373,11 @@
         lostpointercapture: (e) => this._onArmPointerCancel(e)
       });
     }
+  };
 
-    // Audio
+  proto._bindAudioListeners = function () {
     const sync = () => { this._syncProgress(); this._handlePerformanceTime(); };
-    listen(this.audio, {
+    this._listenBound(this.audio, {
       timeupdate: sync,
       seeked: sync,
       durationchange: sync,
@@ -367,18 +389,21 @@
       emptied: () => { this._cancelAll(); this.clearPerformanceState(); this._syncProgress(); },
       loadstart: () => { this._cancelAll(); this.clearPerformanceState(); }
     });
+  };
 
-    // Geometría
+  proto._bindGeometryListeners = function () {
     const onResize = () => { this._geomDirty = true; this._layoutOverlay(); };
-    global.addEventListener("resize", onResize, sigPassive);
-    global.addEventListener("scroll", () => { this._geomDirty = true; }, sigPassive);
+    const passive = this._bindOptions(true);
+    global.addEventListener("resize", onResize, passive);
+    global.addEventListener("scroll", () => { this._geomDirty = true; }, passive);
     if (typeof global.ResizeObserver === "function") {
       this._ro = new global.ResizeObserver(onResize);
-      this._ro.observe(el);
+      this._ro.observe(this.artFrame);
     }
+  };
 
+  proto._bindOverlayListeners = function () {
     if (this.opts.showIndicator) this._createOverlay();
-    this._syncProgress();
   };
 
   proto.destroy = function () {
@@ -472,9 +497,13 @@
     try {
       const transform = global.getComputedStyle(this.artFrame).transform;
       if (!transform || transform === "none") return 0;
-      const match = transform.match(/^matrix\(([^)]+)\)$/);
+      const match = transform.match(/^matrix(3d)?\(([^)]+)\)$/);
       if (!match) return 0;
-      const values = match[1].split(",").map(Number);
+      const values = match[2].split(",").map(Number);
+      if (match[1] === "3d") {
+        if (values.length < 2 || !isNum(values[0]) || !isNum(values[1])) return 0;
+        return Math.atan2(values[1], values[0]) / DEG;
+      }
       if (values.length < 2 || !isNum(values[0]) || !isNum(values[1])) return 0;
       return Math.atan2(values[1], values[0]) / DEG;
     } catch (_) { return 0; }
@@ -484,6 +513,99 @@
   proto._setVinylScratchAngle = function (angle) {
     if (!this.artFrame || !this.artFrame.style || !isNum(angle)) return;
     this.artFrame.style.setProperty("--vinyl-scratch-angle", angle + "deg");
+  };
+
+  /** Estado RESTORED: fija la portada al punto recuperado tras Ctrl+R. */
+  proto.restoreVisualStateFromAudio = function () {
+    if (this._isTransientMotionActive()) return false;
+    const duration = this.audio && this.audio.duration;
+    if (!isValidDuration(duration) || !this.artFrame || !this.artFrame.style) return false;
+    const angle = clamp((this.audio.currentTime || 0) / duration, 0, 1) * 360;
+    this.visualStates.restored = angle;
+    this.visualStates.paused = angle;
+    this.visualStates.playing = null;
+    this._setVinylScratchAngle(angle);
+    const playing = !this.audio.paused && !this.audio.ended;
+    this.artFrame.classList.toggle("spinning", playing);
+    this.artFrame.classList.toggle("paused", !playing);
+    if (this.artFrame.classList && this.artFrame.classList.contains("spinning")) {
+      this.artFrame.style.transform = "";
+      this._preserveVinylAnimationPhase(angle);
+    } else {
+      this.artFrame.style.transform = "rotate(" + angle + "deg)";
+    }
+    return true;
+  };
+
+  /** Estado PAUSED: conserva solo el ángulo visible al entrar en pausa. */
+  proto.enterPausedVisualState = function (explicitAngle) {
+    if (this._isTransientMotionActive()) return false;
+    const angle = isNum(explicitAngle) ? explicitAngle : this._readVinylAngle();
+    this.visualStates.paused = angle;
+    // En una pausa normal, `playing` puede contener la fase de la última
+    // reproducción y ya no representa el ángulo visible. Se invalida para
+    // que el siguiente play use el ángulo recién guardado en `paused`.
+    // El scratch pasa un ángulo explícito y conserva ambos estados separados.
+    if (!isNum(explicitAngle)) this.visualStates.playing = null;
+    this.visualStates.restored = null;
+    this.artFrame.classList.add("paused");
+    if (this.artFrame.classList.contains("spinning")) {
+      this._preserveVinylAnimationPhase(angle);
+      this.artFrame.style.transform = "";
+    } else {
+      this.artFrame.style.transform = "rotate(" + angle + "deg)";
+    }
+    return true;
+  };
+
+  /** Estado PLAYING: reanuda desde el ángulo propio de reproducción. */
+  proto.enterPlayingVisualState = function (explicitAngle) {
+    if (this._isTransientMotionActive()) return false;
+    const angle = isNum(explicitAngle)
+      ? explicitAngle
+      : isNum(this.visualStates.playing)
+      ? this.visualStates.playing
+      : (isNum(this.visualStates.paused) ? this.visualStates.paused : this._readVinylAngle());
+    this.visualStates.playing = angle;
+    this.visualStates.restored = null;
+    this.artFrame.classList.add("spinning");
+    this.artFrame.classList.remove("paused");
+    this._preserveVinylAnimationPhase(angle);
+    this.artFrame.style.transform = "";
+    return true;
+  };
+
+  proto._isTransientMotionActive = function () {
+    return !!(this.visualStates.scratch.active || this.inertia || this.backspin);
+  };
+
+  /**
+   * Transfiere el ángulo manual a la línea de tiempo de la animación CSS.
+   * Al quitar `is-seeking`, el navegador deja de usar la transformación manual
+   * y, sin esta fase negativa, la animación vuelve a empezar desde 0 grados.
+   */
+  proto._preserveVinylAnimationPhase = function (angle) {
+    if (!this.artFrame || !this.artFrame.style || !isNum(angle)) return;
+    if (typeof global.getComputedStyle !== "function") return;
+    try {
+      const computed = global.getComputedStyle(this.artFrame);
+      const durationMatch = String(computed.animationDuration || "").match(/^([\d.]+)s$/);
+      const duration = durationMatch ? Number(durationMatch[1]) : 0;
+      if (!(duration > 0)) return;
+      const phase = ((angle % 360) + 360) % 360 / 360;
+      const style = this.artFrame.style;
+      const delay = (-phase * duration) + "s";
+
+      // Cambiar solo animation-delay no siempre reinicia la instancia CSS:
+      // Chrome/Edge pueden conservar el tiempo interno anterior y volver a 0°.
+      // Desactivar el nombre, forzar un reflow y restaurarlo crea una instancia
+      // nueva que empieza exactamente en la fase guardada.
+      style.animationDelay = delay;
+      style.animationName = "none";
+      void this.artFrame.offsetWidth;
+      style.animationName = "";
+      void this.artFrame.offsetWidth;
+    } catch (_) { /* el giro visual no debe interrumpir el gesto */ }
   };
 
   // ---------- Puntero (disco) ----------
@@ -581,50 +703,68 @@
     const ts = this._eventTime(e);
 
     if (!d.active) {
-      const moved = Math.hypot(e.clientX - d.downX, e.clientY - d.downY);
-      if (moved < this.opts.dragThresholdPx) return;
-      // Arranca el arrastre. La referencia de POSICIÓN se toma AQUÍ (no en
-      // pointerdown) para que no haya salto por la distancia ya recorrida.
-      d.active = true;
-      d.wasPlaying = d.inherited !== null ? d.inherited : isPlaying(this.audio);
-      d.startTime = this.audio.currentTime || 0;
-      d.vinylAngle = this._readVinylAngle();
-      this._setVinylScratchAngle(d.vinylAngle);
-      d.previousAngle = this._pointerAngle(e);
-      d.accumulated = 0;
-      d.lastMoveTime = ts;
-      // La VELOCIDAD sí cuenta el recorrido desde pointerdown: así el primer
-      // movimiento ya lleva velocidad y el sonido entra en este mismo evento,
-      // en lugar de gastar el evento de arranque sin medir nada.
-      if (ts - d.downTs <= 120) {
-        d.pendingDelta = shortestAngleDelta(d.previousAngle, d.downAngle);
-        d.previousTimestamp = d.downTs;
-      } else {
-        d.pendingDelta = 0;      // llevaba quieto: la velocidad empieza desde aquí
-        d.previousTimestamp = ts;
-      }
-      d.vinylAngle += d.pendingDelta * 180 / Math.PI;
-      this._setVinylScratchAngle(d.vinylAngle);
-      this._setHoverCenter(false);
-      this.artFrame.classList.add("is-dragging", "is-seeking");
-      if (this._overlay) this._overlay.classList.add("is-active");
-      if (d.wasPlaying && !this.audio.paused) this._pause();
-      this._updateVelocity(d, ts);
+      if (!this._beginDragMove(d, e, ts)) return;
+      this._updateDragVelocity(d, ts);
       return;
     }
 
     const angle = this._pointerAngle(e);
     const delta = shortestAngleDelta(angle, d.previousAngle);
     d.accumulated += delta * this._scratchSeekMultiplier();
-    d.vinylAngle += delta * 180 / Math.PI;
-    this._setVinylScratchAngle(d.vinylAngle);
+    this._updateDragVisualState(d, delta);
     d.previousAngle = angle;
     d.pendingDelta += delta;
     if (delta !== 0) d.lastMoveTime = ts;
+    this._updateDragVelocity(d, ts);
+    this._applyDragSeek(d, duration);
+  };
+
+  proto._beginDragMove = function (d, e, ts) {
+    const moved = Math.hypot(e.clientX - d.downX, e.clientY - d.downY);
+    if (moved < this.opts.dragThresholdPx) return false;
+    // Arranca el arrastre. La referencia de POSICIÓN se toma AQUÍ (no en
+    // pointerdown) para que no haya salto por la distancia ya recorrida.
+    d.active = true;
+    d.wasPlaying = d.inherited !== null ? d.inherited : isPlaying(this.audio);
+    d.startTime = this.audio.currentTime || 0;
+    d.vinylAngle = this._readVinylAngle();
+    this.visualStates.scratch = {
+      active: true,
+      angle: d.vinylAngle,
+      origin: d.wasPlaying ? "playing" : "paused"
+    };
+    this._setVinylScratchAngle(d.vinylAngle);
+    d.previousAngle = this._pointerAngle(e);
+    d.accumulated = 0;
+    d.lastMoveTime = ts;
+    // La VELOCIDAD sí cuenta el recorrido desde pointerdown.
+    if (ts - d.downTs <= 120) {
+      d.pendingDelta = shortestAngleDelta(d.previousAngle, d.downAngle);
+      d.previousTimestamp = d.downTs;
+    } else {
+      d.pendingDelta = 0;
+      d.previousTimestamp = ts;
+    }
+    this._updateDragVisualState(d, d.pendingDelta);
+    this._setHoverCenter(false);
+    this.artFrame.classList.add("is-dragging", "is-seeking");
+    if (this._overlay) this._overlay.classList.add("is-active");
+    if (d.wasPlaying && !this.audio.paused) this._pause();
+    return true;
+  };
+
+  proto._updateDragVisualState = function (d, deltaRadians) {
+    d.vinylAngle += deltaRadians * 180 / Math.PI;
+    this.visualStates.scratch.angle = d.vinylAngle;
+    this._setVinylScratchAngle(d.vinylAngle);
+  };
+
+  proto._updateDragVelocity = function (d, ts) {
     this._updateVelocity(d, ts);
+  };
 
+  proto._applyDragSeek = function (d, duration) {
     const secondsPerRadian = this._secondsPerRadian(duration);
-
     // Recorta el acumulado al rango alcanzable: al invertir el giro tras
     // chocar con 0 o con el final, la respuesta es inmediata.
     const lo = -d.startTime / secondsPerRadian;
@@ -632,8 +772,7 @@
     d.accumulated = clamp(d.accumulated, lo, hi);
 
     // El motor ya recibe su velocidad (con la curva del perfil) desde
-    // _updateScratch -> _applyScratchAudio. Antes aquí se volvía a llamar con la
-    // velocidad cruda, lo que pisaba la curva del perfil en cada evento.
+    // _updateScratch -> _applyScratchAudio.
     this._queueSeek(clamp(d.startTime + d.accumulated * secondsPerRadian, 0, duration));
   };
 
@@ -650,7 +789,13 @@
     const d = this.drag;
     if (!d) return;
     this.drag = null; // primero: así lostpointercapture no reentra
+    this._cleanupDragPointer(d);
+    this._finishDragVisualState(d);
+    const scratchPlaying = this._finishDragAudio(d);
+    this._finishDragInertia(d, resume, ts, scratchPlaying);
+  };
 
+  proto._cleanupDragPointer = function (d) {
     this._flushSeek();
     this._clearScratchIdle();
     try {
@@ -658,18 +803,42 @@
         this.artFrame.releasePointerCapture(d.pointerId);
       }
     } catch (_) { /* noop */ }
+  };
 
+  proto._finishDragVisualState = function (d) {
+
+    // Primero sincroniza la fase CSS con el último ángulo manual; si se quita
+    // `is-seeking` antes, la portada puede reaparecer en su posición inicial.
+    if (d.active) {
+      this._preserveVinylAnimationPhase(d.vinylAngle);
+      const scratchOrigin = this.visualStates.scratch.origin || (d.wasPlaying ? "playing" : "paused");
+      this.visualStates.scratch.active = false;
+      this.visualStates.scratch.angle = d.vinylAngle;
+      if (scratchOrigin === "playing") this.visualStates.playing = d.vinylAngle;
+      else this.visualStates.paused = d.vinylAngle;
+      this.visualStates.restored = null;
+      if (scratchOrigin === "playing") this.enterPlayingVisualState(d.vinylAngle);
+      else this.enterPausedVisualState(d.vinylAngle);
+    }
+    this.visualStates.scratch.active = false;
+    this.visualStates.scratch.origin = null;
     this.artFrame.classList.remove("is-dragging", "is-seeking");
     if (this._overlay) this._overlay.classList.remove("is-active");
 
+  };
+
+  proto._finishDragAudio = function (d) {
+    // Fin del scratch. Si el scratch había reanudado el audio, lo decidimos en
+    // la fase de inercia para no encadenar pause() + play().
+    const scratchPlaying = d.scratchAudioPlaying;
+    this._endScratch(d, false);
+    return scratchPlaying;
+  };
+
+  proto._finishDragInertia = function (d, resume, ts, scratchPlaying) {
     // Velocidad final: si el puntero llevaba quieto un rato, no hay inercia.
     const endTs = isNum(ts) ? ts : nowMs();
     const velocity = endTs - d.lastMoveTime > this.opts.inertiaStaleMs ? 0 : d.smoothedVelocity;
-
-    // Fin del scratch. Si el scratch había reanudado el audio, lo decidimos abajo
-    // para no encadenar pause() + play().
-    const scratchPlaying = d.scratchAudioPlaying;
-    this._endScratch(d, false);
 
     if (d.active) {
       // Ese arrastre no debe convertirse en un clic de play/pausa.
@@ -1049,7 +1218,6 @@
     let velocity = isNum(options.velocity) ? options.velocity : -Math.abs(o.backspinInitialVelocity);
     if (velocity === 0) velocity = -Math.abs(o.backspinInitialVelocity);
     const wasPlaying = isPlaying(this.audio);
-    if (wasPlaying) this._pause();
     this.backspin = {
       velocity: velocity,
       startedAt: null,
@@ -1057,6 +1225,7 @@
       duration: clamp(Number(options.durationMs) || o.backspinDurationMs, 40, 5000),
       wasPlaying: wasPlaying
     };
+    if (wasPlaying) this._pause();
     this._setBackspinClass(true);
     this._setBackspinFx(velocity, 0.85);
     this._backspinRaf = global.requestAnimationFrame((ts) => this._tickBackspin(ts));
@@ -1188,22 +1357,25 @@
   // ---------- Reproducción (reutiliza el reproductor existente) ----------
 
   proto._play = function () {
-    let r;
-    if (typeof this.opts.play === "function") r = this.opts.play();
-    else if (this.player && typeof this.player._startPlayback === "function") r = this.player._startPlayback();
+    let result;
+    if (typeof this.opts.play === "function") result = this.opts.play();
+    else if (this.player && typeof this.player._startPlayback === "function") result = this.player._startPlayback();
     else if (this.player && typeof this.player.play === "function") {
-      r = typeof this.player.currentIndex === "number"
+      result = typeof this.player.currentIndex === "number"
         ? this.player.play(this.player.currentIndex)
         : this.player.play();
     }
-    else r = this.audio.play();
-    swallow(r);
+    else result = this.audio.play();
+    swallow(result);
+    return result;
   };
 
   proto._pause = function () {
-    if (typeof this.opts.pause === "function") this.opts.pause();
-    else if (this.player && typeof this.player.pause === "function") this.player.pause();
-    else this.audio.pause();
+    let result;
+    if (typeof this.opts.pause === "function") result = this.opts.pause();
+    else if (this.player && typeof this.player.pause === "function") result = this.player.pause();
+    else result = this.audio.pause();
+    return result;
   };
 
   proto._togglePlay = function () {

@@ -1,0 +1,45 @@
+AuraPlay Pro - Fuentes
+========================
+
+Todas son de licencia abierta (OFL / Apache 2.0). Cada carpeta en families/ trae su LICENSE.
+Subsets incluidos: latin + latin-ext (á é í ó ú ñ ü ¿ ¡, mayúsculas acentuadas, comillas, rayas).
+
+Uso: enlaza fonts.css y usa el nombre de la familia, p. ej.
+    <link rel="stylesheet" href="fonts/fonts.css">
+    font-family: "Playfair Display", "Noto Sans Symbols 2", serif;
+
+FAMILIA -> DÓNDE SE USA
+------------------------
+Playfair Display     Skin Brass (títulos) | Skin Ruby (títulos en cursiva) | Karaoke Cinema (letras)
+Cormorant Garamond   Skin Emerald (títulos) | Karaoke Cinema, Guilloché y Palco Esmeralda (dock/títulos)
+EB Garamond          Karaoke Palco Esmeralda (letras)
+Bodoni Moda          Karaoke Guilloché Zafiro (letras; usar solo en la línea grande)
+Source Serif 4       Skin Paper (títulos)
+Fraunces             Skin Telar (títulos)
+Zen Old Mincho       Skin Gres (títulos) | Karaoke Yozakura (letras y títulos)
+Inter                Skins Brass y Paper (cuerpo) | Estilo Glassmorfismo
+DM Sans              Skins Emerald, Gres, Ruby (cuerpo) | Karaoke Palco Esmeralda (controles)
+Outfit               Skin Glacier | Estilo Aurora
+Exo 2                Skin Neon (cuerpo)
+Nunito               Skin Telar (cuerpo) | Estilo Neumorfismo
+Barlow               Skin Titanium (cuerpo)
+Barlow Condensed     Skin Titanium (títulos) | Estilo Skeuomorfismo (etiquetas) | Karaoke Kinético (respaldo)
+Archivo              Skin Ulm | Estilo Neubrutalismo (títulos, peso 900)
+Space Grotesk        Estilo Neubrutalismo (cuerpo)
+Roboto               Estilo Diseño plano
+Geist                Estilo Bento
+Fredoka              Estilo Claymorfismo
+VT323                Estilo Skeuomorfismo (pantalla VFD)
+Orbitron             Skin Neon (títulos) | Karaoke Neon (dock/HUD)
+Tilt Neon            Karaoke Neon (letras estilo tubo de neón)
+Anton                Karaoke Kinético (letras, solo mayúsculas)
+Noto Sans Symbols 2  Respaldo para ♪ y otros símbolos en las letras LRC
+
+NOTAS PARA LRC
+------------------------
+* El símbolo ♪ no existe en muchas de estas fuentes: deja 'Noto Sans Symbols 2'
+  al final del font-family como respaldo.
+* Anton y Barlow Condensed en Karaoke Kinético: Anton solo luce bien en MAYÚSCULAS.
+* Bodoni Moda pierde los trazos finos a tamaño pequeño: úsala solo en la línea grande.
+* Chino, japonés y coreano NO están incluidos. Vuelve a ejecutar el script con --cjk
+  (o deja que el navegador use las fuentes CJK del sistema como respaldo).

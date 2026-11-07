@@ -1,4 +1,9 @@
 @layer surface {
+html[data-ui="brutal"] {
+  --br-font-display: "Archivo", sans-serif;
+  --br-font-body: "Space Grotesk", system-ui, sans-serif;
+  --br-font-mono: "Courier New", ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace;
+}
 /* ==========================================================================
    AuraPlay Pro · brutalism.css
    Modo visual 5: NEUBRUTALISTA ULTRA PREMIUM  ·  html[data-ui="brutal"]
@@ -120,9 +125,9 @@ html[data-ui="brutal"] {
   --br-tap: 44px;
 
   /* Tipografía local (sin red): pesada, de sistema */
-  --br-font-display: "Arial Black", "Archivo Black", "Franklin Gothic Heavy", "Haettenschweiler", Impact, "Helvetica Neue", Arial, sans-serif;
-  --br-font-body: "Helvetica Neue", "Segoe UI", Arial, system-ui, sans-serif;
-  --br-font-mono: "Courier New", ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace;
+  
+  
+  
 
   /* Transición discreta y "mecánica" (en saltos). Se anula con reduced-motion */
   --br-transition: transform 90ms steps(2, end), box-shadow 90ms steps(2, end), background-color 90ms steps(2, end);
@@ -223,7 +228,7 @@ html[data-ui="brutal"] :is(header, footer, aside, nav, section, dialog, .panel, 
    3. BOTONES Y TOGGLES  (skin, tema, estilo, cargar archivos/carpeta, etc.)
    Apariencia presionable: sombra dura que se "hunde" al pulsar.
    ========================================================================== */
-html[data-ui="brutal"] :is(button, .btn, [role="button"]:not(.song-item), input[type="button"], input[type="submit"], input[type="reset"], .icon-btn, .chip, label.file-btn) {
+html[data-ui="brutal"] :is(button, .btn, [role="button"]:not(.song-item), input[type="button"], input[type="submit"], input[type="reset"], .icon-btn, .chip, label.file-btn):not(.header-actions .btn-icon) {
   -webkit-appearance: none;
   appearance: none;
   box-sizing: border-box;
@@ -246,14 +251,14 @@ html[data-ui="brutal"] :is(button, .btn, [role="button"]:not(.song-item), input[
   transition: var(--br-transition);
 }
 
-html[data-ui="brutal"] :is(button, .btn, [role="button"]:not(.song-item), input[type="button"], input[type="submit"], input[type="reset"], .icon-btn, .chip, label.file-btn):hover {
+html[data-ui="brutal"] :is(button, .btn, [role="button"]:not(.song-item), input[type="button"], input[type="submit"], input[type="reset"], .icon-btn, .chip, label.file-btn):not(.header-actions .btn-icon):hover {
   background-color: var(--br-accent);
   color: var(--br-on-accent);
   transform: translate(-2px, -2px);
   box-shadow: 5px 5px 0 var(--br-shadow-color);
 }
 
-html[data-ui="brutal"] :is(button, .btn, [role="button"]:not(.song-item), input[type="button"], input[type="submit"], input[type="reset"], .icon-btn, .chip, label.file-btn):active {
+html[data-ui="brutal"] :is(button, .btn, [role="button"]:not(.song-item), input[type="button"], input[type="submit"], input[type="reset"], .icon-btn, .chip, label.file-btn):not(.header-actions .btn-icon):active {
   background-color: var(--br-accent-3);
   color: var(--br-ink);
   transform: translate(3px, 3px);
@@ -262,9 +267,9 @@ html[data-ui="brutal"] :is(button, .btn, [role="button"]:not(.song-item), input[
 
 /* Toggles activos (skin / tema / estilo / shuffle / repeat…): hundidos e invertidos.
    No dependen solo del color: cambian fondo, posición, sombra y anillo interior. */
-html[data-ui="brutal"] :is(button, .btn, [role="button"], .icon-btn, .chip)[aria-pressed="true"],
-html[data-ui="brutal"] :is(button, .btn, [role="button"], .icon-btn, .chip)[aria-checked="true"],
-html[data-ui="brutal"] :is(button, .btn, .icon-btn, .chip):is(.is-active, .toggled) {
+html[data-ui="brutal"] :is(button, .btn, [role="button"], .icon-btn, .chip):not(.header-actions .btn-icon)[aria-pressed="true"],
+html[data-ui="brutal"] :is(button, .btn, [role="button"], .icon-btn, .chip):not(.header-actions .btn-icon)[aria-checked="true"],
+html[data-ui="brutal"] :is(button, .btn, .icon-btn, .chip):not(.header-actions .btn-icon):is(.is-active, .toggled) {
   background-color: var(--br-inverse);
   color: var(--br-on-inverse);
   transform: translate(3px, 3px);
@@ -1047,7 +1052,7 @@ html[data-ui="brutal"] :is(button, .btn, [role="button"], input[type="button"], 
     min-height: var(--br-tap);
   }
 
-  html[data-ui="brutal"] :is(button, .btn, [role="button"], .icon-btn, .chip, [role="tab"], .tab) {
+  html[data-ui="brutal"] :is(button, .btn, [role="button"], .icon-btn, .chip, [role="tab"], .tab):not(.header-actions .btn-icon) {
     min-height: var(--br-tap);
     min-width: var(--br-tap);
     padding-inline: 10px;
@@ -1089,7 +1094,7 @@ html[data-ui="brutal"] :is(button, .btn, [role="button"], input[type="button"], 
 }
 
 @media (max-width: 380px) {
-  html[data-ui="brutal"] :is(button, .btn, [role="button"], .chip, [role="tab"], .tab) {
+  html[data-ui="brutal"] :is(button, .btn, [role="button"], .chip, [role="tab"], .tab):not(.header-actions .btn-icon) {
     letter-spacing: 0.02em;
     font-size: 0.74rem;
   }
@@ -1103,7 +1108,7 @@ html[data-ui="brutal"] :is(button, .btn, [role="button"], input[type="button"], 
 }
 
 @media (pointer: coarse) {
-  html[data-ui="brutal"] :is(button, .btn, [role="button"], input, select, .icon-btn, .chip, [role="tab"], .tab) {
+  html[data-ui="brutal"] :is(button, .btn, [role="button"], input, select, .icon-btn, .chip, [role="tab"], .tab):not(.header-actions .btn-icon) {
     min-height: 48px;
   }
 

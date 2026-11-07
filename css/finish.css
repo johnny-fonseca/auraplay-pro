@@ -33,6 +33,30 @@ body::after{content:"";position:fixed;inset:0;z-index:1;pointer-events:none;back
 .btn-ghost:hover{color:var(--color-accent-soft)}
 .viz-card:hover .viz-preview{box-shadow:0 0 22px rgba(var(--color-accent-rgb),.28)}
 
+/* Contrato de geometría del encabezado: las superficies no deben modificar
+   padding, tamaño ni escala de estos iconos. La capa finish se declara después
+   de surface, por lo que esta API visual prevalece sobre cualquier skin. */
+html[data-ui] .app-header .header-actions > .btn-icon{
+  box-sizing:border-box;
+  display:inline-grid;
+  place-items:center;
+  flex:0 0 38px;
+  width:38px;
+  min-width:38px;
+  height:38px;
+  min-height:38px;
+  padding:0;
+  gap:0;
+  font-size:0;
+  line-height:0;
+}
+html[data-ui] .app-header .header-actions > .btn-icon > svg{
+  display:block;
+  flex:none;
+  width:18px;
+  height:18px;
+}
+
 /* Barra de progreso: cabeza luminosa */
 .progress-fill::after{content:"";position:absolute;right:-1px;top:50%;width:10px;height:10px;margin-top:-5px;border-radius:50%;background:var(--tone-hi);box-shadow:0 0 0 3px rgba(var(--color-accent-rgb),.25),0 0 14px 2px rgba(var(--color-accent-rgb),.75)}
 .progress-fill[style*="width: 0%"]::after,.progress-fill[style*="width:0%"]::after{opacity:0}

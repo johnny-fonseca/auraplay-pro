@@ -1,4 +1,7 @@
 @layer surface {
+html[data-ui="aurora"] {
+  --au-font-mono: ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace;
+}
 /* ==========================================================================
    AuraPlay Pro · aurora.css
    Modo visual 6: AURORA / GRADIENTES FLUIDOS  ·  html[data-ui="aurora"]
@@ -133,8 +136,8 @@ html[data-ui="aurora"] {
   --au-tap: 44px;
 
   /* Tipografía local (sin red): limpia y minimalista */
-  --au-font: "Inter", "SF Pro Text", "SF Pro Display", "Segoe UI Variable", "Segoe UI", "Helvetica Neue", Arial, system-ui, sans-serif;
-  --au-font-mono: ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace;
+  
+  
 
   /* Transición suave y fluida. Se anula con reduced-motion */
   --au-transition: transform 260ms cubic-bezier(0.2, 0.8, 0.2, 1), box-shadow 260ms ease, background-color 220ms ease, border-color 220ms ease, color 200ms ease;
@@ -223,7 +226,7 @@ html[data-ui="aurora"]::after {
 html[data-ui="aurora"] body {
   background: transparent;
   color: var(--au-text);
-  font-family: var(--au-font);
+  font-family: var(--font-body);
   font-weight: 400;
   line-height: 1.5;
   letter-spacing: -0.005em;
@@ -236,7 +239,7 @@ html[data-ui="aurora"] ::selection {
 }
 
 html[data-ui="aurora"] :is(h1, h2, h3, h4, .title, .section-title, .heading) {
-  font-family: var(--au-font);
+  font-family: var(--font-display);
   font-weight: 600;
   letter-spacing: -0.025em;
   line-height: 1.15;
@@ -268,14 +271,14 @@ html[data-ui="aurora"] hr {
    Píldoras de cristal. Hover: se elevan y brillan. Activo: se hunden un poco.
    Toggle activo: relleno de degradado + brillo + anillo (no solo color).
    ========================================================================== */
-html[data-ui="aurora"] :is(button, .btn, [role="button"]:not(.song-item), input[type="button"], input[type="submit"], input[type="reset"], .icon-btn, .chip, label.file-btn) {
+html[data-ui="aurora"] :is(button, .btn, [role="button"]:not(.song-item), input[type="button"], input[type="submit"], input[type="reset"], .icon-btn, .chip, label.file-btn):not(.header-actions .btn-icon) {
   -webkit-appearance: none;
   appearance: none;
   box-sizing: border-box;
   min-height: 40px;
   min-width: 40px;
   padding-inline: 16px;
-  font-family: var(--au-font);
+  font-family: var(--font-body);
   font-size: 0.875rem;
   font-weight: 500;
   letter-spacing: 0;
@@ -292,22 +295,22 @@ html[data-ui="aurora"] :is(button, .btn, [role="button"]:not(.song-item), input[
   transition: var(--au-transition);
 }
 
-html[data-ui="aurora"] :is(button, .btn, [role="button"]:not(.song-item), input[type="button"], input[type="submit"], input[type="reset"], .icon-btn, .chip, label.file-btn):hover {
+html[data-ui="aurora"] :is(button, .btn, [role="button"]:not(.song-item), input[type="button"], input[type="submit"], input[type="reset"], .icon-btn, .chip, label.file-btn):not(.header-actions .btn-icon):hover {
   background-color: var(--au-surface-hover);
   border-color: var(--au-border-strong);
   transform: translateY(-2px);
   box-shadow: var(--au-glow);
 }
 
-html[data-ui="aurora"] :is(button, .btn, [role="button"]:not(.song-item), input[type="button"], input[type="submit"], input[type="reset"], .icon-btn, .chip, label.file-btn):active {
+html[data-ui="aurora"] :is(button, .btn, [role="button"]:not(.song-item), input[type="button"], input[type="submit"], input[type="reset"], .icon-btn, .chip, label.file-btn):not(.header-actions .btn-icon):active {
   transform: translateY(0) scale(0.97);
   box-shadow: var(--au-glow-sm);
 }
 
 /* Toggles activos (skin / tema / estilo / shuffle / repeat…) */
-html[data-ui="aurora"] :is(button, .btn, [role="button"], .icon-btn, .chip)[aria-pressed="true"],
-html[data-ui="aurora"] :is(button, .btn, [role="button"], .icon-btn, .chip)[aria-checked="true"],
-html[data-ui="aurora"] :is(button, .btn, .icon-btn, .chip):is(.is-active, .toggled) {
+html[data-ui="aurora"] :is(button, .btn, [role="button"], .icon-btn, .chip):not(.header-actions .btn-icon)[aria-pressed="true"],
+html[data-ui="aurora"] :is(button, .btn, [role="button"], .icon-btn, .chip):not(.header-actions .btn-icon)[aria-checked="true"],
+html[data-ui="aurora"] :is(button, .btn, .icon-btn, .chip):not(.header-actions .btn-icon):is(.is-active, .toggled) {
   color: var(--au-on-accent);
   background-image: var(--au-grad);
   border-color: transparent;
@@ -338,7 +341,7 @@ html[data-ui="aurora"] :is(input:not([type]), input[type="text"], input[type="se
   box-sizing: border-box;
   min-height: 40px;
   padding: 8px 16px;
-  font-family: var(--au-font);
+  font-family: var(--font-body);
   font-size: 0.95rem;
   font-weight: 400;
   color: var(--au-text);
@@ -480,7 +483,7 @@ html[data-ui="aurora"] :is(header, .app-header, .topbar, [data-role="header"]) {
 }
 
 html[data-ui="aurora"] :is(.logo, .brand, .app-logo, [data-role="logo"]) {
-  font-family: var(--au-font);
+  font-family: var(--font-body);
   font-weight: 700;
   font-size: clamp(1.3rem, 2.8vw, 1.9rem);
   letter-spacing: -0.04em;
@@ -516,7 +519,7 @@ html[data-ui="aurora"] :is(.panel-header, .panel-title, .card-header, .section-h
   background-position: left bottom;
   background-size: 100% 2px;
   color: var(--au-text);
-  font-family: var(--au-font);
+  font-family: var(--font-body);
   font-size: 0.78rem;
   font-weight: 600;
   letter-spacing: 0.14em;
@@ -554,7 +557,7 @@ html[data-ui="aurora"] :is([role="tab"], .tab) {
   box-sizing: border-box;
   min-height: var(--au-tap);
   padding-inline: 18px;
-  font-family: var(--au-font);
+  font-family: var(--font-body);
   font-size: 0.875rem;
   font-weight: 500;
   letter-spacing: 0;
@@ -610,7 +613,7 @@ html[data-ui="aurora"] :is(.track, .track-item, .song, .queue-item, li[role="opt
   border: 1px solid transparent;
   border-radius: var(--au-radius);
   box-shadow: none;
-  font-family: var(--au-font);
+  font-family: var(--font-body);
   font-weight: 400;
   text-align: start;
   transition: var(--au-transition);
@@ -652,7 +655,7 @@ html[data-ui="aurora"] :is(.track, .track-item, .song, .queue-item, li[role="opt
   top: 6px;
   right: 10px;
   padding: 1px 10px;
-  font-family: var(--au-font);
+  font-family: var(--font-body);
   font-size: 0.66rem;
   font-weight: 700;
   letter-spacing: 0.08em;
@@ -682,7 +685,7 @@ html[data-ui="aurora"] :is(.cover, .album-art, .artwork, .cover-art, [data-role=
 }
 
 html[data-ui="aurora"] :is(.now-title, .np-title, [data-role="now-title"]) {
-  font-family: var(--au-font);
+  font-family: var(--font-body);
   font-size: clamp(1.4rem, 3vw, 2.3rem);
   font-weight: 700;
   line-height: 1.1;
@@ -691,7 +694,7 @@ html[data-ui="aurora"] :is(.now-title, .np-title, [data-role="now-title"]) {
 }
 
 html[data-ui="aurora"] :is(.now-artist, .np-artist, [data-role="now-artist"]) {
-  font-family: var(--au-font);
+  font-family: var(--font-body);
   font-size: 0.95rem;
   font-weight: 500;
   letter-spacing: 0.01em;
@@ -802,7 +805,7 @@ html[data-ui="aurora"] :is(.progress-fill, .progress-bar, .seek-fill) {
 }
 
 html[data-ui="aurora"] :is(.time, .current-time, .duration-label, .time-current, .time-total, [data-role="time"]) {
-  font-family: var(--au-font);
+  font-family: var(--font-body);
   font-size: 0.8rem;
   font-weight: 500;
   font-variant-numeric: tabular-nums;
@@ -818,7 +821,7 @@ html[data-ui="aurora"] :is(.visualizer, .viz, .spectrum, [data-role="visualizer"
 }
 
 html[data-ui="aurora"] :is(.eq, .equalizer, [data-panel="eq"]) :is(label, .band-label, .eq-label) {
-  font-family: var(--au-font);
+  font-family: var(--font-body);
   font-size: 0.7rem;
   font-weight: 500;
   letter-spacing: 0.08em;
@@ -839,7 +842,7 @@ html[data-ui="aurora"] :is(.toast, .snackbar, .notification, .notice, [role="ale
   gap: 10px;
   max-width: min(92vw, 460px);
   padding: 12px 20px;
-  font-family: var(--au-font);
+  font-family: var(--font-body);
   font-size: 0.92rem;
   font-weight: 500;
   color: var(--au-text);
@@ -937,7 +940,7 @@ html[data-ui="aurora"] :is(.karaoke, .lyrics, .lyrics-view, .karaoke-view, [data
 html[data-ui="aurora"] :is(.lyric-line, .lyrics-line, .karaoke-line, .lrc-line, [data-lyric-line]) {
   margin-block: 6px;
   padding: 6px 18px;
-  font-family: var(--au-font);
+  font-family: var(--font-body);
   font-size: clamp(1.1rem, 2.6vw, 1.8rem);
   font-weight: 500;
   line-height: 1.25;
@@ -1006,7 +1009,7 @@ html[data-ui="aurora"] ::-webkit-scrollbar-thumb:hover {
 html[data-ui="aurora"] :is(.badge, .tag, .pill, .label) {
   display: inline-block;
   padding: 1px 10px;
-  font-family: var(--au-font);
+  font-family: var(--font-body);
   font-size: 0.7rem;
   font-weight: 600;
   letter-spacing: 0.06em;
@@ -1101,7 +1104,7 @@ html[data-ui="aurora"] :is(button, .btn, [role="button"], input[type="button"], 
     min-height: var(--au-tap);
   }
 
-  html[data-ui="aurora"] :is(button, .btn, [role="button"], .icon-btn, .chip, [role="tab"], .tab) {
+  html[data-ui="aurora"] :is(button, .btn, [role="button"], .icon-btn, .chip, [role="tab"], .tab):not(.header-actions .btn-icon) {
     min-height: var(--au-tap);
     min-width: var(--au-tap);
     padding-inline: 12px;
@@ -1133,7 +1136,7 @@ html[data-ui="aurora"] :is(button, .btn, [role="button"], input[type="button"], 
 }
 
 @media (max-width: 380px) {
-  html[data-ui="aurora"] :is(button, .btn, [role="button"], .chip, [role="tab"], .tab) {
+  html[data-ui="aurora"] :is(button, .btn, [role="button"], .chip, [role="tab"], .tab):not(.header-actions .btn-icon) {
     font-size: 0.8rem;
   }
 
@@ -1146,7 +1149,7 @@ html[data-ui="aurora"] :is(button, .btn, [role="button"], input[type="button"], 
 }
 
 @media (pointer: coarse) {
-  html[data-ui="aurora"] :is(button, .btn, [role="button"], input, select, .icon-btn, .chip, [role="tab"], .tab) {
+  html[data-ui="aurora"] :is(button, .btn, [role="button"], input, select, .icon-btn, .chip, [role="tab"], .tab):not(.header-actions .btn-icon) {
     min-height: 48px;
   }
 

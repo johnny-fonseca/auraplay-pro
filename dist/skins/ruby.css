@@ -1,9 +1,10 @@
 @layer skin {
+--font-display:"Playfair Display","Playfair Display",Georgia,serif;`r`n--font-body:"DM Sans","Inter",system-ui,sans-serif;
 /* ruby.css — estilo "Rubí": alta relojería hi-fi.
    Vinilo de rubí translúcido sobre un plato de laca negra con borde de oro rosa moleteado, gemas en los cuatro puntos cardinales,
    escala grabada, brazo de laca con inlay de oro rosa y cápsula de rubí.
    Quinto estilo junto a Latón, Neón, Esmeralda y Glaciar (<html data-skin="ruby">). Cargar DESPUÉS de vinyl.css.
-   Tipografías: "Cormorant Garamond" (títulos) y "Jost" (texto). Añádelas al <link> de Google Fonts;
+   Tipografías: "Playfair Display" (títulos) y "DM Sans" (texto). Añádelas al <link> de Google Fonts;
    si no cargan, usa las de respaldo del sistema. */
 
 /* ============================================================
@@ -24,8 +25,8 @@
 --skin-panel-background:linear-gradient(180deg,rgba(255,235,228,.06),rgba(255,235,228,.025));--skin-panel-backdrop-filter:blur(30px) saturate(130%);
 --color-text-primary:#f6ece8;--color-text-secondary:#cdbab6;--color-text-muted:#957f7c;--color-text-disabled:#65524f;
 --shadow-surface:inset 0 1px 0 rgba(255,225,215,.10),0 1px 2px rgba(0,0,0,.5),0 30px 60px -24px rgba(0,0,0,.8);
---font-display:"Cormorant Garamond","Playfair Display",Georgia,serif;
---font-body:"Jost","Inter",system-ui,sans-serif}
+
+}
 
 /* Rubí + tema claro: marfil rosado, rubí profundo y bronce rosado legible */
 :root[data-skin="ruby"][data-theme="light"]{

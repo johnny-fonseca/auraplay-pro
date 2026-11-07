@@ -155,7 +155,7 @@
          ═══════════════════════════════════════════════════════════ -->
     <link rel="stylesheet" href="./css/reset.css?v=17" />
     <link rel="stylesheet" href="./css/layout.css?v=16" />
-    <link rel="stylesheet" href="./css/components.css?v=19" />
+    <link rel="stylesheet" href="./css/components.css?v=20" />
     <link rel="stylesheet" href="./css/playlist.css?v=18" />
     <link rel="stylesheet" href="./css/queue.css?v=17" />
     <link rel="stylesheet" href="./css/player.css?v=16" />
@@ -170,7 +170,7 @@
     <link rel="stylesheet" href="./css/responsive.css?v=16" />
     <link rel="stylesheet" href="./css/theme.css?v=16" />
     <link rel="stylesheet" href="./css/skin-contract.css?v=3" />
-    <link rel="stylesheet" href="./css/finish.css?v=16" />
+    <link rel="stylesheet" href="./css/finish.css?v=17" />
     <link rel="stylesheet" href="./css/vinyl.css?v=16" />
     <link rel="stylesheet" href="./css/vinyl-interaction.css?v=16" />
     <link rel="stylesheet" href="./skins/brass.css?v=17" />
@@ -188,10 +188,10 @@
     <link rel="stylesheet" href="./styles/skeuomorphism.css?v=2" />
     <link rel="stylesheet" href="./styles/glassmorphism.css?v=2" />
     <link rel="stylesheet" href="./styles/claymorphism.css?v=1" />
-    <link rel="stylesheet" href="./styles/brutalism.css?v=4" />
-    <link rel="stylesheet" href="./styles/aurora.css?v=4" />
-    <link rel="stylesheet" href="./styles/flat.css?v=3" />
-    <link rel="stylesheet" href="./styles/bento.css?v=2" />
+    <link rel="stylesheet" href="./styles/brutalism.css?v=5" />
+    <link rel="stylesheet" href="./styles/aurora.css?v=5" />
+    <link rel="stylesheet" href="./styles/flat.css?v=4" />
+    <link rel="stylesheet" href="./styles/bento.css?v=3" />
     <script>
       (function () {
         try {
@@ -506,7 +506,7 @@
             </div>
           </div>
           <div class="now-info">
-            <span class="now-eyebrow">Reproduciendo ahora</span>
+            <span class="now-eyebrow" id="nowEyebrow">Añade una canción</span>
             <h1 class="now-title" id="nowTitle">Selecciona una canción</h1>
             <div class="now-artist" id="nowArtist">Carga archivos para empezar</div>
             <div class="now-album" id="nowAlbum"></div>
@@ -594,7 +594,7 @@
                   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M3 19h18" stroke-width="1.1"/><path d="M4 18v-5.5c0-1.8 2.1-2.2 2.7-.5l1.2 3.2 1.7-9.3c.3-1.6 2.3-1.6 2.6 0l1.2 6.2 1.4-3.7c.6-1.5 2.7-1.1 2.7.5V18" stroke-width="1.6"/><circle cx="5" cy="8" r="1.2" fill="currentColor" stroke="none"/><circle cx="19" cy="13" r="1.4" fill="currentColor" stroke="none"/></svg>
                 </div>
                 <div class="viz-name">Ferrofluido líquido</div>
-                <div class="viz-desc">Barras líquidas al ritmo</div>
+                <div class="viz-desc">Barras líquidas</div>
               </button>
 
               <!-- VIZ 2: Aurora cromática -->
@@ -603,7 +603,7 @@
                   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" aria-hidden="true" focusable="false"><path d="M3 17c2-5.5 4.8-8.3 7.3-7.3 2.3.9 2.5 4.1 4.5 4.1 1.7 0 2.8-2.2 6.2-6.1" stroke-width="1.5"/><path d="M3 20c2.9-3.5 5.4-4.9 7.9-3.6 2.5 1.1 3.5-1.8 5.1-3.4 1.9-2 3.4-2.1 5-1.7" opacity=".62" stroke-width="1.2"/><path d="M5 5.2h.01M18.8 18.8h.01" stroke-width="2.6"/></svg>
                 </div>
                 <div class="viz-name">Aurora cromática</div>
-                <div class="viz-desc">Luces inspiradas en la portada</div>
+                <div class="viz-desc">Luces de portada</div>
               </button>
 
               <!-- VIZ 3: Reactor espectral -->
@@ -612,7 +612,7 @@
                   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="8.2" stroke-dasharray="1 2.3" stroke-width="1"/><circle cx="12" cy="12" r="4.2" stroke-width="1.2"/><path d="M12 1.8v2.1M12 20.1v2.1M1.8 12h2.1M20.1 12h2.1" stroke-width="1.4"/><path d="M12 12 16.8 8.7M12 12l-4.2 3.8" stroke-width="1.7"/><circle cx="12" cy="12" r="1.3" fill="currentColor" stroke="none"/></svg>
                 </div>
                 <div class="viz-name">Reactor espectral</div>
-                <div class="viz-desc">Anillo espectral reactivo</div>
+                <div class="viz-desc">Anillo reactivo</div>
               </button>
 
               <!-- VIZ 4: Nebulosa -->
@@ -621,7 +621,7 @@
                   <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" focusable="false"><path d="m12 2 .8 3.8L16 4.5l-1.3 3.2 3.8.8-3.8.8 1.3 3.2-3.2-1.3L12 15l-.8-3.8L8 13.3l1.3-3.2-3.8-.8 3.8-.8L8 5.3l3.2 1.3L12 2Z"/><circle cx="5" cy="17" r="1.2"/><circle cx="18.5" cy="18.5" r="1.6"/><circle cx="6.5" cy="6" r=".8"/><circle cx="19.5" cy="8" r=".9"/><path d="M5 17c3-4 7-5.5 13.5 1.5" fill="none" stroke="currentColor" stroke-width=".65" opacity=".55"/></svg>
                 </div>
                 <div class="viz-name">Nebulosa de partículas</div>
-                <div class="viz-desc">Estrellas que estallan al ritmo</div>
+                <div class="viz-desc">Estrellas al ritmo</div>
               </button>
 
               <!-- VIZ 5: Túnel -->
@@ -630,7 +630,7 @@
                   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M2.5 4.5h19l-3 15h-13l-3-15Z" stroke-width="1.2"/><path d="M6.5 7.5h11l-1.6 9h-7.8l-1.6-9Z" stroke-width="1.2"/><path d="M10 10h4l-.6 4h-2.8L10 10Z" stroke-width="1.3"/><path d="M3 4.5 7 9M21 4.5l-4 4" stroke-width=".9" opacity=".65"/></svg>
                 </div>
                 <div class="viz-name">Túnel hiperespacial</div>
-                <div class="viz-desc">Estelas y anillos en movimiento</div>
+                <div class="viz-desc">Estelas y anillos</div>
               </button>
 
               <!-- VIZ 6: Mandala -->
@@ -639,7 +639,7 @@
                   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linejoin="round" aria-hidden="true" focusable="false"><g transform="translate(12 12)" stroke-width="1.1"><path d="M0-1.5C-3-4.5-3-8 0-10.5 3-8 3-4.5 0-1.5Z"/><path d="M1.5 0C4.5-3 8-3 10.5 0 8 3 4.5 3 1.5 0Z"/><path d="M0 1.5C3 4.5 3 8 0 10.5-3 8-3 4.5 0 1.5Z"/><path d="M-1.5 0C-4.5 3-8 3-10.5 0-8-3-4.5-3-1.5 0Z"/><circle r="2" fill="currentColor" stroke="none"/></g></svg>
                 </div>
                 <div class="viz-name">Mandala caleidoscopio</div>
-                <div class="viz-desc">Simetría floral en movimiento</div>
+                <div class="viz-desc">Simetría floral</div>
               </button>
 
               <!-- VIZ 7: Prisma -->
@@ -648,7 +648,7 @@
                   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M4 17 9 5l6 2 5 10-8 3-8-3Z" stroke-width="1.25"/><path d="m9 5 3 12m3-10-3 10m-8 0 8-3 8 3" stroke-width=".95" opacity=".78"/><path d="M12 3v18" stroke-width=".7" stroke-dasharray="1 1.5"/></svg>
                 </div>
                 <div class="viz-name">Prisma cristalino</div>
-                <div class="viz-desc">Cristales y haces de luz</div>
+                <div class="viz-desc">Cristales y luz</div>
               </button>
 
               <!-- VIZ 8: Halo -->
@@ -657,7 +657,7 @@
                   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" aria-hidden="true" focusable="false"><path d="M3 12c1.5-5 3.1 5 4.6 0s3.1-5 4.6 0 3.1 5 4.6 0 3.1-5 4.2 0" stroke-width="1.55"/><path d="M4 7.2c2.3-1.9 4.7-1.9 8 0s5.7 1.9 8 0M4 16.8c2.3 1.9 4.7 1.9 8 0s5.7-1.9 8 0" stroke-width=".9" opacity=".55"/></svg>
                 </div>
                 <div class="viz-name">Halo osciloscópico</div>
-                <div class="viz-desc">Ondas de audio con brillo</div>
+                <div class="viz-desc">Ondas con brillo</div>
               </button>
               <!-- VIZ 9: Micelio -->
               <button class="viz-card" data-viz="mycelium" type="button" aria-label="Visualizador Micelio bioluminiscente">
@@ -665,7 +665,7 @@
                   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M12 21V12m0 0L7 8m5 4 5-5M7 8 5 4m2 4 1-4m9 3 3-2m-3 2 1 5M12 16l-4 3m4-3 4 3" stroke-width="1.35"/><circle cx="5" cy="4" r="1.1" fill="currentColor" stroke="none"/><circle cx="8" cy="4" r=".9" fill="currentColor" stroke="none"/><circle cx="20" cy="6" r="1.1" fill="currentColor" stroke="none"/><circle cx="4" cy="19" r=".8" fill="currentColor" stroke="none"/></svg>
                 </div>
                 <div class="viz-name">Micelio bioluminiscente</div>
-                <div class="viz-desc">Filamentos y esporas luminosas</div>
+                <div class="viz-desc">Filamentos luminosos</div>
               </button>
               <!-- VIZ 10: Constelación musical -->
               <button class="viz-card" data-viz="capsules" type="button" aria-label="Visualizador Constelación musical">
@@ -673,7 +673,7 @@
                   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><g stroke-width="1.35"><path d="M5 17V6l9-2v11"/><ellipse cx="3.7" cy="18" rx="2.1" ry="1.5" transform="rotate(-22 3.7 18)" fill="currentColor"/><ellipse cx="12.7" cy="16" rx="2.1" ry="1.5" transform="rotate(-22 12.7 16)" fill="currentColor"/><path d="M17 8v8m0-8c2.4 0 3.7 1.2 4 3"/><path d="M18 20c2-1.6 2-3.1 0-4.4-2-1.1-2-2.8 0-4.2"/></g></svg>
                 </div>
                 <div class="viz-name">Constelación musical</div>
-                <div class="viz-desc">Notas musicales en movimiento</div>
+                <div class="viz-desc">Notas en movimiento</div>
               </button>
               <!-- VIZ 11: Mosaico de guijarros -->
               <button class="viz-card" data-viz="pebbles" type="button" aria-label="Visualizador Mosaico de guijarros">
@@ -681,7 +681,7 @@
                   <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" focusable="false"><path d="M4 7.2c0-1.7 1.2-2.8 2.8-2.8h2c1.4 0 2.4.8 2.6 2.1l.2 1.2c.2 1.5-.9 2.7-2.4 2.7H6.7C5.2 10.4 4 9.1 4 7.2Z"/><path d="M13.1 5.8c.1-1.5 1.2-2.4 2.7-2.4h1.5c1.5 0 2.6 1.1 2.6 2.7 0 1.7-1.2 2.8-2.8 2.8h-1.5c-1.6 0-2.6-1.2-2.5-3.1Z"/><path d="M3.5 15.2c.1-1.6 1.2-2.6 2.8-2.6h3.1c1.5 0 2.6 1 2.6 2.5v1.2c0 1.5-1.2 2.6-2.8 2.6H6.3c-1.8 0-2.9-1.2-2.8-3.7Z"/><path d="M13.5 14.1c.2-1.5 1.2-2.4 2.7-2.4h2c1.5 0 2.5 1 2.5 2.5v1.6c0 1.5-1.1 2.5-2.7 2.5h-2c-1.6 0-2.7-1.1-2.5-4.2Z"/></svg>
                 </div>
                 <div class="viz-name">Mosaico de guijarros</div>
-                <div class="viz-desc">Piedras que brillan con el ritmo</div>
+                <div class="viz-desc">Piedras brillantes</div>
               </button>
               <!-- VIZ 12: Relieve estratificado -->
               <button class="viz-card" data-viz="relief" type="button" aria-label="Visualizador Relieve estratificado">
@@ -689,7 +689,7 @@
                   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" aria-hidden="true" focusable="false"><path d="M3 16c2-4 4-4 6-1s4 2 6-2 4-4 6 0" stroke-width="1.4"/><path d="M4 19c2-3 4-3 6-1s4 1 6-2 3-3 5-1" stroke-width="1.1" opacity=".75"/><path d="M7 10c2-3 4-3 6-1s3 1 5-2" stroke-width="1" opacity=".65"/></svg>
                 </div>
                 <div class="viz-name">Relieve estratificado</div>
-                <div class="viz-desc">Relieve y curvas al ritmo</div>
+                <div class="viz-desc">Relieve y curvas</div>
               </button>
               </div>
 
@@ -859,6 +859,21 @@
           <button id="kNext" type="button" class="k-control" aria-label="Canción siguiente">⏭</button>
           <button id="kFontDown" type="button" class="k-control" aria-label="Reducir tamaño de letra">A−</button>
           <button id="kFontUp" type="button" class="k-control" aria-label="Aumentar tamaño de letra">A+</button>
+          <label class="k-font-picker" for="kFontFamily">
+            <span>Fuente</span>
+            <select id="kFontFamily" aria-label="Fuente de las letras">
+              <option value="system">Predeterminada</option>
+              <option value="playfair-display">Playfair Display</option>
+              <option value="cormorant-garamond">Cormorant Garamond</option>
+              <option value="eb-garamond">EB Garamond</option>
+              <option value="bodoni-moda">Bodoni Moda</option>
+              <option value="anton">Anton</option>
+              <option value="tilt-neon">Tilt Neon</option>
+              <option value="zen-old-mincho">Zen Old Mincho</option>
+              <option value="orbitron">Orbitron</option>
+              <option value="barlow-condensed">Barlow Condensed</option>
+            </select>
+          </label>
           <div class="k-offset">
             <span>Desfase</span>
             <button id="offsetMinus" type="button" class="k-control" title="-0.1 s (Shift: -0.5 s)" aria-label="Reducir desfase">−</button>

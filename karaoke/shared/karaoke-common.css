@@ -661,3 +661,33 @@
   #karaokeOverlay .k-footer { background: color-mix(in srgb, var(--k-dock-bg) 30%, #05060c); }
 }
 }
+
+/* Fullscreen karaoke font picker. The family is shared by all six skins. */
+#karaokeOverlay .k-font-picker {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  min-height: 34px;
+  padding: 0 10px;
+  border: 1px solid var(--k-line);
+  border-radius: 999px;
+  background: var(--k-panel);
+  color: var(--k-ink-dim);
+  font: 600 11px/1 var(--k-font-ui);
+  letter-spacing: .04em;
+}
+#karaokeOverlay .k-font-picker span { opacity: .72; }
+#karaokeOverlay .k-font-picker select {
+  max-width: 150px;
+  border: 0;
+  outline: 0;
+  background: transparent;
+  color: var(--k-ink);
+  font: 600 12px/1 var(--k-font-ui);
+  cursor: pointer;
+}
+#karaokeOverlay .k-font-picker option { background: #11162a; color: #fff; }
+@media (max-width: 760px) {
+  #karaokeOverlay .k-font-picker { order: 4; }
+  #karaokeOverlay .k-font-picker select { max-width: 118px; }
+}

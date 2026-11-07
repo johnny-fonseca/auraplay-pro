@@ -1,4 +1,6 @@
 @layer skin {
+--font-display:"Orbitron","Exo 2","Trebuchet MS",sans-serif;
+--font-body:"Exo 2","Exo 2",system-ui,sans-serif;
 /* ============================================================
    DISCO · bisel de policarbonato con plasma de núcleo blanco, vinilo negro piano a espejo, eje de cromo
    → Reemplaza desde "@keyframes neonRing" hasta el final de neon.css
@@ -18,7 +20,7 @@
  --surface-bg:rgba(10,12,42,.52);--surface-bg-hover:rgba(20,22,68,.68);--surface-bg-active:rgba(34,30,86,.82);--surface-border:rgba(164,220,255,.16);--surface-border-strong:rgba(var(--color-accent-soft-rgb),.42);--glass-blur:30px;
  --skin-panel-background:linear-gradient(var(--glass-tint,transparent),var(--glass-tint,transparent)),var(--surface-bg);--skin-panel-backdrop-filter:blur(var(--glass-blur)) saturate(135%);
  --color-text-primary:#f4f2ff;--color-text-secondary:#c6c9e8;--color-text-muted:#8991bd;--color-text-disabled:#565d88;--shadow-surface:inset 0 1px 0 rgba(220,245,255,.14),0 1px 2px rgba(0,0,0,.55),0 30px 60px -24px rgba(0,0,0,.86);
- --shadow-focus:0 0 0 2px #06081a,0 0 0 4px #00e5ff,0 0 16px 2px rgba(0,229,255,.42);--font-display:"Tilt Neon","Space Grotesk","Trebuchet MS",sans-serif;--font-body:"Space Grotesk","DM Sans",system-ui,sans-serif}
+ --shadow-focus:0 0 0 2px #06081a,0 0 0 4px #00e5ff,0 0 16px 2px rgba(0,229,255,.42);}
 
 /* Neón + tema claro */
 :root[data-skin="neon"][data-theme="light"]{

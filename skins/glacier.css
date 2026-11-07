@@ -2,7 +2,7 @@
 /* glacier.css — estilo "Glaciar": hielo profundo, cristal facetado y escarcha.
    Vinilo azul glaciar con destellos de nieve sobre un plato de cristal tallado, brazo de cerámica blanca y titanio.
    Cuarto estilo junto a Latón, Neón y Esmeralda (<html data-skin="glacier">).
-   Cargar DESPUÉS de vinyl.css (y de brass.css). Tipografías: "Space Grotesk" y "DM Sans" (añádelas al <link> de Google Fonts;
+   Cargar DESPUÉS de vinyl.css (y de brass.css). Tipografías: "Outfit" y "DM Sans" (añádelas al <link> de Google Fonts;
    si no cargan, usa las de respaldo del sistema). */
 
 /* ============================================================
@@ -11,6 +11,8 @@
    ============================================================ */
 :root[data-skin="glacier"]{
 --skin-name:"glacier";
+--font-display:"Outfit","Inter",system-ui,sans-serif;
+--font-body:"DM Sans","Inter",system-ui,sans-serif;
 --color-canvas:#070d14;--color-canvas-sunken:#04080d;--color-canvas-raised:#0d1620;
 --ambient-1:#12466b;--ambient-2:#2a2f6e;--ambient-3:#0e5f66;--ambient-4:#5b7a99;
 --color-accent-rgb:124,200,238;--color-accent-soft-rgb:214,236,248;
@@ -19,8 +21,8 @@
 --gradient-accent:linear-gradient(135deg,#e6f6ff 0%,#7cc8ee 50%,#3b86b5 100%);
 --gradient-accent-secondary:linear-gradient(135deg,#d6ecf8 0%,#9fb8ff 100%);
 --color-text-primary:#eaf3f9;--color-text-secondary:#bccbd6;--color-text-muted:#7f93a3;--color-text-disabled:#51626f;
---font-display:"Space Grotesk","Inter",system-ui,sans-serif;
---font-body:"DM Sans","Inter",system-ui,sans-serif}
+
+}
 
 /* Glaciar + tema claro: niebla azulada, azul acero profundo y ámbar apagado */
 :root[data-skin="glacier"][data-theme="light"]{

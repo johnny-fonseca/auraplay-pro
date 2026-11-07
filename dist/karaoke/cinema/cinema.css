@@ -9,7 +9,7 @@
   --k-a2: color-mix(in oklab, var(--k-a1) 55%, #ff6b91);
   --k-style-accent: #8fa8ff;
 
-  --k-font-lyric: "Fraunces", "Newsreader", "Cormorant Garamond", "Iowan Old Style", "Palatino Linotype", Palatino, "Book Antiqua", Georgia, serif;
+  --k-font-lyric: "Playfair Display", "Noto Sans Symbols 2", serif;
   --k-font-title: var(--k-font-lyric);
   --k-lyric-weight: 500;
   --k-lyric-track: -.014em;

@@ -9,8 +9,8 @@
   --k-a2: #ffb938;
   --k-style-accent: #ff5a3c;
 
-  --k-font-lyric: "Bricolage Grotesque", "Archivo Black", "Arial Black", "Helvetica Neue", Impact, sans-serif;
-  --k-font-title: "DM Serif Display", "Playfair Display", Georgia, "Times New Roman", serif;
+  --k-font-lyric: "Anton", "Noto Sans Symbols 2", sans-serif;
+  --k-font-title: "Barlow Condensed", "Noto Sans Symbols 2", sans-serif;
   --k-lyric-weight: 800;
   --k-lyric-track: -.045em;
   --k-lyric-lh: .96;

@@ -1,4 +1,8 @@
 @layer surface {
+html[data-ui="flat"] {
+  --fl-font: "Roboto", system-ui, sans-serif;
+  --fl-font-mono: ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace;
+}
 /* ==========================================================================
    AuraPlay Pro · flat.css
    Modo visual 7: DISEÑO PLANO (FLAT DESIGN)  ·  html[data-ui="flat"]
@@ -135,8 +139,8 @@ html[data-ui="flat"] {
   --fl-tap: 44px;
 
   /* Tipografía local (sin red): geométrica, neutra y clara */
-  --fl-font: "Segoe UI", "Helvetica Neue", "Inter", Arial, system-ui, sans-serif;
-  --fl-font-mono: ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace;
+  
+  
 
   /* Transición: solo color, lineal y corta. Se anula con reduced-motion */
   --fl-transition: background-color 120ms linear, color 120ms linear, border-color 120ms linear;
@@ -236,7 +240,7 @@ html[data-ui="flat"] hr {
    Bloques de color sólido. Hover/activo = tono más profundo del mismo bloque.
    Toggle activo = bloque de acento + peso 700 (no solo color).
    ========================================================================== */
-html[data-ui="flat"] :is(button, .btn, [role="button"]:not(.song-item), input[type="button"], input[type="submit"], input[type="reset"], .icon-btn, .chip, label.file-btn) {
+html[data-ui="flat"] :is(button, .btn, [role="button"]:not(.song-item), input[type="button"], input[type="submit"], input[type="reset"], .icon-btn, .chip, label.file-btn):not(.header-actions .btn-icon) {
   -webkit-appearance: none;
   appearance: none;
   box-sizing: border-box;
@@ -256,21 +260,21 @@ html[data-ui="flat"] :is(button, .btn, [role="button"]:not(.song-item), input[ty
   transition: var(--fl-transition);
 }
 
-html[data-ui="flat"] :is(button, .btn, [role="button"]:not(.song-item), input[type="button"], input[type="submit"], input[type="reset"], .icon-btn, .chip, label.file-btn):hover {
+html[data-ui="flat"] :is(button, .btn, [role="button"]:not(.song-item), input[type="button"], input[type="submit"], input[type="reset"], .icon-btn, .chip, label.file-btn):not(.header-actions .btn-icon):hover {
   background-color: var(--fl-fill-hover);
   color: var(--fl-text);
   transform: none;
 }
 
-html[data-ui="flat"] :is(button, .btn, [role="button"]:not(.song-item), input[type="button"], input[type="submit"], input[type="reset"], .icon-btn, .chip, label.file-btn):active {
+html[data-ui="flat"] :is(button, .btn, [role="button"]:not(.song-item), input[type="button"], input[type="submit"], input[type="reset"], .icon-btn, .chip, label.file-btn):not(.header-actions .btn-icon):active {
   background-color: var(--fl-fill-active);
   transform: none;
 }
 
 /* Toggles activos (skin / tema / estilo / shuffle / repeat…) */
-html[data-ui="flat"] :is(button, .btn, [role="button"], .icon-btn, .chip)[aria-pressed="true"],
-html[data-ui="flat"] :is(button, .btn, [role="button"], .icon-btn, .chip)[aria-checked="true"],
-html[data-ui="flat"] :is(button, .btn, .icon-btn, .chip):is(.is-active, .toggled) {
+html[data-ui="flat"] :is(button, .btn, [role="button"], .icon-btn, .chip):not(.header-actions .btn-icon)[aria-pressed="true"],
+html[data-ui="flat"] :is(button, .btn, [role="button"], .icon-btn, .chip):not(.header-actions .btn-icon)[aria-checked="true"],
+html[data-ui="flat"] :is(button, .btn, .icon-btn, .chip):not(.header-actions .btn-icon):is(.is-active, .toggled) {
   background-color: var(--fl-accent);
   color: var(--fl-on-accent);
   font-weight: 700;
@@ -1017,7 +1021,7 @@ html[data-ui="flat"] :is(button, .btn, [role="button"], input[type="button"], in
     min-height: var(--fl-tap);
   }
 
-  html[data-ui="flat"] :is(button, .btn, [role="button"], .icon-btn, .chip, [role="tab"], .tab) {
+  html[data-ui="flat"] :is(button, .btn, [role="button"], .icon-btn, .chip, [role="tab"], .tab):not(.header-actions .btn-icon) {
     min-height: var(--fl-tap);
     min-width: var(--fl-tap);
     padding-inline: 12px;
@@ -1049,7 +1053,7 @@ html[data-ui="flat"] :is(button, .btn, [role="button"], input[type="button"], in
 }
 
 @media (max-width: 380px) {
-  html[data-ui="flat"] :is(button, .btn, [role="button"], .chip, [role="tab"], .tab) {
+  html[data-ui="flat"] :is(button, .btn, [role="button"], .chip, [role="tab"], .tab):not(.header-actions .btn-icon) {
     font-size: 0.82rem;
   }
 
@@ -1062,7 +1066,7 @@ html[data-ui="flat"] :is(button, .btn, [role="button"], input[type="button"], in
 }
 
 @media (pointer: coarse) {
-  html[data-ui="flat"] :is(button, .btn, [role="button"], input, select, .icon-btn, .chip, [role="tab"], .tab) {
+  html[data-ui="flat"] :is(button, .btn, [role="button"], input, select, .icon-btn, .chip, [role="tab"], .tab):not(.header-actions .btn-icon) {
     min-height: 48px;
   }
 

@@ -103,6 +103,7 @@
 :root[data-ui="neu"][data-theme="light"] .now-title{filter:drop-shadow(0 1px 1px rgba(255,255,255,.85))}
 :root[data-ui="neu"] .tag-chip{background:var(--neu-down);border:0;color:var(--color-accent-soft);box-shadow:var(--neu-sink-xs)}
 :root[data-ui="neu"] .karaoke-mini{background:var(--neu-down);border:0;border-radius:var(--radius-md);padding:14px 18px 8px;box-shadow:inset 3px 0 0 rgba(var(--color-accent-rgb),.55),var(--neu-sink-md)}
+:root[data-ui="neu"][data-theme="light"] .karaoke-mini{background:var(--neu-up)}
 :root[data-ui="neu"] .karaoke-mini .lyric-variant-toggle:hover,:root[data-ui="neu"] .karaoke-mini .lyric-translation-toggle:hover,:root[data-ui="neu"] .karaoke-mini button.fullscreen-toggle:hover{border-color:transparent;background:var(--neu-up);box-shadow:var(--neu-raise-xs)}
 :root[data-ui="neu"] .karaoke-mini .lyric-variant-toggle.active,:root[data-ui="neu"] .karaoke-mini .lyric-translation-toggle.active{border-color:transparent;background:var(--neu-down);box-shadow:var(--neu-sink-xs)}
 

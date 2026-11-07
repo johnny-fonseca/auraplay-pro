@@ -15,20 +15,36 @@ Los componentes comunes deben consumir nombres por función, no variables privad
 | Superficie | `--surface-bg`, `--surface-bg-hover`, `--surface-bg-active`, `--surface-bg-selected`, `--surface-bg-disabled`, `--surface-border`, `--surface-border-strong` |
 | Acabado | `--gradient-accent`, `--gradient-accent-secondary`, `--ambient-1` a `--ambient-4`, `--shadow-focus`, `--shadow-surface`, `--shadow-accent` |
 | Estructura/ritmo | `--radius-*`, `--elev-*`, `--blur`, `--t-*`, `--ease-*` |
+| Tipografía | `--font-display`, `--font-body`, `--font-mono` |
+
+### Contrato tipográfico
+
+Todas las skins completas deben declarar `--font-display` y `--font-body` dentro de
+su selector raíz `:root[data-skin="<id>"]`. `--font-display` se usa para títulos y
+jerarquía editorial; `--font-body` para texto corrido, controles y campos. El
+contrato global define ambos con `system-ui` como fallback para el estado sin skin.
+`--font-mono` se define globalmente en el contrato y se reserva para métricas,
+códigos, atajos y controles técnicos; una skin solo debe sobrescribirlo cuando su
+identidad lo requiera, como Telar.
+
+Las superficies deben consumir estos tokens y no publicar una familia tipográfica
+propia. Las únicas excepciones de identidad son Neubrutalismo y Skeuomorfismo, que
+mantienen sus familias específicas en sus zonas delimitadas.
 
 Los colores RGB son canales separados por comas, por ejemplo `rgba(var(--color-accent-rgb), .25)` o `rgb(var(--color-accent-soft-rgb))`.
 
 ## Responsabilidades y precedencia
 
-- `skins/<id>.css` declara los valores semánticos de la paleta para `:root[data-skin="<id>"]` y los ajustes de tema claro cuando difieran. Puede publicar valores iniciales de superficie para conservar su material característico.
+- `skins/<id>.css` declara los valores semánticos de la paleta y `--font-display`/`--font-body` para `:root[data-skin="<id>"]`, además de los ajustes de tema claro cuando difieran. Puede publicar valores iniciales de superficie para conservar su material característico.
 - `styles/*.css` ajusta materiales, radios y elevaciones en el eje `data-ui`; si una combinación necesita texto de contraste, usa roles semánticos como `--color-text-primary`, no aliases como `--text-primary`.
 - `css/skin-contract.css` contiene los fallbacks semánticos, los consumidores comunes de tokens `--skin-*` y los mínimos de foco/texto. No traduce nombres antiguos.
 - `css/theme.css` contiene estructura y reglas compartidas. Las capas declaradas en `index.html` ordenan base, tema, skin, superficie y finish; respeta ese orden al añadir reglas.
 - Los componentes comunes no deben volver a seleccionar por skin (`[data-skin="..."]`) para aplicar presentación estándar. Cuando una identidad requiera un acabado propio, publícalo como token `--skin-*` y consúmelo desde la capa propietaria del componente.
+- Los iconos del encabezado (`.app-header .header-actions > .btn-icon`) tienen un contrato geométrico común en `css/finish.css`: no deben recibir `padding`, tamaños mínimos, tipografía ni dimensiones de SVG desde reglas genéricas de superficie. Si una regla de botones usa una lista amplia de selectores, excluye este componente con `:not(.header-actions .btn-icon)`.
 
 ## Añadir o migrar una skin
 
-1. Define la paleta en el selector raíz de la skin con nombres canónicos; añade overrides en `:root[data-skin="<id>"][data-theme="light"]` cuando existan valores distintos.
+1. Define la paleta y `--font-display`/`--font-body` en el selector raíz de la skin con nombres canónicos; añade overrides en `:root[data-skin="<id>"][data-theme="light"]` cuando existan valores distintos.
 2. Si alguna regla compartida requiere un tratamiento de marca, declara un token `--skin-*` en la skin y reutiliza el consumidor común existente. No copies reglas de componentes a la hoja de skin.
 3. Conserva en la skin solo excepciones decorativas locales (por ejemplo, arte del vinilo o adornos), sin cambiar geometría ni comportamiento común.
 4. Busca referencias antes de eliminar cualquier propiedad: `var(--nombre)` debe apuntar a una variable definida en la API canónica, no a una capa de compatibilidad.

@@ -29,8 +29,8 @@
 .viz-card.active{border-color:var(--color-accent);background:rgba(var(--color-accent-rgb),.07);box-shadow:0 8px 24px rgba(var(--color-accent-rgb),.18)}
 .viz-card .viz-preview{height:54px;flex:0 0 54px;margin-bottom:10px;border-radius:var(--radius-md);background:var(--surface-bg-active);display:grid;place-items:center;color:var(--color-accent)}
 .viz-card .viz-preview svg{width:60%;height:60%}
-.viz-card .viz-name{font-size:12px;font-weight:600;line-height:1.4;overflow-wrap:anywhere}
-.viz-card .viz-desc{display:block;min-width:0;max-width:100%;margin-top:4px;font-size:10px;line-height:1.5;color:var(--color-text-muted);letter-spacing:.015em;white-space:normal;overflow-wrap:anywhere;word-break:normal;hyphens:auto}
+.viz-card .viz-name{font-size:11px;font-weight:600;line-height:1.4;overflow-wrap:anywhere}
+.viz-card .viz-desc{display:block;min-width:0;max-width:100%;margin-top:4px;font-size:9px;line-height:1.45;color:var(--color-text-muted);letter-spacing:.015em;white-space:normal;overflow-wrap:anywhere;word-break:normal;hyphens:auto}
 /* Ecualizador */
 .eq-presets{display:flex;gap:6px;flex-wrap:wrap}
 .eq-preset-btn{font-size:11px;padding:6px 12px;border-radius:var(--radius-pill);background:var(--surface-bg);border:var(--border-w) solid var(--surface-border);color:var(--color-text-secondary)}
@@ -75,4 +75,9 @@
 /* Mantiene los SVG externos visibles y añade un halo que sí sigue el acento activo. */
 .viz-card .viz-preview svg{color:var(--color-accent)}
 .viz-card .viz-preview svg image{display:initial;filter:drop-shadow(0 0 3px var(--color-accent))}
+/* Contraste de pistas y superficies del ecualizador en tema claro. */
+:root[data-theme="light"] .queue-tabs{background:color-mix(in srgb,var(--color-text-primary) 8%,var(--surface-bg))}
+:root[data-theme="light"] .viz-card .viz-preview{background:color-mix(in srgb,var(--color-text-primary) 7%,var(--surface-bg-active))}
+:root[data-theme="light"] .eq-bands{background:linear-gradient(180deg,color-mix(in srgb,var(--color-text-primary) 7%,var(--surface-bg)),color-mix(in srgb,var(--color-text-primary) 3%,var(--surface-bg)))}
+:root[data-theme="light"] .eq-band input[type="range"]{background:color-mix(in srgb,var(--color-text-primary) 20%,var(--surface-bg-active))}
 }

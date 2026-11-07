@@ -1,8 +1,10 @@
 @layer skin {
+--font-display:"Outfit","Inter",system-ui,sans-serif;
+--font-body:"DM Sans","Inter",system-ui,sans-serif;
 /* glacier.css — estilo "Glaciar": hielo profundo, cristal facetado y escarcha.
    Vinilo azul glaciar con destellos de nieve sobre un plato de cristal tallado, brazo de cerámica blanca y titanio.
    Cuarto estilo junto a Latón, Neón y Esmeralda (<html data-skin="glacier">).
-   Cargar DESPUÉS de vinyl.css (y de brass.css). Tipografías: "Space Grotesk" y "DM Sans" (añádelas al <link> de Google Fonts;
+   Cargar DESPUÉS de vinyl.css (y de brass.css). Tipografías: "Outfit" y "DM Sans" (añádelas al <link> de Google Fonts;
    si no cargan, usa las de respaldo del sistema). */
 
 /* ============================================================
@@ -19,8 +21,8 @@
 --gradient-accent:linear-gradient(135deg,#e6f6ff 0%,#7cc8ee 50%,#3b86b5 100%);
 --gradient-accent-secondary:linear-gradient(135deg,#d6ecf8 0%,#9fb8ff 100%);
 --color-text-primary:#eaf3f9;--color-text-secondary:#bccbd6;--color-text-muted:#7f93a3;--color-text-disabled:#51626f;
---font-display:"Space Grotesk","Inter",system-ui,sans-serif;
---font-body:"DM Sans","Inter",system-ui,sans-serif}
+
+}
 
 /* Glaciar + tema claro: niebla azulada, azul acero profundo y ámbar apagado */
 :root[data-skin="glacier"][data-theme="light"]{

@@ -13,9 +13,21 @@
 .art-frame .default-art{width:60%;height:60%;color:var(--color-text-disabled);z-index:1}
 .viz-canvas{position:absolute;inset:-40%;width:180%;height:180%;max-width:none;max-height:none;z-index:0;pointer-events:none;opacity:.96}
 .now-info{display:flex;flex-direction:column;gap:12px;min-width:0}
-.now-eyebrow{font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--color-accent-soft);font-family:var(--font-mono);display:inline-flex;align-items:center;gap:8px}
-.now-eyebrow::before{content:"";width:6px;height:6px;border-radius:50%;background:var(--color-accent-soft);box-shadow:0 0 12px var(--color-accent-soft);animation:pulseDot 1.6s var(--ease-in-out) infinite}
-@keyframes pulseDot{50%{opacity:.3}}
+	.now-eyebrow{font-size:10px;line-height:14px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:var(--color-accent-soft);font-family:var(--font-mono);display:inline-flex;align-items:center;gap:8px;min-height:14px;white-space:nowrap}
+	.now-eyebrow.status-changing{animation:statusLabelIn 220ms var(--ease-out) both}
+	.now-eyebrow::before{content:"·";display:inline-grid;place-items:center;flex:0 0 14px;width:14px;height:14px;border:1px solid currentColor;border-radius:50%;font-family:var(--font-body);font-size:9px;font-weight:700;line-height:14px;box-sizing:border-box;transition:color var(--t-fast) var(--ease-out),border-color var(--t-fast) var(--ease-out),box-shadow var(--t-fast) var(--ease-out);animation:pulseDot 1.6s var(--ease-in-out) infinite}
+	.now-eyebrow[data-state="empty"]{color:var(--color-text-muted)}
+	.now-eyebrow[data-state="empty"]::before{content:"+";animation:none}
+	.now-eyebrow[data-state="ready"]::before{content:"▶";padding-left:1px;animation:none}
+	.now-eyebrow[data-state="playing"]::before{content:"♪";animation:none}
+	.now-eyebrow[data-state="paused"]::before{content:"Ⅱ";animation:pulseDot 1.6s var(--ease-in-out) infinite}
+	.now-eyebrow[data-state="loading"]::before{content:"…";animation:statusLoading 900ms linear infinite}
+	.now-eyebrow[data-state="error"]{color:var(--color-danger)}
+	.now-eyebrow[data-state="error"]::before{content:"!";font-weight:700;animation:none}
+	@keyframes statusLabelIn{from{opacity:.25;transform:translateY(-3px)}to{opacity:1;transform:none}}
+	@keyframes statusLoading{to{transform:rotate(360deg)}}
+	@keyframes pulseDot{50%{opacity:.3}}
+	@media(prefers-reduced-motion:reduce){.now-eyebrow{animation:none}.now-eyebrow::before{animation:none;transition:none}}
 .now-title{font-family:var(--font-display);font-size:clamp(28px,3.4vw,48px);font-weight:800;line-height:1.04;padding-bottom:.08em;letter-spacing:-.03em;background:linear-gradient(135deg,var(--color-text-primary) 0%,var(--color-text-secondary) 100%);-webkit-background-clip:text;background-clip:text;color:transparent;word-break:break-word}
 .now-artist{font-size:17px;color:var(--color-text-primary);opacity:.85;font-weight:500}
 .now-album{font-size:13px;color:var(--color-text-muted)}
@@ -102,4 +114,11 @@
 .karaoke-mini .fullscreen-toggle{display:block;width:18px;height:18px;flex:none;color:var(--color-accent-soft);cursor:pointer;transition:color .18s ease,transform .18s ease}
 .karaoke-mini .fullscreen-toggle:hover{color:var(--color-text-primary);transform:scale(1.08)}
 .karaoke-mini .fullscreen-toggle:focus-visible{outline:2px solid var(--color-accent-soft);outline-offset:3px;border-radius:var(--radius-xs)}
+/* En claro, la pista no puede usar el blanco translúcido del acabado oscuro. */
+:root[data-theme="light"] .progress-bar{background:color-mix(in srgb,var(--color-text-primary) 18%,var(--surface-bg-active))}
+:root[data-ui][data-theme="light"] .karaoke-mini .lyric-prev{color:var(--color-text-muted);opacity:1}
+:root[data-ui][data-theme="light"] .karaoke-mini .lyric-current{color:var(--color-text-primary)}
+:root[data-ui][data-theme="light"] .karaoke-mini .lyric-word{--lyric-idle-color:var(--color-text-primary)!important;--lyric-active-color:var(--color-accent)!important}
+:root[data-ui][data-theme="light"] .karaoke-mini .lyric-translation{color:var(--color-text-secondary)!important;-webkit-text-fill-color:var(--color-text-secondary)!important;opacity:1;text-shadow:none}
+:root[data-ui][data-theme="light"] .karaoke-mini .lyric-next{color:var(--color-text-muted)}
 }

@@ -1,4 +1,6 @@
 @layer surface {
+html[data-ui="bento"] {
+}
 /* =============================================================================
    AuraPlay Pro · bento.css · v1.0.0
    Modo visual «Bento Grid»  ·  se activa con  <html data-ui="bento">
@@ -215,7 +217,7 @@ html[data-ui="bento"] {
   --bento-radius-pill: 999px;
 
   /* —— Tipografía (solo pilas del sistema: sin fuentes externas) —— */
-  --bento-font-display: "Iowan Old Style", "Palatino Linotype", Palatino, "Book Antiqua", Georgia, serif;
+  
 
   /* —— Movimiento (se anula con prefers-reduced-motion) —— */
   --bento-transition: background-color 0.15s ease, border-color 0.15s ease, box-shadow 0.15s ease, color 0.15s ease;
@@ -299,8 +301,28 @@ html[data-ui="bento"][data-theme="dark"] {   /* @map:DARK */
   --bento-shadow-stage: 0 1px 0 rgb(255 255 255 / 0.06) inset, 0 24px 48px -26px rgb(0 0 0 / 0.8);
   --bento-shadow-tab: 0 1px 2px rgb(0 0 0 / 0.5);
   --bento-stage-bg: #232838;
+  --bento-kara-bg: var(--bento-stage-bg);
 
   color-scheme: dark;
+}
+
+/* —— Escena del tema CLARO ——
+   El panel principal también debe seguir el tema; no conserva la tinta de la
+   escena nocturna cuando el resto de Bento está en superficies claras. */
+html[data-ui="bento"][data-theme="light"] {
+  --bento-stage-bg: #ffffff;
+  --bento-stage-text: #14161c;
+  --bento-stage-muted: #4b5262;
+  --bento-stage-border: rgb(20 22 28 / 0.1);
+  --bento-stage-border-strong: #7b8294;
+  --bento-stage-control: rgb(20 22 28 / 0.06);
+  --bento-stage-control-hover: rgb(20 22 28 / 0.1);
+  --bento-stage-inset: rgb(20 22 28 / 0.05);
+  --bento-stage-hover: rgb(20 22 28 / 0.06);
+  --bento-stage-pressed: rgb(20 22 28 / 0.12);
+  --bento-stage-focus: #3a36d4;
+  --bento-stage-selected: rgb(91 75 219 / 0.12);
+  --bento-stage-accent-default: #5b4bdb;
 }
 
 /* —— Derivados que dependen del acento (mejora progresiva) ——
@@ -493,7 +515,7 @@ html[data-ui="bento"] :is(.module-title, .section-title, .panel-title, .card-tit
 /* Pista actual: titular editorial (serif del sistema) y artista. */
 html[data-ui="bento"] .player-panel :is(.track-title, .song-title, .now-title, .title, h2, [data-bento="track-title"]) {   /* @map:NP */
   margin: 1rem 0 0.25rem;
-  font-family: var(--bento-font-display);
+  font-family: var(--font-display);
   font-size: clamp(1.5rem, 1.1rem + 1.5vw, 2.25rem);
   font-weight: 600;
   line-height: 1.12;
@@ -594,7 +616,7 @@ html[data-ui="bento"] :is(.playlist-list > .song-item[role="button"], .queue-ite
    ═════════════════════════════════════════════════════════════════════════════ */
 
 /* 6.1 Botones (incluye pestañas y botón de reproducir para heredar la base). */
-html[data-ui="bento"] :is(button, .btn, [role="button"]:not(.song-item), input[type="button"], input[type="submit"], input[type="reset"], .icon-btn, .chip, label.file-btn, [role="tab"]):not(.song-actions button) {   /* @map:BTN @map:TAB @map:PLAY */
+html[data-ui="bento"] :is(button, .btn, [role="button"]:not(.song-item), input[type="button"], input[type="submit"], input[type="reset"], .icon-btn, .chip, label.file-btn, [role="tab"]):not(.song-actions button):not(.header-actions .btn-icon) {   /* @map:BTN @map:TAB @map:PLAY */
   --_bg: var(--bento-control);
   --_fg: var(--bento-text);
   --_bd: var(--bento-border-strong);
@@ -617,7 +639,7 @@ html[data-ui="bento"] :is(button, .btn, [role="button"]:not(.song-item), input[t
   transition: var(--bento-transition);
   -webkit-tap-highlight-color: transparent;
 }
-html[data-ui="bento"] :is(button, .btn, [role="button"]:not(.song-item), input[type="button"], input[type="submit"], input[type="reset"], .icon-btn, .chip, label.file-btn, [role="tab"]):not(.song-actions button) svg {   /* @map:BTN @map:TAB @map:PLAY */
+html[data-ui="bento"] :is(button, .btn, [role="button"]:not(.song-item), input[type="button"], input[type="submit"], input[type="reset"], .icon-btn, .chip, label.file-btn, [role="tab"]):not(.song-actions button):not(.header-actions .btn-icon) svg {   /* @map:BTN @map:TAB @map:PLAY */
   vertical-align: middle;
 }
 
@@ -654,7 +676,7 @@ html[data-ui="bento"] .transport .btn-play {   /* @map:PLAY */
 
 /* 6.4 Estados de botón (orden fijo: hover → active → pressed → selected → disabled). */
 @media (hover: hover) {
-  html[data-ui="bento"] :is(button, .btn, [role="button"]:not(.song-item), input[type="button"], input[type="submit"], input[type="reset"], .icon-btn, .chip, label.file-btn, [role="tab"]):not(.song-actions button):hover {   /* @map:BTN @map:TAB @map:PLAY */
+  html[data-ui="bento"] :is(button, .btn, [role="button"]:not(.song-item), input[type="button"], input[type="submit"], input[type="reset"], .icon-btn, .chip, label.file-btn, [role="tab"]):not(.song-actions button):not(.header-actions .btn-icon):hover {   /* @map:BTN @map:TAB @map:PLAY */
     --_bg: var(--bento-control-hover);
     --_bd: var(--bento-text-muted);
   }
@@ -668,7 +690,7 @@ html[data-ui="bento"] .transport .btn-play {   /* @map:PLAY */
     box-shadow: inset 0 0 0 4.5rem rgb(255 255 255 / 0.16);
   }
 }
-html[data-ui="bento"] :is(button, .btn, [role="button"]:not(.song-item), input[type="button"], input[type="submit"], input[type="reset"], .icon-btn, .chip, label.file-btn, [role="tab"]):not(.song-actions button):active {   /* @map:BTN @map:TAB @map:PLAY */
+html[data-ui="bento"] :is(button, .btn, [role="button"]:not(.song-item), input[type="button"], input[type="submit"], input[type="reset"], .icon-btn, .chip, label.file-btn, [role="tab"]):not(.song-actions button):not(.header-actions .btn-icon):active {   /* @map:BTN @map:TAB @map:PLAY */
   --_bg: var(--bento-pressed);
   transform: translateY(1px);
 }
@@ -677,7 +699,7 @@ html[data-ui="bento"] .transport .btn-play:active {   /* @map:PLAY */
   box-shadow: inset 0 0 0 4.5rem rgb(0 0 0 / 0.18);
 }
 /* Activado / conmutado: relleno tintado + segundo anillo interior (forma, no solo color). */
-html[data-ui="bento"] :is(button:not(.btn-tab):not(.btn-play), .btn:not(.btn-tab):not(.btn-play), .icon-btn, .chip):is([aria-pressed="true"], [aria-checked="true"], .is-active, .active) {   /* @map:BTN */
+html[data-ui="bento"] :is(button:not(.btn-tab):not(.btn-play), .btn:not(.btn-tab):not(.btn-play), .icon-btn, .chip):is([aria-pressed="true"], [aria-checked="true"], .is-active, .active):not(.header-actions .btn-icon) {   /* @map:BTN */
   --_bg: var(--bento-selected-bg);
   --_bd: var(--bento-accent-ink);
   box-shadow: inset 0 0 0 1px var(--bento-accent-ink);
@@ -697,7 +719,7 @@ html[data-ui="bento"] .transport .btn-play:is([aria-pressed="true"], .playing, .
   --_bd: var(--bento-accent);
   box-shadow: 0 0 0 3px var(--bento-module-bg, var(--bento-surface)), 0 0 0 5px var(--bento-accent);
 }
-html[data-ui="bento"] :is(button, .btn, [role="button"]:not(.song-item), input[type="button"], input[type="submit"], input[type="reset"], .icon-btn, .chip, label.file-btn, [role="tab"]):not(.song-actions button):is(:disabled, [aria-disabled="true"]) {   /* @map:BTN @map:TAB @map:PLAY */
+html[data-ui="bento"] :is(button, .btn, [role="button"]:not(.song-item), input[type="button"], input[type="submit"], input[type="reset"], .icon-btn, .chip, label.file-btn, [role="tab"]):not(.song-actions button):not(.header-actions .btn-icon):is(:disabled, [aria-disabled="true"]) {   /* @map:BTN @map:TAB @map:PLAY */
   --_bg: transparent;
   --_fg: var(--bento-text-muted);
   --_bd: var(--bento-border);
@@ -792,7 +814,7 @@ html[data-ui="bento"] .karaoke-mini :is(.line, .lyric, .lyrics-line, .karaoke-li
   margin: 0 0 0.5em;
   padding-inline-start: 1rem;
   border-inline-start: 0.25rem solid transparent;
-  font-family: var(--bento-font-display);
+  font-family: var(--font-display);
   font-size: clamp(1.375rem, 1rem + 2vw, 2.75rem);
   font-weight: 600;
   line-height: 1.25;

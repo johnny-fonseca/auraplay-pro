@@ -11,13 +11,15 @@
 :root[data-skin="brass"]{
 --color-canvas:#0c0c0f;--color-canvas-sunken:#070709;--color-canvas-raised:#141418;
 --ambient-1:#3b2a14;--ambient-2:#4a2f1a;--ambient-3:#1c2630;--ambient-4:#2e2314;
---skin-name:"brass";--color-accent-rgb:212,168,95;--color-accent-soft-rgb:236,220,181;--tone-hi:#f3e2b6;--tone-mid:#d4a85f;--tone-lo:#9c722f;--tone-deep:#b88a42;--color-on-accent:#1b1409;--platter:#1b1a16;--platter-edge:#0a0a0b;
+--skin-name:"brass";
+--font-display:"Playfair Display",Georgia,serif;
+--font-body:"Inter","Inter",system-ui,sans-serif;--color-accent-rgb:212,168,95;--color-accent-soft-rgb:236,220,181;--tone-hi:#f3e2b6;--tone-mid:#d4a85f;--tone-lo:#9c722f;--tone-deep:#b88a42;--color-on-accent:#1b1409;--platter:#1b1a16;--platter-edge:#0a0a0b;
 --color-accent:#d4a85f;--color-accent-strong:var(--color-accent);--color-info:var(--color-accent-soft);--color-focus:var(--color-accent-soft);--color-border:var(--surface-border);--color-border-strong:var(--surface-border-strong);--color-divider:var(--surface-border);--surface-bg-selected:var(--surface-bg-active);--surface-bg-disabled:var(--surface-bg);--color-accent-soft:#ecdcb5;--color-warning:#e8c27a;--color-success:#8fc7a6;--color-danger:#e0705f;
 --gradient-accent:linear-gradient(135deg,#f3e2b6 0%,#d4a85f 52%,#9c722f 100%);
 --gradient-accent-secondary:linear-gradient(135deg,#ecdcb5 0%,#d4a85f 100%);
 --color-text-primary:#f3efe6;--color-text-secondary:#c9c3b6;--color-text-muted:#8d887d;--color-text-disabled:#5e5a52;
---font-display:"Fraunces","Iowan Old Style",Georgia,serif;
---font-body:"Manrope","Inter",system-ui,sans-serif;
+
+
 /* v2 · luz especular, luz ambiental reflejada y sombras (las usan bisel, disco y brazo; el tema claro las suaviza) */
 --spec:255,251,236;
 --amb-1:.30;--amb-2:.18;--amb-3:.09;

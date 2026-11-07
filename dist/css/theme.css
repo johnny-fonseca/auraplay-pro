@@ -10,9 +10,12 @@
 --border-w:1px;--blur:blur(28px) saturate(120%);--glass-blur:28px;
 --ease-out:cubic-bezier(.22,1,.36,1);--ease-in-out:cubic-bezier(.65,0,.35,1);
 --t-fast:160ms;--t-med:280ms;--t-slow:520ms;
---font-mono:"JetBrains Mono","Fira Code",ui-monospace,monospace}
+--font-mono:ui-monospace,monospace}
 body{font-family:var(--font-body);font-weight:400;color:var(--color-text-primary);position:relative;overflow:hidden;letter-spacing:0;-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;text-rendering:optimizeLegibility;background:radial-gradient(1100px 700px at 12% -8%,rgba(var(--color-accent-rgb),.11),transparent 60%),radial-gradient(900px 600px at 100% 110%,rgba(120,150,170,.07),transparent 60%),var(--color-canvas)}
 [data-theme="light"] body{background:radial-gradient(1100px 700px at 12% -8%,rgba(var(--color-accent-rgb),.25),transparent 60%),var(--color-canvas)}
+/* El SVG original usa letras crema para el fondo oscuro; en claro se cambia
+   por una variante con tinta para conservar la marca y su legibilidad. */
+[data-theme="light"] .brand-logo{content:url("../svg/auraplay-logo-light.svg")}
 /* Luz ambiental: manchas cálidas muy suaves */
 .aurora-bg{position:fixed;inset:-10%;z-index:0;pointer-events:none;overflow:hidden;filter:var(--blur) saturate(120%);opacity:.5}
 .aurora-bg::before,.aurora-bg::after,.aurora-bg .blob-3,.aurora-bg .blob-4{content:"";position:absolute;border-radius:50%;mix-blend-mode:screen;animation:floatBlob 22s var(--ease-in-out) infinite alternate}
@@ -27,6 +30,18 @@ button,.song-item,.queue-item,[role="button"],input[type="range"]{transition:bac
 button:active:not(:disabled){transform:scale(.96)}
 /* Matiz leve para SVG neutrales; sigue la paleta activa de tema y skin. */
 svg:not(.brand-logo):not(#artDefault){color:color-mix(in srgb,currentColor 92%,var(--color-accent-soft) 8%)}
+/* Los iconos del encabezado llegan como SVG externos dentro de <image> y no
+   heredan currentColor. Se muestran como máscara para seguir la skin activa. */
+.header-actions svg:has(> image){background-color:currentColor;-webkit-mask:var(--header-icon-mask) center/contain no-repeat;mask:var(--header-icon-mask) center/contain no-repeat}
+.header-actions svg:has(> image)>image{opacity:0}
+.header-actions svg:has(> image[href$="folder-upload.svg"]){--header-icon-mask:url("../svg/folder-upload.svg")}
+.header-actions svg:has(> image[href$="audio-file-add.svg"]){--header-icon-mask:url("../svg/audio-file-add.svg")}
+.header-actions svg:has(> image[href$="playlist-save.svg"]){--header-icon-mask:url("../svg/playlist-save.svg")}
+.header-actions svg:has(> image[href$="playlist-load.svg"]){--header-icon-mask:url("../svg/playlist-load.svg")}
+.header-actions svg:has(> image[href$="playlist-export.svg"]){--header-icon-mask:url("../svg/playlist-export.svg")}
+.header-actions svg:has(> image[href$="skin-switch.svg"]){--header-icon-mask:url("../svg/skin-switch.svg")}
+.header-actions svg:has(> image[href$="theme-toggle.svg"]){--header-icon-mask:url("../svg/theme-toggle.svg")}
+.header-actions svg:has(> image[href$="help.svg"]){--header-icon-mask:url("../svg/help.svg")}
 @media(prefers-reduced-motion:reduce){.aurora-bg{display:none}}
 
 /* ---- Botón de estilo (camiseta) ---- */

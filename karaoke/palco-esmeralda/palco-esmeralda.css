@@ -47,9 +47,9 @@
   --pe-progress: 0%;                 /* el player puede sobrescribirlo (ver INTEGRATION.md §7) */
 
   /* — Tipografía por rol (stacks de sistema, sin descargas) — */
-  --pe-font-lyric: "Palatino Linotype", "Book Antiqua", Palatino, "Iowan Old Style", "URW Palladio L", "Hiragino Mincho ProN", "Yu Mincho", "Noto Serif CJK JP", Georgia, "Times New Roman", serif;
-  --pe-font-title: Baskerville, "Baskerville Old Face", "Hoefler Text", Garamond, "Hiragino Mincho ProN", "Noto Serif CJK JP", "Times New Roman", serif;
-  --pe-font-ui: Optima, Candara, "Gill Sans", "Gill Sans MT", "Segoe UI", Calibri, "Hiragino Sans", "Noto Sans CJK JP", "Helvetica Neue", Arial, sans-serif;
+  --pe-font-lyric: "EB Garamond", "Noto Sans Symbols 2", serif;
+  --pe-font-title: "Cormorant Garamond", "Noto Sans Symbols 2", serif;
+  --pe-font-ui: "DM Sans", "Noto Sans Symbols 2", sans-serif;
   --pe-font-mono: ui-monospace, "SF Mono", Menlo, Consolas, "Liberation Mono", monospace;
   --pe-lyric-size: clamp(1.6rem, 1.05rem + 2.7vw, 3.1rem);
   --pe-lyric-leading: 1.22;

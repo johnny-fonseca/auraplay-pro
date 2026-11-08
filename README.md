@@ -196,9 +196,14 @@ Para una experiencia local normal, basta con ejecutar el `.bat` y cargar los arc
 
 ### Demo musical
 
-Puedes abrir la canción y su letra directamente en AuraPlay desde este enlace:
+La demo pública carga por defecto estas dos canciones junto con sus letras sincronizadas:
 
-[Abrir «Donde Suena Mi Aura» en GitHub Pages](https://johnny-fonseca.github.io/auraplay-pro/?demoAudio=demo%2FcancionAuraPlay%2FDonde%20Suena%20Mi%20Aura.mp3&demoLyrics=demo%2FcancionAuraPlay%2FDonde%20Suena%20Mi%20Aura.lrc)
+- **Auraplay - Tengo todo, pero no tu corazón**
+- **Donde Suena Mi Aura**
+
+Puedes abrirlas directamente en AuraPlay desde este enlace:
+
+[Abrir las demos musicales en GitHub Pages](https://johnny-fonseca.github.io/auraplay-pro/)
 
 ---
 

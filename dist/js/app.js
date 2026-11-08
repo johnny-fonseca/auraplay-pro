@@ -1,7 +1,15 @@
 /* app.js — entry point */
 (function () {
-  const DEFAULT_DEMO_AUDIO = "demo/cancionAuraPlay/Donde Suena Mi Aura.mp3";
-  const DEFAULT_DEMO_LYRICS = "demo/cancionAuraPlay/Donde Suena Mi Aura.lrc";
+  const DEFAULT_DEMO_TRACKS = Object.freeze([
+    {
+      audio: "demo/cancionAuraPlay/Auraplay - Tengo todo, pero no tu corazón.mp3",
+      lyrics: "demo/cancionAuraPlay/Auraplay - Tengo todo, pero no tu corazón.lrc"
+    },
+    {
+      audio: "demo/cancionAuraPlay/Donde Suena Mi Aura.mp3",
+      lyrics: "demo/cancionAuraPlay/Donde Suena Mi Aura.lrc"
+    }
+  ]);
 
   function demoAssetUrl(value) {
     if (!value) return null;
@@ -16,27 +24,40 @@
 
   async function loadDemoFromUrl(player) {
     const params = new URLSearchParams(window.location.search);
-    // La portada publicada carga la canción demo por defecto. Los parámetros
-    // de URL siguen permitiendo abrir otra pareja de audio/letra compartida.
-    const audioUrl = demoAssetUrl(params.get("demoAudio") || DEFAULT_DEMO_AUDIO);
-    const lyricsUrl = demoAssetUrl(params.get("demoLyrics") || DEFAULT_DEMO_LYRICS);
-    if (!audioUrl && !lyricsUrl) return;
-    if (!audioUrl || !lyricsUrl) {
+    // Sin parámetros, la demo pública carga las dos canciones y sus letras.
+    // Los parámetros existentes siguen permitiendo abrir una sola pareja.
+    const requestedAudio = params.get("demoAudio");
+    const requestedLyrics = params.get("demoLyrics");
+    const demoTracks = requestedAudio || requestedLyrics
+      ? [{ audio: requestedAudio, lyrics: requestedLyrics }]
+      : DEFAULT_DEMO_TRACKS;
+    const assets = demoTracks.map(({ audio, lyrics }) => ({
+      audioUrl: demoAssetUrl(audio),
+      lyricsUrl: demoAssetUrl(lyrics)
+    }));
+    if (assets.every(({ audioUrl, lyricsUrl }) => !audioUrl && !lyricsUrl)) return;
+    if (assets.some(({ audioUrl, lyricsUrl }) => !audioUrl || !lyricsUrl)) {
       window.AuraToast.show("El enlace de demo necesita audio y letra", "warn", 5000);
       return;
     }
 
     try {
-      const [audioResponse, lyricsResponse] = await Promise.all([fetch(audioUrl), fetch(lyricsUrl)]);
-      if (!audioResponse.ok || !lyricsResponse.ok) throw new Error("recurso no encontrado");
-      const audioBlob = await audioResponse.blob();
-      const lyricsText = await lyricsResponse.text();
-      const audioName = decodeURIComponent(audioUrl.pathname.split("/").pop() || "demo.mp3");
-      const lyricsName = decodeURIComponent(lyricsUrl.pathname.split("/").pop() || "demo.lrc");
-      const audioFile = new File([audioBlob], audioName, { type: audioBlob.type || "audio/mpeg" });
-      const lyricsFile = new File([lyricsText], lyricsName, { type: "text/plain;charset=utf-8" });
-      await player._handleFiles([audioFile, lyricsFile]);
-      const index = player.tracks.findIndex((track) => track.name === audioName);
+      const files = [];
+      for (const { audioUrl, lyricsUrl } of assets) {
+        const [audioResponse, lyricsResponse] = await Promise.all([fetch(audioUrl), fetch(lyricsUrl)]);
+        if (!audioResponse.ok || !lyricsResponse.ok) throw new Error("recurso no encontrado");
+        const audioBlob = await audioResponse.blob();
+        const lyricsText = await lyricsResponse.text();
+        const audioName = decodeURIComponent(audioUrl.pathname.split("/").pop() || "demo.mp3");
+        const lyricsName = decodeURIComponent(lyricsUrl.pathname.split("/").pop() || "demo.lrc");
+        files.push(
+          new File([audioBlob], audioName, { type: audioBlob.type || "audio/mpeg" }),
+          new File([lyricsText], lyricsName, { type: "text/plain;charset=utf-8" })
+        );
+      }
+      await player._handleFiles(files);
+      const firstAudioName = files.find((file) => file.type.startsWith("audio/"))?.name;
+      const index = player.tracks.findIndex((track) => track.name === firstAudioName);
       if (index >= 0) player.play(index);
     } catch (_) {
       window.AuraToast.show("No se pudo cargar la canción de la demo", "error", 6000);

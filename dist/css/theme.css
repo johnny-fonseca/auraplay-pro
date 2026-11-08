@@ -1,7 +1,8 @@
 @layer theme {
 /* theme.css — tokens base y estructura compartida por todos los estilos.
-   Los colores/tipografías de cada estilo viven en brass.css (por defecto), neon.css y emerald.css.
-   Orden de carga: theme.css → (finish.css) → vinyl.css → brass.css → neon.css → emerald.css */
+   La tipografía canónica vive en skin-contract.css y cada skin publica sus
+   valores --font-display y --font-body dentro de su selector raíz.
+   Orden de carga: theme.css → skin-contract.css → finish.css → vinyl.css → skins → styles. */
 :root{
 /* Contrato público de superficie. Las skins no lo redefinen; los componentes
    consumen estos tokens y cada modo de superficie publica sus propios valores. */
@@ -10,7 +11,7 @@
 --border-w:1px;--blur:blur(28px) saturate(120%);--glass-blur:28px;
 --ease-out:cubic-bezier(.22,1,.36,1);--ease-in-out:cubic-bezier(.65,0,.35,1);
 --t-fast:160ms;--t-med:280ms;--t-slow:520ms;
---font-mono:ui-monospace,monospace}
+}
 body{font-family:var(--font-body);font-weight:400;color:var(--color-text-primary);position:relative;overflow:hidden;letter-spacing:0;-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;text-rendering:optimizeLegibility;background:radial-gradient(1100px 700px at 12% -8%,rgba(var(--color-accent-rgb),.11),transparent 60%),radial-gradient(900px 600px at 100% 110%,rgba(120,150,170,.07),transparent 60%),var(--color-canvas)}
 [data-theme="light"] body{background:radial-gradient(1100px 700px at 12% -8%,rgba(var(--color-accent-rgb),.25),transparent 60%),var(--color-canvas)}
 /* El SVG original usa letras crema para el fondo oscuro; en claro se cambia

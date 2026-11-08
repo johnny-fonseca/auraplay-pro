@@ -1,6 +1,4 @@
 @layer skin {
---font-display:"Cormorant Garamond",Georgia,serif;
---font-body:"DM Sans","Inter",system-ui,sans-serif;
 /* emerald.css — estilo "Esmeralda": vinilo de cristal esmeralda traslúcido sobre plato de roble tallado, brazo de bronce torneado y madera oscura.
    Tercer estilo junto a Latón y Neón (<html data-skin="emerald">). Cargar DESPUÉS de vinyl.css.
    Edición de lujo: óptica de cristal con dispersión cromática, relieve físico por iluminación SVG, bronce anisotrópico y micro-surcos libres de moiré.
@@ -12,6 +10,8 @@
    ============================================================ */
 :root[data-skin="emerald"]{
 --skin-name:"emerald";
+--font-display:"Cormorant Garamond",Georgia,serif;
+--font-body:"DM Sans","Inter",system-ui,sans-serif;
 --color-canvas:#07100c;--color-canvas-sunken:#040a07;--color-canvas-raised:#0e1a14;
 --ambient-1:#0f6b43;--ambient-2:#7a4a1f;--ambient-3:#0b4a47;--ambient-4:#a97a2c;
 --color-accent-rgb:61,201,140;--color-accent-soft-rgb:233,184,96;

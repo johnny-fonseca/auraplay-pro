@@ -26,6 +26,8 @@ const runtimeEntries = [
   'svg',
   'visualizers',
   'fonts',
+  'demo',
+  '__aura',
 ];
 const karaokeAssets = [
   'karaoke/shared/karaoke-core.js',
@@ -53,6 +55,7 @@ function copyRuntime() {
     if (!fs.existsSync(source)) throw new Error(`Falta un recurso requerido: ${entry}`);
     fs.cpSync(source, path.join(dist, entry), { recursive: true });
   }
+  fs.writeFileSync(path.join(dist, '.nojekyll'), '', 'utf8');
 }
 
 function removeOldMinifiedCopies() {

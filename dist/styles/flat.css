@@ -1,6 +1,5 @@
 @layer surface {
 html[data-ui="flat"] {
-  --fl-font: "Roboto", system-ui, sans-serif;
   --fl-font-mono: ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace;
 }
 /* ==========================================================================
@@ -191,7 +190,7 @@ html[data-ui="flat"] body {
   background-color: var(--fl-bg);
   background-image: none;
   color: var(--fl-text);
-  font-family: var(--fl-font);
+  font-family: var(--font-body);
   font-weight: 400;
   line-height: 1.5;
   text-shadow: none;
@@ -203,7 +202,7 @@ html[data-ui="flat"] ::selection {
 }
 
 html[data-ui="flat"] :is(h1, h2, h3, h4, .title, .section-title, .heading) {
-  font-family: var(--fl-font);
+  font-family: var(--font-display);
   font-weight: 700;
   letter-spacing: -0.01em;
   line-height: 1.2;
@@ -247,7 +246,7 @@ html[data-ui="flat"] :is(button, .btn, [role="button"]:not(.song-item), input[ty
   min-height: 40px;
   min-width: 40px;
   padding-inline: 16px;
-  font-family: var(--fl-font);
+  font-family: var(--font-body);
   font-size: 0.9rem;
   font-weight: 600;
   letter-spacing: 0;
@@ -303,7 +302,7 @@ html[data-ui="flat"] :is(input:not([type]), input[type="text"], input[type="sear
   box-sizing: border-box;
   min-height: 40px;
   padding: 8px 14px;
-  font-family: var(--fl-font);
+  font-family: var(--font-body);
   font-size: 0.95rem;
   font-weight: 400;
   color: var(--fl-text);
@@ -434,7 +433,7 @@ html[data-ui="flat"] :is(header, .app-header, .topbar, [data-role="header"]) :is
 }
 
 html[data-ui="flat"] :is(.logo, .brand, .app-logo, [data-role="logo"]) {
-  font-family: var(--fl-font);
+  font-family: var(--font-body);
   font-weight: 800;
   font-size: clamp(1.3rem, 2.6vw, 1.8rem);
   letter-spacing: -0.03em;
@@ -475,7 +474,7 @@ html[data-ui="flat"] :is(.panel, .card, .sidebar, .library, .queue, .playlist, .
 html[data-ui="flat"] :is(.panel-header, .panel-title, .card-header, .section-header) {
   background-color: transparent;
   color: var(--fl-text);
-  font-family: var(--fl-font);
+  font-family: var(--font-body);
   font-size: 0.78rem;
   font-weight: 800;
   letter-spacing: 0.1em;
@@ -514,7 +513,7 @@ html[data-ui="flat"] :is([role="tab"], .tab) {
   box-sizing: border-box;
   min-height: var(--fl-tap);
   padding-inline: 18px;
-  font-family: var(--fl-font);
+  font-family: var(--font-body);
   font-size: 0.9rem;
   font-weight: 600;
   letter-spacing: 0;
@@ -568,7 +567,7 @@ html[data-ui="flat"] :is(.track, .track-item, .song, .queue-item, li[role="optio
   border: 0;
   border-left: 6px solid transparent;
   border-radius: var(--radius-md);
-  font-family: var(--fl-font);
+  font-family: var(--font-body);
   font-weight: 400;
   text-align: start;
   transition: var(--fl-transition);
@@ -606,7 +605,7 @@ html[data-ui="flat"] :is(.track, .track-item, .song, .queue-item, li[role="optio
   top: 6px;
   right: 10px;
   padding: 1px 10px;
-  font-family: var(--fl-font);
+  font-family: var(--font-body);
   font-size: 0.66rem;
   font-weight: 800;
   letter-spacing: 0.08em;
@@ -639,7 +638,7 @@ html[data-ui="flat"] :is(.cover, .album-art, .artwork, .cover-art, [data-role="c
 }
 
 html[data-ui="flat"] :is(.now-title, .np-title, [data-role="now-title"]) {
-  font-family: var(--fl-font);
+  font-family: var(--font-body);
   font-size: clamp(1.4rem, 3vw, 2.2rem);
   font-weight: 800;
   line-height: 1.1;
@@ -648,7 +647,7 @@ html[data-ui="flat"] :is(.now-title, .np-title, [data-role="now-title"]) {
 }
 
 html[data-ui="flat"] :is(.now-artist, .np-artist, [data-role="now-artist"]) {
-  font-family: var(--fl-font);
+  font-family: var(--font-body);
   font-size: 1rem;
   font-weight: 600;
   color: var(--fl-text-muted);
@@ -752,7 +751,7 @@ html[data-ui="flat"] :is(.progress-fill, .progress-bar, .seek-fill) {
 }
 
 html[data-ui="flat"] :is(.time, .current-time, .duration-label, .time-current, .time-total, [data-role="time"]) {
-  font-family: var(--fl-font);
+  font-family: var(--font-body);
   font-size: 0.8rem;
   font-weight: 600;
   font-variant-numeric: tabular-nums;
@@ -766,7 +765,7 @@ html[data-ui="flat"] :is(.visualizer, .viz, .spectrum, [data-role="visualizer"])
 }
 
 html[data-ui="flat"] :is(.eq, .equalizer, [data-panel="eq"]) :is(label, .band-label, .eq-label) {
-  font-family: var(--fl-font);
+  font-family: var(--font-body);
   font-size: 0.7rem;
   font-weight: 700;
   letter-spacing: 0.06em;
@@ -787,7 +786,7 @@ html[data-ui="flat"] :is(.toast, .snackbar, .notification, .notice, [role="alert
   gap: 12px;
   max-width: min(92vw, 460px);
   padding: 12px 18px;
-  font-family: var(--fl-font);
+  font-family: var(--font-body);
   font-size: 0.95rem;
   font-weight: 600;
   color: var(--fl-on-inverse);
@@ -884,7 +883,7 @@ html[data-ui="flat"] :is(.karaoke, .lyrics, .lyrics-view, .karaoke-view, [data-v
 html[data-ui="flat"] :is(.lyric-line, .lyrics-line, .karaoke-line, .lrc-line, [data-lyric-line]) {
   margin-block: 6px;
   padding: 6px 16px;
-  font-family: var(--fl-font);
+  font-family: var(--font-body);
   font-size: clamp(1.1rem, 2.6vw, 1.8rem);
   font-weight: 500;
   line-height: 1.25;
@@ -944,7 +943,7 @@ html[data-ui="flat"] ::-webkit-scrollbar-thumb:hover {
 html[data-ui="flat"] :is(.badge, .tag, .pill, .label) {
   display: inline-block;
   padding: 1px 10px;
-  font-family: var(--fl-font);
+  font-family: var(--font-body);
   font-size: 0.72rem;
   font-weight: 700;
   letter-spacing: 0.04em;

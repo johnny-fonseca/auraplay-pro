@@ -4,7 +4,7 @@
 
 AuraPlay Pro se ejecuta directamente en un navegador moderno: no usa framework de frontend, no requiere base de datos y no necesita backend para la reproducción.
 
-![Interfaz de AuraPlay Pro con biblioteca, reproductor, karaoke y visualizadores](screenshot/captura_20261107_144101.png)
+![Interfaz de AuraPlay Pro con biblioteca, reproductor, karaoke y visualizadores](screenshot/captura_20261107_144101.jpg)
 
 **Vista rápida**
 
@@ -192,6 +192,12 @@ Ejecuta `Abrir AuraPlay.bat`. El lanzador:
 6. Intenta abrir la aplicación con varios métodos de respaldo.
 
 Para una experiencia local normal, basta con ejecutar el `.bat` y cargar los archivos de audio desde la interfaz.
+
+### Demo musical
+
+Puedes abrir la canción y su letra directamente en AuraPlay desde este enlace:
+
+[Abrir «Donde Suena Mi Aura» en GitHub Pages](https://johnny-fonseca.github.io/auraplay-pro/?demoAudio=demo%2FcancionAuraPlay%2FDonde%20Suena%20Mi%20Aura.mp3&demoLyrics=demo%2FcancionAuraPlay%2FDonde%20Suena%20Mi%20Aura.lrc)
 
 ---
 

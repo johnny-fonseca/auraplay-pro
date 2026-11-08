@@ -28,7 +28,7 @@
 	@keyframes statusLoading{to{transform:rotate(360deg)}}
 	@keyframes pulseDot{50%{opacity:.3}}
 	@media(prefers-reduced-motion:reduce){.now-eyebrow{animation:none}.now-eyebrow::before{animation:none;transition:none}}
-.now-title{font-family:var(--font-display);font-size:clamp(28px,3.4vw,48px);font-weight:800;line-height:1.04;padding-bottom:.08em;letter-spacing:-.03em;background:linear-gradient(135deg,var(--color-text-primary) 0%,var(--color-text-secondary) 100%);-webkit-background-clip:text;background-clip:text;color:transparent;word-break:break-word}
+.now-title{font-family:var(--font-display);padding-bottom:.08em;background:linear-gradient(135deg,var(--color-text-primary) 0%,var(--color-text-secondary) 100%);-webkit-background-clip:text;background-clip:text;color:transparent;word-break:break-word}
 .now-artist{font-size:17px;color:var(--color-text-primary);opacity:.85;font-weight:500}
 .now-album{font-size:13px;color:var(--color-text-muted)}
 .now-tags{display:flex;gap:8px;flex-wrap:wrap;margin-top:4px}
@@ -65,7 +65,7 @@
 .progress-wrap{width:100%;display:flex;flex-direction:column;gap:5px;min-width:0}
 .progress-waveform{display:block;width:100%;height:16px;overflow:hidden;pointer-events:none;opacity:.95}
 .progress-meta{display:flex;justify-content:space-between;align-items:center;min-height:16px;font-size:11px;line-height:16px;font-family:var(--font-mono);font-variant-numeric:tabular-nums;color:var(--color-text-muted);letter-spacing:.04em}
-.progress-meta .now-mini-title{font-family:var(--font-body);color:var(--color-text-primary);font-size:12px;font-weight:500;max-width:50%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+	.progress-meta .now-mini-title{font-family:var(--font-body);color:var(--color-text-primary);max-width:50%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .progress-bar{position:relative;height:6px;background:var(--surface-bg-active);border-radius:var(--radius-pill);cursor:pointer;overflow:visible;transition:height var(--t-fast) var(--ease-out)}
 .progress-bar::before{content:"";position:absolute;inset:-10px 0}
 .progress-bar:hover{height:8px}
@@ -88,7 +88,7 @@
 .art-frame .default-art{z-index:1;color:var(--color-text-disabled)}
 .now-eyebrow{letter-spacing:.16em;color:var(--color-accent-soft)}
 .now-eyebrow::before{background:var(--color-accent);box-shadow:0 0 12px var(--color-accent)}
-.now-title{font-weight:600;font-size:clamp(32px,3.8vw,58px);line-height:1.02;letter-spacing:-.025em;font-variation-settings:"opsz" 144;background:linear-gradient(160deg,#fff 0%,var(--color-accent-soft) 100%);-webkit-background-clip:text;background-clip:text}
+.now-title{font-variation-settings:"opsz" 144;background:linear-gradient(160deg,#fff 0%,var(--color-accent-soft) 100%);-webkit-background-clip:text;background-clip:text}
 [data-theme="light"] .now-title{background:linear-gradient(160deg,#17160f,#6b4f1c);-webkit-background-clip:text;background-clip:text}
 .now-artist{font-size:16px;letter-spacing:.02em;opacity:.9}
 .tag-chip{background:transparent;border-color:var(--surface-border-strong);color:var(--color-accent-soft)}
@@ -106,7 +106,7 @@
 .progress-fill{background:linear-gradient(90deg,var(--tone-lo),var(--tone-mid) 60%,var(--tone-hi));box-shadow:0 0 16px rgba(var(--color-accent-rgb),.55)}
 .progress-thumb{width:14px;height:14px;background:linear-gradient(135deg,var(--tone-hi),var(--tone-deep));border:0;box-shadow:0 0 0 4px rgba(var(--color-accent-rgb),.22),0 2px 6px rgba(0,0,0,.5)}
 .progress-meta{letter-spacing:.02em}
-.progress-meta .now-mini-title{font-family:var(--font-display);font-size:14px;font-weight:500}
+
 .progress-bar{touch-action:none}
 .progress-fill{transition:width .28s cubic-bezier(.22,.8,.24,1)}
 .progress-thumb{transition:left .28s cubic-bezier(.22,.8,.24,1),opacity var(--t-fast) var(--ease-out)}

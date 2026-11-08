@@ -1,6 +1,4 @@
 @layer skin {
---font-display:"Orbitron","Exo 2","Trebuchet MS",sans-serif;
---font-body:"Exo 2","Exo 2",system-ui,sans-serif;
 /* ============================================================
    DISCO · bisel de policarbonato con plasma de núcleo blanco, vinilo negro piano a espejo, eje de cromo
    → Reemplaza desde "@keyframes neonRing" hasta el final de neon.css
@@ -11,7 +9,7 @@
    TOKENS · noche de club + magenta/cian (interfaz completa)
    ============================================================ */
 :root[data-skin="neon"]{
- --skin-name:"neon";--color-canvas:#06081a;--color-canvas-sunken:#03040e;--color-canvas-raised:#0d1030;
+ --skin-name:"neon";--font-display:"Orbitron","Exo 2","Trebuchet MS",sans-serif;--font-body:"Exo 2","Exo 2",system-ui,sans-serif;--color-canvas:#06081a;--color-canvas-sunken:#03040e;--color-canvas-raised:#0d1030;
  --ambient-1:#3b0f6b;--ambient-2:#0b4967;--ambient-3:#32105b;--ambient-4:#063d52;
  --color-accent-rgb:255,43,214;--color-accent-soft-rgb:0,229,255;
  --tone-hi:#f2eaff;--tone-mid:#ff2bd6;--tone-lo:#9a32d0;--tone-deep:#6b3cff;--color-on-accent:#17051a;--platter:#090b22;--platter-edge:#02030c;

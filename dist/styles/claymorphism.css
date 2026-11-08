@@ -1,6 +1,5 @@
 @layer surface {
 :root[data-ui="clay"] {
---cl-font:"Fredoka", var(--font-body), system-ui, sans-serif;
 }
 /* claymorphism.css — Claymorfismo: figuras infladas de plastilina.
    Formas muy redondeadas, colores pastel y sombras dobles pronunciadas:
@@ -9,7 +8,7 @@
    Orden de carga: ... → emerald → neumorphism → skeuomorphism → glassmorphism → claymorphism.css (el ÚLTIMO).
    Los pasteles salen de las variables de cada skin (--accent-*), así que brass, neon y emerald conservan su identidad.
    Los paneles son SIEMPRE pastel con texto oscuro; data-theme solo cambia el fondo de la página (noche / día).
-   Tipografía: usa fuentes redondeadas si están; para el mejor resultado añade Nunito (Google Fonts). */
+   Tipografía: hereda --font-body y --font-display de la skin activa; no impone una familia propia. */
 
 /* ================= Paleta pastel (tokens) ================= */
 :root[data-ui="clay"],body[data-ui="clay"]{
@@ -42,7 +41,7 @@
 }
 
 /* ================= Fondo ================= */
-:root[data-ui="clay"] body{font-family:var(--cl-font);background:radial-gradient(900px 600px at 10% 0%,rgba(var(--color-accent-rgb),.28),transparent 60%),radial-gradient(800px 600px at 95% 100%,rgba(var(--color-accent-soft-rgb),.24),transparent 60%),color-mix(in srgb,var(--color-canvas) 82%,rgb(var(--color-accent-soft-rgb)))}
+:root[data-ui="clay"] body{font-family:var(--font-body);background:radial-gradient(900px 600px at 10% 0%,rgba(var(--color-accent-rgb),.28),transparent 60%),radial-gradient(800px 600px at 95% 100%,rgba(var(--color-accent-soft-rgb),.24),transparent 60%),color-mix(in srgb,var(--color-canvas) 82%,rgb(var(--color-accent-soft-rgb)))}
 :root[data-ui="clay"][data-theme="dark"] body{background:radial-gradient(900px 600px at 10% 0%,rgba(var(--color-accent-rgb),.12),transparent 60%),radial-gradient(800px 600px at 95% 100%,rgba(var(--color-accent-soft-rgb),.1),transparent 60%),color-mix(in srgb,var(--color-canvas) 80%,#000)}
 :root[data-ui="clay"][data-theme="light"] body{background:radial-gradient(900px 600px at 10% 0%,rgba(var(--color-accent-rgb),.3),transparent 60%),radial-gradient(800px 600px at 95% 100%,rgba(var(--color-accent-soft-rgb),.24),transparent 60%),color-mix(in srgb,rgb(var(--color-accent-rgb)) 14%,#f8f2ea)}
 :root[data-ui="clay"] .aurora-bg{opacity:.3}
@@ -89,7 +88,7 @@ color:var(--cl-ink)}
 /* Marca */
 :root[data-ui="clay"] .brand-mark{--c:var(--cl-candy);--s:5px;border-radius:50%}
 :root[data-ui="clay"] .brand-mark svg{color:var(--cl-ink)}
-:root[data-ui="clay"] .brand-title,:root[data-ui="clay"] .modal-title,:root[data-ui="clay"] .reset-zone-copy h2,:root[data-ui="clay"] .karaoke-mini .lyric-current,:root[data-ui="clay"] .progress-meta .now-mini-title{font-family:var(--cl-font);font-weight:800}
+:root[data-ui="clay"] .brand-title,:root[data-ui="clay"] .modal-title,:root[data-ui="clay"] .reset-zone-copy h2,:root[data-ui="clay"] .karaoke-mini .lyric-current,:root[data-ui="clay"] .progress-meta .now-mini-title{font-family:var(--font-display);font-weight:800}
 
 /* ================= Botones: pastillas infladas ================= */
 :root[data-ui="clay"] .btn{--c:var(--cl-pill);--s:7px;height:42px;padding:0 20px;font-weight:700;text-shadow:0 1px 0 rgba(255,255,255,.7)}
@@ -139,7 +138,7 @@ box-shadow:inset calc(var(--s)*.7) calc(var(--s)*.9) calc(var(--s)*1.6) rgba(80,
 :root[data-ui="clay"] .progress-thumb{--c:var(--cl-candy);--s:4px;width:24px;height:24px;opacity:1;border-radius:50%}
 
 /* ================= Información y letras ================= */
-:root[data-ui="clay"] .now-title{font-family:var(--cl-font);font-weight:800;background-image:linear-gradient(160deg,var(--cl-ink),color-mix(in srgb,var(--color-accent,#ff8a73) 62%,var(--cl-ink)));filter:drop-shadow(2px 3px 0 rgba(255,255,255,.85)) drop-shadow(0 7px 8px color-mix(in srgb,var(--cl-ink) 25%,transparent))}
+:root[data-ui="clay"] .now-title{font-family:var(--font-display);font-weight:800;background-image:linear-gradient(160deg,var(--cl-ink),color-mix(in srgb,var(--color-accent,#ff8a73) 62%,var(--cl-ink)));filter:drop-shadow(2px 3px 0 rgba(255,255,255,.85)) drop-shadow(0 7px 8px color-mix(in srgb,var(--cl-ink) 25%,transparent))}
 :root[data-ui="clay"] .now-eyebrow{color:color-mix(in srgb,var(--color-accent,#ff8a73) 55%,#2a1f2e)}
 :root[data-ui="clay"] .now-eyebrow::before{box-shadow:0 0 0 3px rgba(255,255,255,.7),0 2px 6px rgba(80,55,110,.35)}
 :root[data-ui="clay"] .tag-chip{--c:var(--cl-mint);--s:4px;font-weight:700;color:color-mix(in srgb,var(--color-success,#7be0b0) 40%,#143024)}

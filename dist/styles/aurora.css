@@ -1,6 +1,5 @@
 @layer surface {
 html[data-ui="aurora"] {
-  --au-font: "Outfit", "SF Pro Text", "SF Pro Display", "Segoe UI Variable", "Segoe UI", "Helvetica Neue", Arial, system-ui, sans-serif;
   --au-font-mono: ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace;
 }
 /* ==========================================================================
@@ -227,7 +226,7 @@ html[data-ui="aurora"]::after {
 html[data-ui="aurora"] body {
   background: transparent;
   color: var(--au-text);
-  font-family: var(--au-font);
+  font-family: var(--font-body);
   font-weight: 400;
   line-height: 1.5;
   letter-spacing: -0.005em;
@@ -240,7 +239,7 @@ html[data-ui="aurora"] ::selection {
 }
 
 html[data-ui="aurora"] :is(h1, h2, h3, h4, .title, .section-title, .heading) {
-  font-family: var(--au-font);
+  font-family: var(--font-display);
   font-weight: 600;
   letter-spacing: -0.025em;
   line-height: 1.15;
@@ -279,7 +278,7 @@ html[data-ui="aurora"] :is(button, .btn, [role="button"]:not(.song-item), input[
   min-height: 40px;
   min-width: 40px;
   padding-inline: 16px;
-  font-family: var(--au-font);
+  font-family: var(--font-body);
   font-size: 0.875rem;
   font-weight: 500;
   letter-spacing: 0;
@@ -342,7 +341,7 @@ html[data-ui="aurora"] :is(input:not([type]), input[type="text"], input[type="se
   box-sizing: border-box;
   min-height: 40px;
   padding: 8px 16px;
-  font-family: var(--au-font);
+  font-family: var(--font-body);
   font-size: 0.95rem;
   font-weight: 400;
   color: var(--au-text);
@@ -484,7 +483,7 @@ html[data-ui="aurora"] :is(header, .app-header, .topbar, [data-role="header"]) {
 }
 
 html[data-ui="aurora"] :is(.logo, .brand, .app-logo, [data-role="logo"]) {
-  font-family: var(--au-font);
+  font-family: var(--font-body);
   font-weight: 700;
   font-size: clamp(1.3rem, 2.8vw, 1.9rem);
   letter-spacing: -0.04em;
@@ -520,7 +519,7 @@ html[data-ui="aurora"] :is(.panel-header, .panel-title, .card-header, .section-h
   background-position: left bottom;
   background-size: 100% 2px;
   color: var(--au-text);
-  font-family: var(--au-font);
+  font-family: var(--font-body);
   font-size: 0.78rem;
   font-weight: 600;
   letter-spacing: 0.14em;
@@ -558,7 +557,7 @@ html[data-ui="aurora"] :is([role="tab"], .tab) {
   box-sizing: border-box;
   min-height: var(--au-tap);
   padding-inline: 18px;
-  font-family: var(--au-font);
+  font-family: var(--font-body);
   font-size: 0.875rem;
   font-weight: 500;
   letter-spacing: 0;
@@ -614,7 +613,7 @@ html[data-ui="aurora"] :is(.track, .track-item, .song, .queue-item, li[role="opt
   border: 1px solid transparent;
   border-radius: var(--au-radius);
   box-shadow: none;
-  font-family: var(--au-font);
+  font-family: var(--font-body);
   font-weight: 400;
   text-align: start;
   transition: var(--au-transition);
@@ -656,7 +655,7 @@ html[data-ui="aurora"] :is(.track, .track-item, .song, .queue-item, li[role="opt
   top: 6px;
   right: 10px;
   padding: 1px 10px;
-  font-family: var(--au-font);
+  font-family: var(--font-body);
   font-size: 0.66rem;
   font-weight: 700;
   letter-spacing: 0.08em;
@@ -686,7 +685,7 @@ html[data-ui="aurora"] :is(.cover, .album-art, .artwork, .cover-art, [data-role=
 }
 
 html[data-ui="aurora"] :is(.now-title, .np-title, [data-role="now-title"]) {
-  font-family: var(--au-font);
+  font-family: var(--font-body);
   font-size: clamp(1.4rem, 3vw, 2.3rem);
   font-weight: 700;
   line-height: 1.1;
@@ -695,7 +694,7 @@ html[data-ui="aurora"] :is(.now-title, .np-title, [data-role="now-title"]) {
 }
 
 html[data-ui="aurora"] :is(.now-artist, .np-artist, [data-role="now-artist"]) {
-  font-family: var(--au-font);
+  font-family: var(--font-body);
   font-size: 0.95rem;
   font-weight: 500;
   letter-spacing: 0.01em;
@@ -806,7 +805,7 @@ html[data-ui="aurora"] :is(.progress-fill, .progress-bar, .seek-fill) {
 }
 
 html[data-ui="aurora"] :is(.time, .current-time, .duration-label, .time-current, .time-total, [data-role="time"]) {
-  font-family: var(--au-font);
+  font-family: var(--font-body);
   font-size: 0.8rem;
   font-weight: 500;
   font-variant-numeric: tabular-nums;
@@ -822,7 +821,7 @@ html[data-ui="aurora"] :is(.visualizer, .viz, .spectrum, [data-role="visualizer"
 }
 
 html[data-ui="aurora"] :is(.eq, .equalizer, [data-panel="eq"]) :is(label, .band-label, .eq-label) {
-  font-family: var(--au-font);
+  font-family: var(--font-body);
   font-size: 0.7rem;
   font-weight: 500;
   letter-spacing: 0.08em;
@@ -843,7 +842,7 @@ html[data-ui="aurora"] :is(.toast, .snackbar, .notification, .notice, [role="ale
   gap: 10px;
   max-width: min(92vw, 460px);
   padding: 12px 20px;
-  font-family: var(--au-font);
+  font-family: var(--font-body);
   font-size: 0.92rem;
   font-weight: 500;
   color: var(--au-text);
@@ -941,7 +940,7 @@ html[data-ui="aurora"] :is(.karaoke, .lyrics, .lyrics-view, .karaoke-view, [data
 html[data-ui="aurora"] :is(.lyric-line, .lyrics-line, .karaoke-line, .lrc-line, [data-lyric-line]) {
   margin-block: 6px;
   padding: 6px 18px;
-  font-family: var(--au-font);
+  font-family: var(--font-body);
   font-size: clamp(1.1rem, 2.6vw, 1.8rem);
   font-weight: 500;
   line-height: 1.25;
@@ -1010,7 +1009,7 @@ html[data-ui="aurora"] ::-webkit-scrollbar-thumb:hover {
 html[data-ui="aurora"] :is(.badge, .tag, .pill, .label) {
   display: inline-block;
   padding: 1px 10px;
-  font-family: var(--au-font);
+  font-family: var(--font-body);
   font-size: 0.7rem;
   font-weight: 600;
   letter-spacing: 0.06em;

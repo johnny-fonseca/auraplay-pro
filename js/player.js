@@ -1710,11 +1710,22 @@
       try { graphReady = this.graph.resume(); } catch (_) { graphReady = Promise.resolve(false); }
       let playPromise;
       try { playPromise = this.audio.play(); } catch (_) { playPromise = null; }
-      if (playPromise && typeof playPromise.catch === "function") playPromise.catch(() => {});
+      // Los navegadores suelen bloquear el autoplay con sonido cuando la
+      // llamada no nace de un gesto del usuario (por ejemplo, al cargar la
+      // demo desde GitHub Pages). No ocultar ese rechazo: la pista sí está
+      // cargada y el botón Reproducir puede iniciarla desde un clic.
+      if (playPromise && typeof playPromise.catch === "function") {
+        playPromise.catch((error) => {
+          if (error?.name === "NotAllowedError") {
+            AuraToast.show("La demo está cargada. Pulsa Reproducir para empezar.", "info", 6500);
+          }
+        });
+      }
       Promise.resolve(graphReady).then((ready) => {
         if (ready && this.vizEnabled) this.viz.start();
         else if (!ready && this.vizEnabled) AuraToast.show("No se pudo activar el analizador de audio", "warn", 3500);
       }).catch(() => {});
+      return playPromise || Promise.resolve(false);
     }
 
     play(idx) {

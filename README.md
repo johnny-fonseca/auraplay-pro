@@ -22,6 +22,7 @@ AuraPlay Pro se ejecuta directamente en un navegador moderno: no usa framework d
 - [Características](#características)
 - [Requisitos](#requisitos)
 - [Inicio rápido](#inicio-rápido)
+- [Demo musical](#demo-musical)
 - [Uso de la aplicación](#uso-de-la-aplicación)
 - [Mando remoto móvil](#mando-remoto-móvil)
 - [Atajos de teclado](#atajos-de-teclado)

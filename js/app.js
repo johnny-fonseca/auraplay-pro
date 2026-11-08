@@ -1,5 +1,8 @@
 /* app.js — entry point */
 (function () {
+  const DEFAULT_DEMO_AUDIO = "demo/cancionAuraPlay/Donde Suena Mi Aura.mp3";
+  const DEFAULT_DEMO_LYRICS = "demo/cancionAuraPlay/Donde Suena Mi Aura.lrc";
+
   function demoAssetUrl(value) {
     if (!value) return null;
     try {
@@ -13,8 +16,10 @@
 
   async function loadDemoFromUrl(player) {
     const params = new URLSearchParams(window.location.search);
-    const audioUrl = demoAssetUrl(params.get("demoAudio"));
-    const lyricsUrl = demoAssetUrl(params.get("demoLyrics"));
+    // La portada publicada carga la canción demo por defecto. Los parámetros
+    // de URL siguen permitiendo abrir otra pareja de audio/letra compartida.
+    const audioUrl = demoAssetUrl(params.get("demoAudio") || DEFAULT_DEMO_AUDIO);
+    const lyricsUrl = demoAssetUrl(params.get("demoLyrics") || DEFAULT_DEMO_LYRICS);
     if (!audioUrl && !lyricsUrl) return;
     if (!audioUrl || !lyricsUrl) {
       window.AuraToast.show("El enlace de demo necesita audio y letra", "warn", 5000);
